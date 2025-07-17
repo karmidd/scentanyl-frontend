@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Background from "../primary/Background.jsx";
-import Header from "../primary/Header.jsx";
-import BlurText from "../../blocks/TextAnimations/BlurText/BlurText.jsx";
-import AccordCard from "../cards/AccordCard.jsx";
+import Background from "../../primary/Background.jsx";
+import Header from "../../primary/Header.jsx";
+import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
+import LoadingPage from "../LoadingPage.jsx";
+import GeneralCard from "../../cards/GeneralCard.jsx";
 
-const AllAccordsPage = () => {
+const AllPerfumersPage = () => {
     const navigate = useNavigate();
-    const [accords, setAccords] = useState([]);
-    const [accordsData, setAccordsData] = useState({});
-    const [displayedAccords, setDisplayedAccords] = useState([]);
+    const [perfumers, setPerfumers] = useState([]);
+    const [displayedPerfumers, setDisplayedPerfumers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -17,118 +17,76 @@ const AllAccordsPage = () => {
     const [hasMore, setHasMore] = useState(true);
     const [sortBy, setSortBy] = useState('alphabetical'); // 'alphabetical' or 'popularity'
 
-    const ACCORDS_PER_PAGE = 20;
+    const PERFUMERS_PER_PAGE = 20;
 
     useEffect(() => {
-        fetchAccords();
+        fetchPerfumers();
     }, []);
 
     useEffect(() => {
         if(!loading)
-            filterAndSortAccords();
-    }, [searchQuery, sortBy, accords, accordsData]);
+            filterAndSortPerfumers();
+    }, [searchQuery, sortBy, perfumers]);
 
-    const fetchAccords = async () => {
+    const fetchPerfumers = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:8080/accords');
-            const accordsArray = await response.json();
-            setAccords(accordsArray);
-
-            // Fetch fragrance data for each accord
-            await fetchAccordsData(accordsArray);
-
+            const response = await fetch('http://localhost:8080/perfumers');
+            const perfumersArray = await response.json();
+            setPerfumers(perfumersArray);
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching accords:', error);
+            console.error('Error fetching perfumers:', error);
             setLoading(false);
         }
     };
 
-    const fetchAccordsData = async (accordsArray) => {
-        const accordsDataMap = {};
-        // Process accords in batches to avoid overwhelming the server
-        const batchSize = 10;
-        for (let i = 0; i < accordsArray.length; i += batchSize) {
-            const batch = accordsArray.slice(i, i + batchSize);
-            const promises = batch.map(accord => fetchAccordFragrances(accord));
-            const results = await Promise.all(promises);
-
-            batch.forEach((accord, index) => {
-                accordsDataMap[accord] = results[index];
-            });
-
-            // Update state after each batch to show progress
-            setAccordsData(prev => ({ ...prev, ...accordsDataMap }));
-        }
-    };
-
-    const fetchAccordFragrances = async (accord) => {
-        try {
-            const response = await fetch(`http://localhost:8080/accords/${encodeURIComponent(accord)}`);
-            const fragrances = await response.json();
-
-            return { total: fragrances.length };
-        } catch (error) {
-            console.error(`Error fetching fragrances for accord ${accord}:`, error);
-            return { total: 0 };
-        }
-    };
-
-    const filterAndSortAccords = () => {
-        let filtered = accords;
+    const filterAndSortPerfumers = () => {
+        let filtered = perfumers;
 
         // Filter by search query
         if (searchQuery.trim()) {
-            filtered = filtered.filter(accord =>
-                accord.toLowerCase().includes(searchQuery.toLowerCase())
+            filtered = filtered.filter(perfumer =>
+                perfumer.name.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
 
         // Sort accords
         if (sortBy === 'alphabetical') {
-            filtered.sort((a, b) => a.localeCompare(b));
+            filtered.sort((a, b) => a.name.localeCompare(b.name));
         } else if (sortBy === 'popularity') {
-            filtered.sort((a, b) => {
-                const aCount = accordsData[a]?.total || 0;
-                const bCount = accordsData[b]?.total || 0;
-                return bCount - aCount;
-            });
+            filtered.sort((a, b) => b.totalContributions - a.totalContributions);
         }
 
-        setDisplayedAccords(filtered.slice(0, ACCORDS_PER_PAGE * currentPage));
-        setHasMore(filtered.length > ACCORDS_PER_PAGE * currentPage);
+        setDisplayedPerfumers(filtered.slice(0, PERFUMERS_PER_PAGE * currentPage));
+        setHasMore(filtered.length > PERFUMERS_PER_PAGE * currentPage);
     };
 
-    const loadMoreAccords = async () => {
+    const loadMorePerfumers = async () => {
         if (loadingMore || !hasMore) return;
 
         setLoadingMore(true);
         const nextPage = currentPage + 1;
 
         setTimeout(() => {
-            let filtered = accords;
+            let filtered = perfumers;
 
             if (searchQuery.trim()) {
-                filtered = filtered.filter(accord =>
-                    accord.toLowerCase().includes(searchQuery.toLowerCase())
+                filtered = filtered.filter(perfumer =>
+                    perfumer.name.toLowerCase().includes(searchQuery.toLowerCase())
                 );
             }
 
             if (sortBy === 'alphabetical') {
-                filtered.sort((a, b) => a.localeCompare(b));
+                filtered.sort((a, b) => a.name.localeCompare(b.name));
             } else if (sortBy === 'popularity') {
-                filtered.sort((a, b) => {
-                    const aCount = accordsData[a]?.total || 0;
-                    const bCount = accordsData[b]?.total || 0;
-                    return bCount - aCount;
-                });
+                filtered.sort((a, b) => b.totalContributions - a.totalContributions);
             }
 
-            const newAccords = filtered.slice(0, ACCORDS_PER_PAGE * nextPage);
-            setDisplayedAccords(newAccords);
+            const newPerfumers = filtered.slice(0, PERFUMERS_PER_PAGE * nextPage);
+            setDisplayedPerfumers(newPerfumers);
             setCurrentPage(nextPage);
-            setHasMore(filtered.length > ACCORDS_PER_PAGE * nextPage);
+            setHasMore(filtered.length > PERFUMERS_PER_PAGE * nextPage);
             setLoadingMore(false);
         }, 800);
     };
@@ -136,7 +94,7 @@ const AllAccordsPage = () => {
     const handleSearch = (e) => {
         e.preventDefault();
         setCurrentPage(1);
-        filterAndSortAccords();
+        filterAndSortPerfumers();
     };
 
     const handleSearchChange = (e) => {
@@ -149,29 +107,20 @@ const AllAccordsPage = () => {
         setCurrentPage(1);
     };
 
-    const handleAccordClick = (accord) => {
-        navigate(`/accords/${encodeURIComponent(accord)}`);
+    const handlePerfumerClick = (perfumer) => {
+        navigate(`/perfumers/${encodeURIComponent(perfumer.name)}`);
     };
 
     const getFilteredCount = () => {
-        if (!searchQuery.trim()) return accords.length;
-        return accords.filter(accord =>
-            accord.toLowerCase().includes(searchQuery.toLowerCase())
+        if (!searchQuery.trim()) return perfumers.length;
+        return perfumers.filter(perfumer =>
+            perfumer.name.toLowerCase().includes(searchQuery.toLowerCase())
         ).length;
     };
 
     if (loading) {
         return (
-            <>
-                <Background/>
-                <div className="min-h-screen bg-black flex items-center justify-center font-['Viaoda_Libre',serif]">
-                    <div className="text-center space-y-4 z-20">
-                        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-800 mx-auto"></div>
-                        <div className="text-white text-xl">Loading accords and analyzing fragrances...</div>
-                        <div className="text-gray-400">This may take a moment</div>
-                    </div>
-                </div>
-            </>
+            <LoadingPage/>
         );
     }
 
@@ -181,7 +130,7 @@ const AllAccordsPage = () => {
             <div className="relative z-10 font-['Viaoda_Libre',serif] text-2xl">
                 <div className="text-white">
                     {/* Header */}
-                    <Header page={4} />
+                    <Header page={5} />
 
                     {/* Main Content */}
                     <main className="max-w-7xl mx-auto px-4 py-8 pt-[160px]">
@@ -189,14 +138,14 @@ const AllAccordsPage = () => {
                         <div className="space-y-8 mb-16">
                             <div className="space-y-6 text-center">
                                 <BlurText
-                                    text="Explore Accords"
+                                    text="Explore Perfumers"
                                     delay={100}
                                     animateBy="words"
                                     direction="top"
                                     className="flex justify-center text-6xl lg:text-7xl font-bold leading-tight"
                                 />
                                 <BlurText
-                                    text="Discover the harmonic structures that define fragrance families"
+                                    text="Discover the noses behind your favorite fragrances"
                                     delay={80}
                                     animateBy="words"
                                     direction="bottom"
@@ -211,7 +160,7 @@ const AllAccordsPage = () => {
                                         type="text"
                                         value={searchQuery}
                                         onChange={handleSearchChange}
-                                        placeholder="Search for accords..."
+                                        placeholder="Search for perfumers..."
                                         className="w-full px-8 py-6 text-2xl bg-gray-900 border border-gray-700 rounded-2xl focus:outline-none focus:border-blue-400 transition-all duration-300 group-hover:border-blue-600 placeholder-gray-500"
                                     />
                                     <button
@@ -252,7 +201,7 @@ const AllAccordsPage = () => {
                             {/* Results Counter */}
                             <div className="text-center">
                                 <BlurText
-                                    text={`Showing ${displayedAccords.length} of ${getFilteredCount()} accords`}
+                                    text={`Showing ${displayedPerfumers.length} of ${getFilteredCount()} perfumers`}
                                     delay={150}
                                     animateBy="words"
                                     direction="bottom"
@@ -261,24 +210,25 @@ const AllAccordsPage = () => {
                             </div>
                         </div>
 
-                        {/* Accords Grid */}
+                        {/* Perfumers Grid */}
                         <div className="space-y-8">
-                            {displayedAccords.length > 0 ? (
+                            {displayedPerfumers.length > 0 ? (
                                 <>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                        {displayedAccords.map((accord, index) => (
+                                        {displayedPerfumers.map((perfumer, index) => (
                                             <div
-                                                key={accord}
+                                                key={perfumer}
                                                 className="animate-fadeIn"
                                                 style={{
-                                                    animationDelay: `${(index % ACCORDS_PER_PAGE) * 50}ms`,
+                                                    animationDelay: `${(index % PERFUMERS_PER_PAGE) * 50}ms`,
                                                     animationFillMode: 'both'
                                                 }}
                                             >
-                                                <AccordCard
-                                                    accord={accord}
-                                                    accordData={accordsData[accord] || { total: 0 }}
-                                                    onClick={() => handleAccordClick(accord)}
+                                                <GeneralCard
+                                                    name={perfumer.name}
+                                                    total={perfumer.totalContributions}
+                                                    onClick={() => handlePerfumerClick(perfumer)}
+                                                    message={"Click to explore fragrances made by this perfumer"}
                                                 />
                                             </div>
                                         ))}
@@ -288,7 +238,7 @@ const AllAccordsPage = () => {
                                     {hasMore && (
                                         <div className="flex justify-center pt-12">
                                             <button
-                                                onClick={loadMoreAccords}
+                                                onClick={loadMorePerfumers}
                                                 disabled={loadingMore}
                                                 className="cursor-pointer relative inline-flex items-center justify-center px-12 py-4 text-xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-blue-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0"
                                             >
@@ -301,7 +251,7 @@ const AllAccordsPage = () => {
                                                         </>
                                                     ) : (
                                                         <>
-                                                            <span>Load More Accords</span>
+                                                            <span>Load More Perfumers</span>
                                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                                                             </svg>
@@ -315,7 +265,7 @@ const AllAccordsPage = () => {
                             ) : (
                                 <div className="text-center py-16">
                                     <BlurText
-                                        text="No accords found"
+                                        text="No perfumers found"
                                         delay={100}
                                         animateBy="words"
                                         direction="bottom"
@@ -345,17 +295,16 @@ const AllAccordsPage = () => {
                                     Explore Fragrances
                                 </button>
                                 <button
-                                    onClick={() => navigate('/notes')}
+                                    onClick={() => navigate('/brands')}
                                     className="cursor-pointer border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl"
                                 >
-                                    Browse Notes
+                                    Browse Brands
                                 </button>
                             </div>
                         </div>
                     </main>
                 </div>
             </div>
-
             <style jsx>{`
                 @keyframes fadeIn {
                     from {
@@ -376,4 +325,4 @@ const AllAccordsPage = () => {
     );
 };
 
-export default AllAccordsPage;
+export default AllPerfumersPage;

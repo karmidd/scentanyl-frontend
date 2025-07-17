@@ -1,7 +1,6 @@
 import React from 'react';
 
-const AccordCard = ({ accord, accordData, onClick }) => {
-    const { total } = accordData;
+const GeneralCard = ({ name, total, message, onClick }) => {
 
     return (
         <div
@@ -9,9 +8,9 @@ const AccordCard = ({ accord, accordData, onClick }) => {
             className="cursor-pointer bg-gray-900 border border-gray-700 rounded-2xl p-6 hover:border-blue-400 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-105 transform group"
         >
             <div className="space-y-4">
-                {/* Accord Name */}
+                {/* Item Name */}
                 <h3 className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300 capitalize">
-                    {accord}
+                    {name}
                 </h3>
 
                 {/* Total Fragrances */}
@@ -34,11 +33,11 @@ const AccordCard = ({ accord, accordData, onClick }) => {
 
                 {/* Hover Effect Text */}
                 <div className="text-sm text-gray-500 group-hover:text-blue-300 transition-colors duration-300">
-                    Click to explore fragrances with this accord
+                    {message}
                 </div>
             </div>
         </div>
     );
 };
 
-export default AccordCard;
+export default GeneralCard;

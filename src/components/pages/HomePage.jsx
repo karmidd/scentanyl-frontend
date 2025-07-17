@@ -117,7 +117,7 @@ const HomePage = () => {
                                         <span>Browse All</span>
                                     </div>
                                 </button>
-                                <RandomFragranceButton text={"Random Discovery"} className={"group relative inline-flex items-center justify-center px-8 py-4 text-xl font-bold text-white bg-gradient-to-r from-gray-700 to-gray-900 rounded-xl shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30"}/>
+                                <RandomFragranceButton text={"Random Discovery"} className={"cursor-pointer group relative inline-flex items-center justify-center px-8 py-4 text-xl font-bold text-white bg-gradient-to-r from-gray-700 to-gray-900 rounded-xl shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30"}/>
                             </div>
                         </div>
 

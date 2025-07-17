@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Background from "../primary/Background.jsx";
-import Header from "../primary/Header.jsx";
-import BlurText from "../../blocks/TextAnimations/BlurText/BlurText.jsx";
-import NoteCard from "../cards/NoteCard.jsx";
-import LoadingPage from "./LoadingPage.jsx";
+import Background from "../../primary/Background.jsx";
+import Header from "../../primary/Header.jsx";
+import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
+import LoadingPage from "../LoadingPage.jsx";
+import GeneralCard from "../../cards/GeneralCard.jsx";
 
-const AllNotesPage = () => {
+const AllAccordsPage = () => {
     const navigate = useNavigate();
-    const [notes, setNotes] = useState([]);
-    const [notesData, setNotesData] = useState({});
-    const [displayedNotes, setDisplayedNotes] = useState([]);
+    const [accords, setAccords] = useState([]);
+    const [displayedAccords, setDisplayedAccords] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -18,147 +17,77 @@ const AllNotesPage = () => {
     const [hasMore, setHasMore] = useState(true);
     const [sortBy, setSortBy] = useState('alphabetical'); // 'alphabetical' or 'popularity'
 
-    const NOTES_PER_PAGE = 20;
+    const ACCORDS_PER_PAGE = 20;
 
     useEffect(() => {
-        fetchNotes();
+        fetchAccords();
     }, []);
 
     useEffect(() => {
-        if(!loading)
-            filterAndSortNotes();
-    }, [searchQuery, sortBy, notes, notesData]);
+        if (!loading) {
+            filterAndSortAccords();
+        }
+    }, [searchQuery, sortBy, accords]);
 
-    const fetchNotes = async () => {
+    const fetchAccords = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:8080/notes');
-            const notesArray = await response.json();
-            setNotes(notesArray);
-
-            // Fetch fragrance data for each note
-            await fetchNotesData(notesArray);
-
+            const response = await fetch('http://localhost:8080/accords');
+            const accordsArray = await response.json();
+            setAccords(accordsArray);
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching notes:', error);
+            console.error('Error fetching accords:', error);
             setLoading(false);
         }
     };
 
-    const fetchNotesData = async (notesArray) => {
-        const notesDataMap = {};
-        // Process notes in batches to avoid overwhelming the server
-        const batchSize = 10;
-        for (let i = 0; i < notesArray.length; i += batchSize) {
-            const batch = notesArray.slice(i, i + batchSize);
-            const promises = batch.map(note => fetchNoteFragrances(note));
-            const results = await Promise.all(promises);
-
-            batch.forEach((note, index) => {
-                notesDataMap[note] = results[index];
-            });
-
-            // Update state after each batch to show progress
-            setNotesData(prev => ({ ...prev, ...notesDataMap }));
-        }
-    };
-
-    const fetchNoteFragrances = async (note) => {
-        try {
-            const response = await fetch(`http://localhost:8080/notes/${encodeURIComponent(note)}`);
-            const fragrances = await response.json();
-
-            return categorizeNoteUsage(fragrances, note);
-        } catch (error) {
-            console.error(`Error fetching fragrances for note ${note}:`, error);
-            return { total: 0, topNotes: 0, middleNotes: 0, baseNotes: 0, uncategorizedNotes: 0 };
-        }
-    };
-
-    const categorizeNoteUsage = (fragrances, note) => {
-        const noteUsage = {
-            total: fragrances.length,
-            topNotes: 0,
-            middleNotes: 0,
-            baseNotes: 0,
-            uncategorizedNotes: 0
-        };
-
-        fragrances.forEach(fragrance => {
-            const noteLower = note.toLowerCase();
-
-            if (fragrance.topNotes && fragrance.topNotes.toLowerCase().includes(noteLower)) {
-                noteUsage.topNotes++;
-            }
-            if (fragrance.middleNotes && fragrance.middleNotes.toLowerCase().includes(noteLower)) {
-                noteUsage.middleNotes++;
-            }
-            if (fragrance.baseNotes && fragrance.baseNotes.toLowerCase().includes(noteLower)) {
-                noteUsage.baseNotes++;
-            }
-            if (fragrance.uncategorizedNotes && fragrance.uncategorizedNotes.toLowerCase().includes(noteLower)) {
-                noteUsage.uncategorizedNotes++;
-            }
-        });
-
-        return noteUsage;
-    };
-
-    const filterAndSortNotes = () => {
-        let filtered = notes;
+    const filterAndSortAccords = () => {
+        let filtered = accords;
 
         // Filter by search query
         if (searchQuery.trim()) {
-            filtered = filtered.filter(note =>
-                note.toLowerCase().includes(searchQuery.toLowerCase())
+            filtered = filtered.filter(accord =>
+                accord.name.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
 
-        // Sort notes
+        // Sort accords
         if (sortBy === 'alphabetical') {
-            filtered.sort((a, b) => a.localeCompare(b));
+            filtered.sort((a, b) => a.name.localeCompare(b.name));
         } else if (sortBy === 'popularity') {
-            filtered.sort((a, b) => {
-                const aCount = notesData[a]?.total || 0;
-                const bCount = notesData[b]?.total || 0;
-                return bCount - aCount;
-            });
+            filtered.sort((a, b) => b.totalAppearances - a.totalAppearances);
         }
 
-        setDisplayedNotes(filtered.slice(0, NOTES_PER_PAGE * currentPage));
-        setHasMore(filtered.length > NOTES_PER_PAGE * currentPage);
+        setDisplayedAccords(filtered.slice(0, ACCORDS_PER_PAGE * currentPage));
+        setHasMore(filtered.length > ACCORDS_PER_PAGE * currentPage);
     };
 
-    const loadMoreNotes = async () => {
+    const loadMoreAccords = async () => {
         if (loadingMore || !hasMore) return;
 
         setLoadingMore(true);
         const nextPage = currentPage + 1;
 
         setTimeout(() => {
-            let filtered = notes;
+            let filtered = accords;
 
             if (searchQuery.trim()) {
-                filtered = filtered.filter(note =>
-                    note.toLowerCase().includes(searchQuery.toLowerCase())
+                filtered = filtered.filter(accord =>
+                    accord.name.toLowerCase().includes(searchQuery.toLowerCase())
                 );
             }
 
             if (sortBy === 'alphabetical') {
-                filtered.sort((a, b) => a.localeCompare(b));
+                filtered.sort((a, b) => a.name.localeCompare(b.name));
             } else if (sortBy === 'popularity') {
-                filtered.sort((a, b) => {
-                    const aCount = notesData[a]?.total || 0;
-                    const bCount = notesData[b]?.total || 0;
-                    return bCount - aCount;
-                });
+                filtered.sort((a, b) => b.totalAppearances - a.totalAppearances);
             }
 
-            const newNotes = filtered.slice(0, NOTES_PER_PAGE * nextPage);
-            setDisplayedNotes(newNotes);
+            const newAccords = filtered.slice(0, ACCORDS_PER_PAGE * nextPage);
+            setDisplayedAccords(newAccords);
             setCurrentPage(nextPage);
-            setHasMore(filtered.length > NOTES_PER_PAGE * nextPage);
+            setHasMore(filtered.length > ACCORDS_PER_PAGE * nextPage);
             setLoadingMore(false);
         }, 800);
     };
@@ -166,7 +95,7 @@ const AllNotesPage = () => {
     const handleSearch = (e) => {
         e.preventDefault();
         setCurrentPage(1);
-        filterAndSortNotes();
+        filterAndSortAccords();
     };
 
     const handleSearchChange = (e) => {
@@ -179,14 +108,14 @@ const AllNotesPage = () => {
         setCurrentPage(1);
     };
 
-    const handleNoteClick = (note) => {
-        navigate(`/notes/${encodeURIComponent(note)}`);
+    const handleAccordClick = (accord) => {
+        navigate(`/accords/${encodeURIComponent(accord.name)}`);
     };
 
     const getFilteredCount = () => {
-        if (!searchQuery.trim()) return notes.length;
-        return notes.filter(note =>
-            note.toLowerCase().includes(searchQuery.toLowerCase())
+        if (!searchQuery.trim()) return accords.length;
+        return accords.filter(accord =>
+            accord.name.toLowerCase().includes(searchQuery.toLowerCase())
         ).length;
     };
 
@@ -202,7 +131,7 @@ const AllNotesPage = () => {
             <div className="relative z-10 font-['Viaoda_Libre',serif] text-2xl">
                 <div className="text-white">
                     {/* Header */}
-                    <Header page={3} />
+                    <Header page={4} />
 
                     {/* Main Content */}
                     <main className="max-w-7xl mx-auto px-4 py-8 pt-[160px]">
@@ -210,14 +139,14 @@ const AllNotesPage = () => {
                         <div className="space-y-8 mb-16">
                             <div className="space-y-6 text-center">
                                 <BlurText
-                                    text="Explore Notes"
+                                    text="Explore Accords"
                                     delay={100}
                                     animateBy="words"
                                     direction="top"
                                     className="flex justify-center text-6xl lg:text-7xl font-bold leading-tight"
                                 />
                                 <BlurText
-                                    text="Discover the building blocks of your favorite fragrances"
+                                    text="Discover the harmonic structures that define fragrance families"
                                     delay={80}
                                     animateBy="words"
                                     direction="bottom"
@@ -232,7 +161,7 @@ const AllNotesPage = () => {
                                         type="text"
                                         value={searchQuery}
                                         onChange={handleSearchChange}
-                                        placeholder="Search for notes..."
+                                        placeholder="Search for accords..."
                                         className="w-full px-8 py-6 text-2xl bg-gray-900 border border-gray-700 rounded-2xl focus:outline-none focus:border-blue-400 transition-all duration-300 group-hover:border-blue-600 placeholder-gray-500"
                                     />
                                     <button
@@ -273,7 +202,7 @@ const AllNotesPage = () => {
                             {/* Results Counter */}
                             <div className="text-center">
                                 <BlurText
-                                    text={`Showing ${displayedNotes.length} of ${getFilteredCount()} notes`}
+                                    text={`Showing ${displayedAccords.length} of ${getFilteredCount()} accords`}
                                     delay={150}
                                     animateBy="words"
                                     direction="bottom"
@@ -282,24 +211,25 @@ const AllNotesPage = () => {
                             </div>
                         </div>
 
-                        {/* Notes Grid */}
+                        {/* Accords Grid */}
                         <div className="space-y-8">
-                            {displayedNotes.length > 0 ? (
+                            {displayedAccords.length > 0 ? (
                                 <>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                        {displayedNotes.map((note, index) => (
+                                        {displayedAccords.map((accord, index) => (
                                             <div
-                                                key={note}
+                                                key={accord.id}
                                                 className="animate-fadeIn"
                                                 style={{
-                                                    animationDelay: `${(index % NOTES_PER_PAGE) * 50}ms`,
+                                                    animationDelay: `${(index % ACCORDS_PER_PAGE) * 50}ms`,
                                                     animationFillMode: 'both'
                                                 }}
                                             >
-                                                <NoteCard
-                                                    note={note}
-                                                    noteData={notesData[note] || { total: 0, topNotes: 0, middleNotes: 0, baseNotes: 0, uncategorizedNotes: 0 }}
-                                                    onClick={() => handleNoteClick(note)}
+                                                <GeneralCard
+                                                    name={accord.name}
+                                                    total={accord.totalAppearances}
+                                                    message={"Click to explore fragrances with this accord"}
+                                                    onClick={() => handleAccordClick(accord)}
                                                 />
                                             </div>
                                         ))}
@@ -309,7 +239,7 @@ const AllNotesPage = () => {
                                     {hasMore && (
                                         <div className="flex justify-center pt-12">
                                             <button
-                                                onClick={loadMoreNotes}
+                                                onClick={loadMoreAccords}
                                                 disabled={loadingMore}
                                                 className="cursor-pointer relative inline-flex items-center justify-center px-12 py-4 text-xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-blue-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0"
                                             >
@@ -322,7 +252,7 @@ const AllNotesPage = () => {
                                                         </>
                                                     ) : (
                                                         <>
-                                                            <span>Load More Notes</span>
+                                                            <span>Load More Accords</span>
                                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                                                             </svg>
@@ -336,7 +266,7 @@ const AllNotesPage = () => {
                             ) : (
                                 <div className="text-center py-16">
                                     <BlurText
-                                        text="No notes found"
+                                        text="No accords found"
                                         delay={100}
                                         animateBy="words"
                                         direction="bottom"
@@ -376,8 +306,24 @@ const AllNotesPage = () => {
                     </main>
                 </div>
             </div>
+            <style jsx>{`
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .animate-fadeIn {
+                    animation: fadeIn 0.6s ease-out;
+                }
+            `}</style>
         </div>
     );
 };
 
-export default AllNotesPage;
+export default AllAccordsPage;

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Background from "../primary/Background.jsx";
-import Header from "../primary/Header.jsx";
-import BlurText from "../../blocks/TextAnimations/BlurText/BlurText.jsx";
-import FragranceCard from "../cards/FragranceCard.jsx";
+import { useParams, useNavigate } from 'react-router-dom';
+import Background from "../../primary/Background.jsx";
+import Header from "../../primary/Header.jsx";
+import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
+import FragranceCard from "../../cards/FragranceCard.jsx";
+import LoadingPage from "../LoadingPage.jsx";
 
-const AllFragrancesPage = () => {
+const AccordPage = () => {
+    const { accord } = useParams();
     const navigate = useNavigate();
     const [fragrances, setFragrances] = useState([]);
     const [displayedFragrances, setDisplayedFragrances] = useState([]);
@@ -19,24 +21,27 @@ const AllFragrancesPage = () => {
     const FRAGRANCES_PER_PAGE = 20;
 
     useEffect(() => {
-        fetchFragrances();
-    }, []);
+        if (accord) {
+            fetchAccordFragrances();
+        }
+    }, [accord]);
 
     useEffect(() => {
         filterFragrances();
     }, [searchQuery, selectedGender, fragrances]);
 
-    const fetchFragrances = async () => {
+    const fetchAccordFragrances = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:8080/fragrances');
+            const response = await fetch(`http://localhost:8080/accords/${encodeURIComponent(accord)}`);
             const data = await response.json();
             setFragrances(data);
+
             setDisplayedFragrances(data.slice(0, FRAGRANCES_PER_PAGE));
             setHasMore(data.length > FRAGRANCES_PER_PAGE);
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching fragrances:', error);
+            console.error('Error fetching accord fragrances:', error);
             setLoading(false);
         }
     };
@@ -49,7 +54,9 @@ const AllFragrancesPage = () => {
             filtered = filtered.filter(fragrance =>
                 fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 fragrance.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                fragrance.accords?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                fragrance.topNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                fragrance.middleNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                fragrance.baseNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 fragrance.uncategorizedNotes?.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
@@ -79,7 +86,9 @@ const AllFragrancesPage = () => {
                 filtered = filtered.filter(fragrance =>
                     fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     fragrance.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    fragrance.accords?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    fragrance.topNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    fragrance.middleNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    fragrance.baseNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     fragrance.uncategorizedNotes?.toLowerCase().includes(searchQuery.toLowerCase())
                 );
             }
@@ -121,7 +130,9 @@ const AllFragrancesPage = () => {
             filtered = filtered.filter(fragrance =>
                 fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 fragrance.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                fragrance.accords?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                fragrance.topNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                fragrance.middleNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                fragrance.baseNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 fragrance.uncategorizedNotes?.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
@@ -135,13 +146,31 @@ const AllFragrancesPage = () => {
         return filtered.length;
     };
 
+    const getGenderCounts = () => {
+        const counts = {
+            all: fragrances.length,
+            men: 0,
+            women: 0,
+            unisex: 0
+        };
+
+        fragrances.forEach(fragrance => {
+            const gender = fragrance.gender?.toLowerCase();
+            if (gender === 'men') counts.men++;
+            else if (gender === 'women') counts.women++;
+            else if (gender === 'unisex') counts.unisex++;
+        });
+
+        return counts;
+    };
+
     if (loading) {
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-800"></div>
-            </div>
+            <LoadingPage/>
         );
     }
+
+    const genderCounts = getGenderCounts();
 
     return (
         <div className="relative min-h-screen overflow-hidden">
@@ -149,7 +178,7 @@ const AllFragrancesPage = () => {
             <div className="relative z-10 font-['Viaoda_Libre',serif] text-2xl">
                 <div className="text-white">
                     {/* Header */}
-                    <Header page={1} />
+                    <Header page={4} />
 
                     {/* Main Content */}
                     <main className="max-w-7xl mx-auto px-4 py-8 pt-[160px]">
@@ -157,19 +186,39 @@ const AllFragrancesPage = () => {
                         <div className="space-y-8 mb-16">
                             <div className="space-y-6 text-center">
                                 <BlurText
-                                    text="Discover Fragrances"
+                                    text={`${accord.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} Accord`}
                                     delay={100}
                                     animateBy="words"
                                     direction="top"
                                     className="flex justify-center text-6xl lg:text-7xl font-bold leading-tight"
                                 />
                                 <BlurText
-                                    text="Explore thousands of exquisite fragrances from luxury to niche perfumes"
+                                    text="Discover all fragrances featuring this distinctive accord"
                                     delay={80}
                                     animateBy="words"
                                     direction="bottom"
                                     className="flex justify-center text-2xl text-gray-400 max-w-3xl mx-auto"
                                 />
+                            </div>
+
+                            {/* Accord Statistics */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-8">
+                                <div className="bg-gray-900 rounded-xl p-4 text-center border border-gray-700">
+                                    <div className="text-3xl font-bold text-blue-400">{genderCounts.all}</div>
+                                    <div className="text-sm text-gray-400">Total Fragrances</div>
+                                </div>
+                                <div className="bg-gray-900 rounded-xl p-4 text-center border border-gray-700">
+                                    <div className="text-3xl font-bold text-green-400">{genderCounts.men}</div>
+                                    <div className="text-sm text-gray-400">Men's</div>
+                                </div>
+                                <div className="bg-gray-900 rounded-xl p-4 text-center border border-gray-700">
+                                    <div className="text-3xl font-bold text-pink-400">{genderCounts.women}</div>
+                                    <div className="text-sm text-gray-400">Women's</div>
+                                </div>
+                                <div className="bg-gray-900 rounded-xl p-4 text-center border border-gray-700">
+                                    <div className="text-3xl font-bold text-purple-400">{genderCounts.unisex}</div>
+                                    <div className="text-sm text-gray-400">Unisex</div>
+                                </div>
                             </div>
 
                             {/* Search Bar */}
@@ -179,7 +228,7 @@ const AllFragrancesPage = () => {
                                         type="text"
                                         value={searchQuery}
                                         onChange={handleSearchChange}
-                                        placeholder="Search fragrances, brands, notes, or accords..."
+                                        placeholder="Search fragrances, brands, or notes..."
                                         className="w-full px-8 py-6 text-2xl bg-gray-900 border border-gray-700 rounded-2xl focus:outline-none focus:border-blue-400 transition-all duration-300 group-hover:border-blue-600 placeholder-gray-500"
                                     />
                                     <button
@@ -247,7 +296,7 @@ const AllFragrancesPage = () => {
                                             <button
                                                 onClick={loadMoreFragrances}
                                                 disabled={loadingMore}
-                                                className="group relative inline-flex items-center justify-center px-12 py-4 text-xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-blue-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0"
+                                                className="cursor-pointer relative inline-flex items-center justify-center px-12 py-4 text-xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-blue-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0"
                                             >
                                                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
                                                 <div className="relative flex items-center space-x-3">
@@ -285,10 +334,10 @@ const AllFragrancesPage = () => {
                             )}
                         </div>
 
-                        {/* Call to Action */}
+                        {/* Back to Accords Button */}
                         <div className="text-center space-y-6 pt-16">
                             <BlurText
-                                text="Ready to Build Your Collection?"
+                                text="Explore More Accords"
                                 delay={300}
                                 animateBy="words"
                                 direction="bottom"
@@ -296,16 +345,16 @@ const AllFragrancesPage = () => {
                             />
                             <div className="flex gap-6 justify-center">
                                 <button
-                                    onClick={() => navigate('/collection')}
-                                    className="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl"
+                                    onClick={() => navigate('/accords')}
+                                    className="cursor-pointer bg-blue-800 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl"
                                 >
-                                    Start Your Collection
+                                    Back to All Accords
                                 </button>
                                 <button
-                                    onClick={() => navigate('/wishlist')}
-                                    className="border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl"
+                                    onClick={() => navigate('/fragrances')}
+                                    className="cursor-pointer border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl"
                                 >
-                                    Create Wishlist
+                                    Explore All Fragrances
                                 </button>
                             </div>
                         </div>
@@ -333,4 +382,4 @@ const AllFragrancesPage = () => {
     );
 };
 
-export default AllFragrancesPage;
+export default AccordPage;

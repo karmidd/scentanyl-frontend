@@ -8,7 +8,7 @@ const items = [
     { label: "Brands", href: "/brands" },
     { label: "Notes", href: "/notes" },
     { label: "Accords", href: "/accords" },
-    { label: "About", href: "/about" },
+    { label: "Perfumers", href: "/perfumers" },
 ];
 
 const  Header = ({ page }) => {
@@ -22,10 +22,7 @@ const  Header = ({ page }) => {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
-
-
-
-
+    
     return (
         <div
             className={`fixed top-0 left-0 w-full h-[150px] flex justify-center pt-[40px] text-3xl z-50 transition-all duration-300 ${

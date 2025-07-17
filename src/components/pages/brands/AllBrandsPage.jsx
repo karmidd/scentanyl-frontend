@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Background from "../primary/Background.jsx";
-import Header from "../primary/Header.jsx";
-import BlurText from "../../blocks/TextAnimations/BlurText/BlurText.jsx";
-import BrandCard from "../cards/BrandCard.jsx";
-import LoadingPage from "./LoadingPage.jsx";
+import Background from "../../primary/Background.jsx";
+import Header from "../../primary/Header.jsx";
+import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
+import BrandCard from "../../cards/BrandCard.jsx";
+import LoadingPage from "../LoadingPage.jsx";
 
 const AllBrandsPage = () => {
     const navigate = useNavigate();
@@ -13,6 +13,8 @@ const AllBrandsPage = () => {
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCountry, setSelectedCountry] = useState('');
+    const [selectedParent, setSelectedParent] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
 
@@ -24,7 +26,7 @@ const AllBrandsPage = () => {
 
     useEffect(() => {
         filterBrands();
-    }, [searchQuery, brands]);
+    }, [searchQuery, selectedCountry, selectedParent, brands]);
 
     const fetchBrands = async () => {
         try {
@@ -41,18 +43,47 @@ const AllBrandsPage = () => {
         }
     };
 
+    // Get unique countries and parents from brands data
+    const getUniqueCountries = () => {
+        const countries = brands
+            .map(brand => brand.country)
+            .filter(country => country !== null && country !== undefined && country !== '')
+            .filter((country, index, self) => self.indexOf(country) === index)
+            .sort();
+        return countries;
+    };
+
+    const getUniqueParents = () => {
+        const parents = brands
+            .map(brand => brand.parent)
+            .filter(parent => parent !== null && parent !== undefined && parent !== '')
+            .filter((parent, index, self) => self.indexOf(parent) === index)
+            .sort();
+        return parents;
+    };
+
     const filterBrands = () => {
-        if (!searchQuery.trim()) {
-            setDisplayedBrands(brands.slice(0, BRANDS_PER_PAGE * currentPage));
-            setHasMore(brands.length > BRANDS_PER_PAGE * currentPage);
-        } else {
-            const filtered = brands.filter(brand =>
-                brand.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                brand.brand?.toLowerCase().includes(searchQuery.toLowerCase())
+        let filtered = brands;
+
+        // Apply search filter
+        if (searchQuery.trim()) {
+            filtered = filtered.filter(brand =>
+                brand.name?.toLowerCase().includes(searchQuery.toLowerCase())
             );
-            setDisplayedBrands(filtered.slice(0, BRANDS_PER_PAGE * currentPage));
-            setHasMore(filtered.length > BRANDS_PER_PAGE * currentPage);
         }
+
+        // Apply country filter
+        if (selectedCountry) {
+            filtered = filtered.filter(brand => brand.country === selectedCountry);
+        }
+
+        // Apply parent company filter
+        if (selectedParent) {
+            filtered = filtered.filter(brand => brand.parent === selectedParent);
+        }
+
+        setDisplayedBrands(filtered.slice(0, BRANDS_PER_PAGE * currentPage));
+        setHasMore(filtered.length > BRANDS_PER_PAGE * currentPage);
     };
 
     const loadMoreBrands = async () => {
@@ -62,17 +93,27 @@ const AllBrandsPage = () => {
         const nextPage = currentPage + 1;
 
         setTimeout(() => {
-            const filteredBrands = searchQuery.trim()
-                ? brands.filter(brand =>
-                    brand.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    brand.brand?.toLowerCase().includes(searchQuery.toLowerCase())
-                )
-                : brands;
+            let filtered = brands;
 
-            const newBrands = filteredBrands.slice(0, BRANDS_PER_PAGE * nextPage);
+            // Apply all filters
+            if (searchQuery.trim()) {
+                filtered = filtered.filter(brand =>
+                    brand.name?.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+            }
+
+            if (selectedCountry) {
+                filtered = filtered.filter(brand => brand.country === selectedCountry);
+            }
+
+            if (selectedParent) {
+                filtered = filtered.filter(brand => brand.parent === selectedParent);
+            }
+
+            const newBrands = filtered.slice(0, BRANDS_PER_PAGE * nextPage);
             setDisplayedBrands(newBrands);
             setCurrentPage(nextPage);
-            setHasMore(filteredBrands.length > BRANDS_PER_PAGE * nextPage);
+            setHasMore(filtered.length > BRANDS_PER_PAGE * nextPage);
             setLoadingMore(false);
         }, 800);
     };
@@ -86,6 +127,43 @@ const AllBrandsPage = () => {
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
         setCurrentPage(1);
+    };
+
+    const handleCountryChange = (e) => {
+        setSelectedCountry(e.target.value);
+        setCurrentPage(1);
+    };
+
+    const handleParentChange = (e) => {
+        setSelectedParent(e.target.value);
+        setCurrentPage(1);
+    };
+
+    const clearFilters = () => {
+        setSearchQuery('');
+        setSelectedCountry('');
+        setSelectedParent('');
+        setCurrentPage(1);
+    };
+
+    const getFilteredBrandsCount = () => {
+        let filtered = brands;
+
+        if (searchQuery.trim()) {
+            filtered = filtered.filter(brand =>
+                brand.name?.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+
+        if (selectedCountry) {
+            filtered = filtered.filter(brand => brand.country === selectedCountry);
+        }
+
+        if (selectedParent) {
+            filtered = filtered.filter(brand => brand.parent === selectedParent);
+        }
+
+        return filtered.length;
     };
 
     if (loading) {
@@ -144,13 +222,64 @@ const AllBrandsPage = () => {
                                 </div>
                             </form>
 
+                            {/* Filters Section */}
+                            <div className="max-w-2xl mx-auto">
+                                <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-6">
+                                    <div className="flex flex-wrap gap-4 items-center justify-center">
+                                        {/* Country Filter */}
+                                        <div className="flex flex-col space-y-2">
+                                            <label className="text-sm text-gray-400 font-medium">Country</label>
+                                            <select
+                                                value={selectedCountry}
+                                                onChange={handleCountryChange}
+                                                className="cursor-pointer px-6 py-3 bg-gray-800 border border-gray-600 rounded-xl focus:outline-none focus:border-blue-400 transition-all duration-300 text-white min-w-[150px]"
+                                            >
+                                                <option value="">All Countries</option>
+                                                {getUniqueCountries().map(country => (
+                                                    <option key={country} value={country}>
+                                                        {country}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        {/* Parent Company Filter */}
+                                        <div className="flex flex-col space-y-2">
+                                            <label className="text-sm text-gray-400 font-medium">Parent Company</label>
+                                            <select
+                                                value={selectedParent}
+                                                onChange={handleParentChange}
+                                                className="cursor-pointer px-6 py-3 bg-gray-800 border border-gray-600 rounded-xl focus:outline-none focus:border-blue-400 transition-all duration-300 text-white min-w-[150px]"
+                                            >
+                                                <option value="">All Parents</option>
+                                                {getUniqueParents().map(parent => (
+                                                    <option key={parent} value={parent}>
+                                                        {parent}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        {/* Clear Filters Button */}
+                                        {(searchQuery || selectedCountry || selectedParent) && (
+                                            <div className="flex flex-col space-y-2">
+                                                <label className="text-sm text-transparent font-medium">Clear</label>
+                                                <button
+                                                    onClick={clearFilters}
+                                                    className="cursor-pointer px-5 py-3 bg-red-800 hover:bg-red-700 text-white rounded-xl transition-all duration-300 hover:scale-105 font-medium"
+                                                >
+                                                    Clear Filters
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
                             {/* Results Counter */}
                             <div className="text-center">
                                 <BlurText
-                                    text={`Showing ${displayedBrands.length} of ${searchQuery.trim() ? brands.filter(brand =>
-                                        brand.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                        brand.brand?.toLowerCase().includes(searchQuery.toLowerCase())
-                                    ).length : brands.length} brands`}
+                                    text={`Showing ${displayedBrands.length} of ${getFilteredBrandsCount()} brands`}
                                     delay={150}
                                     animateBy="words"
                                     direction="bottom"
@@ -166,7 +295,7 @@ const AllBrandsPage = () => {
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                                         {displayedBrands.map((brand, index) => (
                                             <div
-                                                key={brand.id || brand.brand || index}
+                                                key={brand.id || brand.name || index}
                                                 className="animate-fadeIn"
                                                 style={{
                                                     animationDelay: `${(index % BRANDS_PER_PAGE) * 50}ms`,
@@ -174,8 +303,8 @@ const AllBrandsPage = () => {
                                                 }}
                                             >
                                                 <BrandCard
-                                                    image={"https://images.seeklogo.com/logo-png/41/1/christian-dior-logo-png_seeklogo-410283.png"}
-                                                    brand={"dior"}
+                                                    image={brand.image}
+                                                    brand={brand.name}
                                                 />
                                             </div>
                                         ))}
@@ -187,7 +316,7 @@ const AllBrandsPage = () => {
                                             <button
                                                 onClick={loadMoreBrands}
                                                 disabled={loadingMore}
-                                                className="group relative inline-flex items-center justify-center px-12 py-4 text-xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-blue-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0"
+                                                className="cursor-pointer group relative inline-flex items-center justify-center px-12 py-4 text-xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-blue-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0"
                                             >
                                                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
                                                 <div className="relative flex items-center space-x-3">
@@ -219,7 +348,7 @@ const AllBrandsPage = () => {
                                         className="flex justify-center text-3xl text-gray-400 mb-4"
                                     />
                                     <p className="text-gray-500 text-xl">
-                                        Try adjusting your search terms or browse all brands
+                                        Try adjusting your search terms or filters
                                     </p>
                                 </div>
                             )}
@@ -237,7 +366,7 @@ const AllBrandsPage = () => {
                             <div className="flex gap-6 justify-center">
                                 <button
                                     onClick={() => navigate('/fragrances')}
-                                    className="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl"
+                                    className="cursor-pointer bg-blue-800 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl"
                                 >
                                     Browse All Fragrances
                                 </button>
@@ -264,7 +393,7 @@ const AllBrandsPage = () => {
                         transform: translateY(0);
                     }
                 }
-                
+
                 .animate-fadeIn {
                     animation: fadeIn 0.6s ease-out;
                 }

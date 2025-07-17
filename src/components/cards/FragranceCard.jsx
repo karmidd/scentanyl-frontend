@@ -14,9 +14,9 @@ export default function FragranceCard({fragrance}) {
         >
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                                                <span className="px-3 py-1 bg-blue-800 rounded-full text-sm font-medium">
-                                                    {fragrance.gender}
-                                                </span>
+                    <span className="px-3 py-1 bg-blue-800 rounded-full text-sm font-medium">
+                        {fragrance.gender}
+                    </span>
                     <span className="text-2xl">✨</span>
                 </div>
                 <div className="space-y-2">

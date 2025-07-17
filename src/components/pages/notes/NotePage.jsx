@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Background from "../primary/Background.jsx";
-import Header from "../primary/Header.jsx";
-import BlurText from "../../blocks/TextAnimations/BlurText/BlurText.jsx";
-import FragranceCard from "../cards/FragranceCard.jsx";
-import LoadingPage from "./LoadingPage.jsx";
+import Background from "../../primary/Background.jsx";
+import Header from "../../primary/Header.jsx";
+import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
+import FragranceCard from "../../cards/FragranceCard.jsx";
+import LoadingPage from "../LoadingPage.jsx";
 
-const AllFragrancesByNotePage = () => {
+const NotePage = () => {
     const { note } = useParams();
     const navigate = useNavigate();
     const [fragrances, setFragrances] = useState([]);
@@ -479,4 +479,4 @@ const AllFragrancesByNotePage = () => {
     );
 };
 
-export default AllFragrancesByNotePage;
+export default NotePage;
