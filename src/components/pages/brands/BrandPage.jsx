@@ -4,6 +4,11 @@ import Background from "../../primary/Background.jsx";
 import Header from "../../primary/Header.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import FragranceCard from "../../cards/FragranceCard.jsx";
+import {useTheme} from "../../contexts/ThemeContext.jsx";
+import LoadingPage from "../LoadingPage.jsx";
+import SearchBar from "../../utils/SearchBar.jsx";
+import ResultsCounter from "../../utils/ResultsCounter.jsx";
+import GenderFilterButtons from "../../utils/GenderFilterButtons.jsx";
 
 const BrandPage = () => {
     const navigate = useNavigate();
@@ -18,6 +23,7 @@ const BrandPage = () => {
     const [hasMore, setHasMore] = useState(true);
     const [selectedGender, setSelectedGender] = useState('all');
     const [error, setError] = useState(null);
+    const { theme } = useTheme();
 
     const FRAGRANCES_PER_PAGE = 20;
 
@@ -154,9 +160,7 @@ const BrandPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-800"></div>
-            </div>
+            <LoadingPage/>
         );
     }
 
@@ -166,7 +170,7 @@ const BrandPage = () => {
                 <Background />
                 <div className="relative z-10 font-['Viaoda_Libre',serif] text-2xl">
                     <div className="text-white">
-                        <Header page={1} />
+                        <Header page={2} />
                         <main className="max-w-7xl mx-auto px-4 py-8 pt-[160px]">
                             <div className="text-center py-16">
                                 <BlurText
@@ -197,7 +201,7 @@ const BrandPage = () => {
         <div className="relative min-h-screen overflow-hidden">
             <Background />
             <div className="relative z-10 font-['Viaoda_Libre',serif] text-2xl">
-                <div className="text-white">
+                <div className={theme.text.primary}>
                     {/* Header */}
                     <Header page={2} />
 
@@ -212,7 +216,7 @@ const BrandPage = () => {
                                         delay={100}
                                         animateBy="words"
                                         direction="top"
-                                        className="flex justify-center text-6xl lg:text-7xl font-bold leading-tight"
+                                        className="flex justify-center text-6xl lg:text-7xl text-white font-bold leading-tight"
                                     />
                                     {brandInfo.country && (
                                         <BlurText
@@ -220,7 +224,7 @@ const BrandPage = () => {
                                             delay={150}
                                             animateBy="words"
                                             direction="bottom"
-                                            className="flex justify-center text-2xl text-gray-400"
+                                            className={`flex justify-center text-2xl ${theme.text.secondary}`}
                                         />
                                     )}
                                     {brandInfo.parent && (
@@ -229,7 +233,7 @@ const BrandPage = () => {
                                             delay={200}
                                             animateBy="words"
                                             direction="bottom"
-                                            className="flex justify-center text-xl text-gray-500"
+                                            className={`flex justify-center text-xl ${theme.text.secondary}`}
                                         />
                                     )}
                                 </div>
@@ -255,58 +259,19 @@ const BrandPage = () => {
                                     delay={300}
                                     animateBy="words"
                                     direction="bottom"
-                                    className="flex justify-center text-xl text-gray-400 max-w-2xl mx-auto"
+                                    className={`flex justify-center text-xl text-gray-200 max-w-2xl mx-auto`}
                                 />
                             </div>
 
                             {/* Search Bar */}
-                            <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-                                <div className="relative group">
-                                    <input
-                                        type="text"
-                                        value={searchQuery}
-                                        onChange={handleSearchChange}
-                                        placeholder="Search fragrances, notes, or accords..."
-                                        className="w-full px-8 py-6 text-2xl bg-gray-900 border border-gray-700 rounded-2xl focus:outline-none focus:border-blue-400 transition-all duration-300 group-hover:border-blue-600 placeholder-gray-500"
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blue-800 hover:bg-blue-700 text-white p-4 rounded-xl transition-all duration-300 hover:scale-105"
-                                    >
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </form>
+                            <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search fragrances, notes, or accords..."}/>
 
                             {/* Gender Filter */}
-                            <div className="flex justify-center space-x-4">
-                                {['all', 'men', 'women', 'unisex'].map((gender) => (
-                                    <button
-                                        key={gender}
-                                        onClick={() => handleGenderChange(gender)}
-                                        className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 text-lg cursor-pointer ${
-                                            selectedGender === gender
-                                                ? 'bg-blue-800 text-white shadow-lg'
-                                                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                                        }`}
-                                    >
-                                        {gender === 'all' ? 'All' : gender.charAt(0).toUpperCase() + gender.slice(1)}
-                                    </button>
-                                ))}
-                            </div>
+                            <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender} />
 
                             {/* Results Counter */}
-                            <div className="text-center">
-                                <BlurText
-                                    text={`Showing ${displayedFragrances.length} of ${getFilteredCount()} fragrances`}
-                                    delay={350}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-xl text-gray-400"
-                                />
-                            </div>
+                            <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={getFilteredCount()}  type={"fragrances"}/>
+
                         </div>
 
                         {/* Fragrances Grid */}

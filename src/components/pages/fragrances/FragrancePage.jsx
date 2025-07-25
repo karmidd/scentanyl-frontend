@@ -5,6 +5,7 @@ import Header from "../../primary/Header.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import RandomFragranceButton from "../../utils/RandomFragranceButton.jsx";
 import LoadingPage from "../LoadingPage.jsx";
+import {useTheme} from "../../contexts/ThemeContext.jsx";
 
 const FragrancePage = () => {
     // For demo purposes, using props. In a real app, you'd get these from URL params
@@ -13,20 +14,20 @@ const FragrancePage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const { theme } = useTheme();
 
     useEffect(() => {
         const fetchFragrance = async () => {
             try {
                 setLoading(true);
                 // Replace with your actual backend URL
-                const normalizedName = name.replace(/-/g, ' ');
-                const response = await fetch(`http://localhost:8080/fragrances/${brand}/${normalizedName}`);
+                const response = await fetch(`http://localhost:8080/fragrances/${brand}/${name}`);
                 if (!response.ok) {
-                    throw new Error(`Fragrance "${normalizedName}" from the brand "${brand}" not found`);
+                    throw new Error(`Fragrance "${name}" from the brand "${brand}" not found`);
                 }
                 const data = await response.json();
                 if (!data || !data.name) {
-                    throw new Error(`Fragrance "${normalizedName}" from the brand "${brand}" wasn't found`);
+                    throw new Error(`Fragrance "${name}" from the brand "${brand}" wasn't found`);
                 }
                 setFragrance(data);
             } catch (err) {
@@ -109,7 +110,7 @@ const FragrancePage = () => {
         <div className="relative min-h-screen overflow-hidden">
             <Background />
             <div className="relative z-10 font-['Viaoda_Libre',serif] text-2xl">
-                {<div className="text-white">
+                {<div className={theme.text.primary}>
                     {/* Header */}
                     <Header page={1}/>
                     {/* Main Content */}
@@ -122,7 +123,7 @@ const FragrancePage = () => {
                                     delay={100}
                                     animateBy="words"
                                     direction="top"
-                                    className="flex justify-center text-6xl lg:text-7xl font-bold leading-tight"
+                                    className="flex justify-center text-6xl text-white lg:text-7xl font-bold leading-tight"
                                 />
                                 <div className="flex items-center justify-center space-x-1">
                                     <BlurText
@@ -130,7 +131,7 @@ const FragrancePage = () => {
                                         delay={200}
                                         animateBy="words"
                                         direction="top"
-                                        className="text-3xl text-gray-400 font-semibold"
+                                        className="text-3xl text-gray-300 font-semibold"
                                     />
                                     <button onClick={() => handleBrandClick(fragrance?.brand)} className="cursor-pointer hover:scale-105 transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-lg px-2 py-1">
                                         <BlurText
@@ -138,16 +139,16 @@ const FragrancePage = () => {
                                             delay={250}
                                             animateBy="words"
                                             direction="top"
-                                            className="text-3xl text-blue-400 font-semibold"
+                                            className={`text-3xl ${theme.text.accent} font-semibold`}
                                         />
                                     </button>
-                                    <span className="px-4 py-2 bg-blue-800 rounded-full text-xl font-medium">
+                                    <span className={`px-4 py-2 ${fragrance.gender === "men" ? "bg-blue-800" : fragrance.gender === "women" ? "bg-pink-600" : "bg-gradient-to-r from-pink-600 via-purple-500 to-blue-800"} rounded-full text-xl font-medium`}>
                                         <BlurText
                                             text={fragrance?.gender}
                                             delay={300}
                                             animateBy="words"
                                             direction="top"
-                                            className="text-xl font-medium"
+                                            className="text-xl text-white font-medium"
                                         />
                                     </span>
                                 </div>
@@ -160,7 +161,7 @@ const FragrancePage = () => {
                                                     delay={200}
                                                     animateBy="words"
                                                     direction="top"
-                                                    className="text-gray-400 text-2xl"
+                                                    className="text-gray-200 text-2xl"
                                                 />
                                                 <BlurText
                                                     text={perfumer?.replaceAll(' | ', ', ')}
@@ -183,9 +184,9 @@ const FragrancePage = () => {
                                         <div className="flex flex-col items-center">
                                             <button
                                                 onClick={() => window.open(fragrance.imageUrl, '_blank')}
-                                                className="group relative inline-flex items-center justify-center px-12 py-6 text-2xl font-bold text-white bg-gradient-to-r from-purple-900 via-blue-850 to-blue-900 rounded-2xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-blue-400/30 cursor-pointer"
+                                                className={`group relative inline-flex items-center justify-center px-12 py-6 text-2xl font-bold text-white ${theme.button.browseAll} rounded-2xl shadow-2xl ${theme.shadow.button} transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border ${theme.border.accent} cursor-pointer`}
                                             >
-                                                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-blue-600 to-blue-800 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                                                <div className={`absolute inset-0 ${theme.button.browseAll} rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300`}></div>
                                                 <div className="relative flex items-center space-x-4">
                                                     <span className="text-4xl">🌸</span>
                                                     <BlurText
@@ -214,7 +215,7 @@ const FragrancePage = () => {
                                         </div>
 
                                         {/* Random Button */}
-                                        <RandomFragranceButton className="cursor-pointer group relative inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-gray-700 to-gray-900 rounded-full shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30" />
+                                        <RandomFragranceButton className={`cursor-pointer group relative inline-flex items-center justify-center w-24 h-24 text-xl font-bold ${theme.text.primary} bg-gradient-to-r ${theme.randomDiscoveryButton.primary} rounded-full shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30`} />
                                     </div>
                                 </div>
 
@@ -226,7 +227,7 @@ const FragrancePage = () => {
                                         delay={200}
                                         animateBy="words"
                                         direction="top"
-                                        className="text-[1.1rem] text-gray-400 text-center"
+                                        className="text-[1.1rem] text-gray-200 text-center"
                                     />
                                 </p>
                             )}
@@ -239,17 +240,17 @@ const FragrancePage = () => {
                                         delay={500}
                                         animateBy="words"
                                         direction="top"
-                                        className="text-3xl font-semibold text-blue-400 flex justify-center"
+                                        className={`text-3xl font-semibold ${theme.text.accent} flex justify-center`}
                                     />
                                     <div className="flex flex-wrap gap-3 justify-center">
                                         {parseAccords(fragrance.accords).map((accord, index) => (
                                             <button
                                                 key={index}
                                                 onClick={() => handleAccordClick(accord)}
-                                                className="px-4 py-2 bg-gray-800 rounded-lg text-xl border border-gray-700 hover:border-blue-800 hover:bg-gray-700 transition-all duration-300 hover:scale-105 cursor-pointer animate-fadeIn"
+                                                className={`px-4 py-2 ${theme.card.primary} rounded-lg text-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 ${theme.card.hover} cursor-pointer animate-fadeIn`}
                                                 style={{animationDelay: `${550 + index * 100}ms`}}
                                             >
-                                                {accord}
+                                                {accord.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
                                             </button>
                                         ))}
                                     </div>
@@ -266,14 +267,14 @@ const FragrancePage = () => {
                                             delay={700}
                                             animateBy="words"
                                             direction="top"
-                                            className="text-3xl font-semibold text-blue-400 flex justify-center"
+                                            className={`text-3xl font-semibold ${theme.text.accent} flex justify-center`}
                                         />
                                         <div className="gap-4 flex justify-center flex-wrap">
                                             {parseNotes(fragrance.topNotes).map((note, index) => (
                                                 <button
                                                     key={index}
                                                     onClick={() => handleNoteClick(note)}
-                                                    className="bg-gradient-to-r from-gray-900 to-gray-800 p-5 rounded-xl border border-gray-700 hover:border-blue-800 transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer hover:from-gray-800 hover:to-gray-700 animate-fadeIn"
+                                                    className={`${theme.card.primary} p-5 rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn`}
                                                     style={{animationDelay: `${750 + index * 100}ms`}}
                                                 >
                                                     <span className="text-xl font-medium">{note}</span>
@@ -291,14 +292,14 @@ const FragrancePage = () => {
                                             delay={900}
                                             animateBy="words"
                                             direction="top"
-                                            className="text-3xl font-semibold text-blue-400 flex justify-center"
+                                            className={`text-3xl font-semibold ${theme.text.accent} flex justify-center`}
                                         />
                                         <div className="gap-4 flex justify-center flex-wrap">
                                             {parseNotes(fragrance.middleNotes).map((note, index) => (
                                                 <button
                                                     key={index}
                                                     onClick={() => handleNoteClick(note)}
-                                                    className="bg-gradient-to-r from-gray-900 to-gray-800 p-5 rounded-xl border border-gray-700 hover:border-blue-800 transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer hover:from-gray-800 hover:to-gray-700 animate-fadeIn"
+                                                    className={`${theme.card.primary} p-5 rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn`}
                                                     style={{animationDelay: `${950 + index * 100}ms`}}
                                                 >
                                                     <span className="text-xl font-medium">{note}</span>
@@ -316,14 +317,14 @@ const FragrancePage = () => {
                                             delay={1100}
                                             animateBy="words"
                                             direction="top"
-                                            className="text-3xl font-semibold text-blue-400 flex justify-center"
+                                            className={`text-3xl font-semibold ${theme.text.accent} flex justify-center`}
                                         />
                                         <div className="gap-4 flex justify-center flex-wrap">
                                             {parseNotes(fragrance.baseNotes).map((note, index) => (
                                                 <button
                                                     key={index}
                                                     onClick={() => handleNoteClick(note)}
-                                                    className="bg-gradient-to-r from-gray-900 to-gray-800 p-5 rounded-xl border border-gray-700 hover:border-blue-800 transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer hover:from-gray-800 hover:to-gray-700 animate-fadeIn"
+                                                    className={`${theme.card.primary} p-5 rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn`}
                                                     style={{animationDelay: `${1150 + index * 100}ms`}}
                                                 >
                                                     <span className="text-xl font-medium">{note}</span>
@@ -341,14 +342,14 @@ const FragrancePage = () => {
                                             delay={1300}
                                             animateBy="words"
                                             direction="top"
-                                            className="text-3xl font-semibold text-blue-400 flex justify-center"
+                                            className={`text-3xl font-semibold ${theme.text.accent} flex justify-center`}
                                         />
                                         <div className="gap-4 flex justify-center flex-wrap">
                                             {parseNotes(fragrance.uncategorizedNotes).map((note, index) => (
                                                 <button
                                                     key={index}
                                                     onClick={() => handleNoteClick(note)}
-                                                    className="bg-gradient-to-r from-gray-900 to-gray-800 p-5 rounded-xl border border-gray-700 hover:border-blue-800 transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer hover:from-gray-800 hover:to-gray-700 animate-fadeIn"
+                                                    className={`${theme.card.primary} p-5 rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn`}
                                                     style={{animationDelay: `${1350 + index * 100}ms`}}
                                                 >
                                                     <span className="text-xl font-medium">{note}</span>

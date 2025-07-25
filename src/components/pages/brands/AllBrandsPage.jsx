@@ -5,6 +5,10 @@ import Header from "../../primary/Header.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import BrandCard from "../../cards/BrandCard.jsx";
 import LoadingPage from "../LoadingPage.jsx";
+import {useTheme} from "../../contexts/ThemeContext.jsx";
+import SearchBar from "../../utils/SearchBar.jsx";
+import LoadMoreButton from "../../utils/LoadMoreButton.jsx";
+import ResultsCounter from "../../utils/ResultsCounter.jsx";
 
 const AllBrandsPage = () => {
     const navigate = useNavigate();
@@ -17,6 +21,7 @@ const AllBrandsPage = () => {
     const [selectedParent, setSelectedParent] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+    const { theme } = useTheme();
 
     const BRANDS_PER_PAGE = 20;
 
@@ -176,7 +181,7 @@ const AllBrandsPage = () => {
         <div className="relative min-h-screen overflow-hidden">
             <Background />
             <div className="relative z-10 font-['Viaoda_Libre',serif] text-2xl">
-                <div className="text-white">
+                <div className={theme.text.primary}>
                     {/* Header */}
                     <Header page={2} />
 
@@ -190,41 +195,23 @@ const AllBrandsPage = () => {
                                     delay={100}
                                     animateBy="words"
                                     direction="top"
-                                    className="flex justify-center text-6xl lg:text-7xl font-bold leading-tight"
+                                    className="flex justify-center text-6xl text-white lg:text-7xl font-bold leading-tight"
                                 />
                                 <BlurText
                                     text="Discover fragrances from the world's most prestigious and emerging brands"
                                     delay={80}
                                     animateBy="words"
                                     direction="bottom"
-                                    className="flex justify-center text-2xl text-gray-400 max-w-3xl mx-auto"
+                                    className="flex justify-center text-2xl text-gray-200 max-w-3xl mx-auto"
                                 />
                             </div>
 
                             {/* Search Bar */}
-                            <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-                                <div className="relative group">
-                                    <input
-                                        type="text"
-                                        value={searchQuery}
-                                        onChange={handleSearchChange}
-                                        placeholder="Search for brands..."
-                                        className="w-full px-8 py-6 text-2xl bg-gray-900 border border-gray-700 rounded-2xl focus:outline-none focus:border-blue-400 transition-all duration-300 group-hover:border-blue-600 placeholder-gray-500"
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blue-800 hover:bg-blue-700 text-white p-4 rounded-xl transition-all duration-300 hover:scale-105"
-                                    >
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </form>
+                            <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search for brands..."} />
 
                             {/* Filters Section */}
                             <div className="max-w-2xl mx-auto">
-                                <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-6">
+                                <div className={`${theme.card.blur} border border-gray-700 rounded-2xl p-6`}>
                                     <div className="flex flex-wrap gap-4 items-center justify-center">
                                         {/* Country Filter */}
                                         <div className="flex flex-col space-y-2">
@@ -232,7 +219,7 @@ const AllBrandsPage = () => {
                                             <select
                                                 value={selectedCountry}
                                                 onChange={handleCountryChange}
-                                                className="cursor-pointer px-6 py-3 bg-gray-800 border border-gray-600 rounded-xl focus:outline-none focus:border-blue-400 transition-all duration-300 text-white min-w-[150px]"
+                                                className={`cursor-pointer px-6 py-3 ${theme.bg.card} border border-gray-600 rounded-xl focus:outline-none focus:border-blue-400 transition-all duration-300 ${theme.text.primary} min-w-[150px]`}
                                             >
                                                 <option value="">All Countries</option>
                                                 {getUniqueCountries().map(country => (
@@ -249,7 +236,7 @@ const AllBrandsPage = () => {
                                             <select
                                                 value={selectedParent}
                                                 onChange={handleParentChange}
-                                                className="cursor-pointer px-6 py-3 bg-gray-800 border border-gray-600 rounded-xl focus:outline-none focus:border-blue-400 transition-all duration-300 text-white min-w-[150px]"
+                                                className={`cursor-pointer px-6 py-3 ${theme.bg.card} border border-gray-600 rounded-xl focus:outline-none focus:border-blue-400 transition-all duration-300 ${theme.text.primary} min-w-[150px]`}
                                             >
                                                 <option value="">All Parents</option>
                                                 {getUniqueParents().map(parent => (
@@ -266,7 +253,7 @@ const AllBrandsPage = () => {
                                                 <label className="text-sm text-transparent font-medium">Clear</label>
                                                 <button
                                                     onClick={clearFilters}
-                                                    className="cursor-pointer px-5 py-3 bg-red-800 hover:bg-red-700 text-white rounded-xl transition-all duration-300 hover:scale-105 font-medium"
+                                                    className="cursor-pointer px-5 py-3 bg-red-700 hover:bg-red-700 text-white rounded-xl transition-all duration-300 hover:scale-105 font-medium"
                                                 >
                                                     Clear Filters
                                                 </button>
@@ -277,15 +264,7 @@ const AllBrandsPage = () => {
                             </div>
 
                             {/* Results Counter */}
-                            <div className="text-center">
-                                <BlurText
-                                    text={`Showing ${displayedBrands.length} of ${getFilteredBrandsCount()} brands`}
-                                    delay={150}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-xl text-gray-400"
-                                />
-                            </div>
+                            <ResultsCounter displayedCount={displayedBrands.length} filteredCount={getFilteredBrandsCount()} type={"brands"} />
                         </div>
 
                         {/* Brands Grid */}
@@ -312,30 +291,7 @@ const AllBrandsPage = () => {
 
                                     {/* Load More Button */}
                                     {hasMore && (
-                                        <div className="flex justify-center pt-12">
-                                            <button
-                                                onClick={loadMoreBrands}
-                                                disabled={loadingMore}
-                                                className="cursor-pointer group relative inline-flex items-center justify-center px-12 py-4 text-xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-blue-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0"
-                                            >
-                                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
-                                                <div className="relative flex items-center space-x-3">
-                                                    {loadingMore ? (
-                                                        <>
-                                                            <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
-                                                            <span>Loading...</span>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <span>Load More Brands</span>
-                                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                                            </svg>
-                                                        </>
-                                                    )}
-                                                </div>
-                                            </button>
-                                        </div>
+                                        <LoadMoreButton onClick={loadMoreBrands} disabled={loadingMore} message={"Load More Brands"} />
                                     )}
                                 </>
                             ) : (

@@ -1,6 +1,7 @@
 import GooeyNav from "../../blocks/Components/GooeyNav/GooeyNav.jsx";
 import React, { useEffect, useState } from "react";
 import {Link} from "react-router-dom";
+import ThemeToggle from "../utils/ThemeToggle.jsx";
 
 const items = [
     { label: "Home", href: "/" },
@@ -48,6 +49,7 @@ const  Header = ({ page }) => {
                 timeVariance={300}
                 colors={[1, 2, 3, 1, 2, 3, 1, 4]}
             />
+            <ThemeToggle className="ml-14 mt-3 cursor-pointer" />
         </div>
     );
 };

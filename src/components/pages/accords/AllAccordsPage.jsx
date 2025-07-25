@@ -5,6 +5,11 @@ import Header from "../../primary/Header.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import LoadingPage from "../LoadingPage.jsx";
 import GeneralCard from "../../cards/GeneralCard.jsx";
+import SearchBar from "../../utils/SearchBar.jsx";
+import LoadMoreButton from "../../utils/LoadMoreButton.jsx";
+import {useTheme} from "../../contexts/ThemeContext.jsx";
+import ResultsCounter from "../../utils/ResultsCounter.jsx";
+import SortButtons from "../../utils/SortButtons.jsx";
 
 const AllAccordsPage = () => {
     const navigate = useNavigate();
@@ -16,6 +21,7 @@ const AllAccordsPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [sortBy, setSortBy] = useState('alphabetical'); // 'alphabetical' or 'popularity'
+    const { theme } = useTheme();
 
     const ACCORDS_PER_PAGE = 20;
 
@@ -129,7 +135,7 @@ const AllAccordsPage = () => {
         <div className="relative min-h-screen overflow-hidden">
             <Background />
             <div className="relative z-10 font-['Viaoda_Libre',serif] text-2xl">
-                <div className="text-white">
+                <div className={theme.text.primary}>
                     {/* Header */}
                     <Header page={4} />
 
@@ -143,72 +149,26 @@ const AllAccordsPage = () => {
                                     delay={100}
                                     animateBy="words"
                                     direction="top"
-                                    className="flex justify-center text-6xl lg:text-7xl font-bold leading-tight"
+                                    className="flex justify-center text-6xl text-white lg:text-7xl font-bold leading-tight"
                                 />
                                 <BlurText
                                     text="Discover the harmonic structures that define fragrance families"
                                     delay={80}
                                     animateBy="words"
                                     direction="bottom"
-                                    className="flex justify-center text-2xl text-gray-400 max-w-3xl mx-auto"
+                                    className="flex justify-center text-2xl text-gray-200 max-w-3xl mx-auto"
                                 />
                             </div>
 
                             {/* Search Bar */}
-                            <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-                                <div className="relative group">
-                                    <input
-                                        type="text"
-                                        value={searchQuery}
-                                        onChange={handleSearchChange}
-                                        placeholder="Search for accords..."
-                                        className="w-full px-8 py-6 text-2xl bg-gray-900 border border-gray-700 rounded-2xl focus:outline-none focus:border-blue-400 transition-all duration-300 group-hover:border-blue-600 placeholder-gray-500"
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blue-800 hover:bg-blue-700 text-white p-4 rounded-xl transition-all duration-300 hover:scale-105"
-                                    >
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </form>
+                            <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search for accords..."} />
 
                             {/* Sort Options */}
-                            <div className="flex justify-center space-x-4">
-                                <button
-                                    onClick={() => handleSortChange('alphabetical')}
-                                    className={`cursor-pointer px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 text-lg ${
-                                        sortBy === 'alphabetical'
-                                            ? 'bg-blue-800 text-white shadow-lg'
-                                            : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                                    }`}
-                                >
-                                    Alphabetical
-                                </button>
-                                <button
-                                    onClick={() => handleSortChange('popularity')}
-                                    className={`cursor-pointer px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 text-lg ${
-                                        sortBy === 'popularity'
-                                            ? 'bg-blue-800 text-white shadow-lg'
-                                            : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                                    }`}
-                                >
-                                    Most Popular
-                                </button>
-                            </div>
+                            <SortButtons handleSortChange={handleSortChange} sortBy={sortBy} />
 
                             {/* Results Counter */}
-                            <div className="text-center">
-                                <BlurText
-                                    text={`Showing ${displayedAccords.length} of ${getFilteredCount()} accords`}
-                                    delay={150}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-xl text-gray-400"
-                                />
-                            </div>
+                            <ResultsCounter displayedCount={displayedAccords.length} filteredCount={getFilteredCount()} type={"accords"}/>
+
                         </div>
 
                         {/* Accords Grid */}
@@ -237,30 +197,7 @@ const AllAccordsPage = () => {
 
                                     {/* Load More Button */}
                                     {hasMore && (
-                                        <div className="flex justify-center pt-12">
-                                            <button
-                                                onClick={loadMoreAccords}
-                                                disabled={loadingMore}
-                                                className="cursor-pointer relative inline-flex items-center justify-center px-12 py-4 text-xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-blue-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0"
-                                            >
-                                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
-                                                <div className="relative flex items-center space-x-3">
-                                                    {loadingMore ? (
-                                                        <>
-                                                            <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
-                                                            <span>Loading...</span>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <span>Load More Accords</span>
-                                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                                            </svg>
-                                                        </>
-                                                    )}
-                                                </div>
-                                            </button>
-                                        </div>
+                                        <LoadMoreButton onClick={loadMoreAccords} disabled={loadingMore} message={"Load More Accords"} />
                                     )}
                                 </>
                             ) : (

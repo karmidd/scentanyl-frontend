@@ -5,6 +5,10 @@ import Header from "../../primary/Header.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import FragranceCard from "../../cards/FragranceCard.jsx";
 import LoadingPage from "../LoadingPage.jsx";
+import {useTheme} from "../../contexts/ThemeContext.jsx";
+import SearchBar from "../../utils/SearchBar.jsx";
+import GenderFilterButtons from "../../utils/GenderFilterButtons.jsx";
+import ResultsCounter from "../../utils/ResultsCounter.jsx";
 
 const NotePage = () => {
     const { note } = useParams();
@@ -25,6 +29,7 @@ const NotePage = () => {
         baseNotes: 0,
         uncategorizedNotes: 0
     });
+    const { theme } = useTheme();
 
     const FRAGRANCES_PER_PAGE = 20;
 
@@ -248,7 +253,7 @@ const NotePage = () => {
         <div className="relative min-h-screen overflow-hidden">
             <Background />
             <div className="relative z-10 font-['Viaoda_Libre',serif] text-2xl">
-                <div className="text-white">
+                <div className={theme.text.primary}>
                     {/* Header */}
                     <Header page={3} />
 
@@ -258,82 +263,51 @@ const NotePage = () => {
                         <div className="space-y-8 mb-16">
                             <div className="space-y-6 text-center">
                                 <BlurText
-                                    text={`Fragrances with ${note}`}
+                                    text={`Fragrances with ${note.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')
+                                    }`}
                                     delay={100}
                                     animateBy="words"
                                     direction="top"
-                                    className="flex justify-center text-6xl lg:text-7xl font-bold leading-tight"
+                                    className="flex justify-center text-white text-6xl lg:text-7xl font-bold leading-tight"
                                 />
                                 <BlurText
                                     text="Discover all fragrances featuring this beautiful note"
                                     delay={80}
                                     animateBy="words"
                                     direction="bottom"
-                                    className="flex justify-center text-2xl text-gray-400 max-w-3xl mx-auto"
+                                    className="flex justify-center text-2xl text-gray-300 max-w-3xl mx-auto"
                                 />
                             </div>
 
                             {/* Note Statistics */}
                             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-5xl mx-auto mb-8">
-                                <div className="bg-gray-900 rounded-xl p-4 text-center border border-gray-700">
-                                    <div className="text-3xl font-bold text-blue-400">{noteStats.total}</div>
-                                    <div className="text-sm text-gray-400">Total</div>
+                                <div className={`${theme.card.primary} rounded-xl p-4 text-center border border-gray-700`}>
+                                    <div className="text-3xl font-bold text-blue-500">{noteStats.total}</div>
+                                    <div className={`text-sm ${theme.text.secondary}`}>Total</div>
                                 </div>
-                                <div className="bg-gray-900 rounded-xl p-4 text-center border border-gray-700">
-                                    <div className="text-3xl font-bold text-green-400">{noteStats.topNotes}</div>
-                                    <div className="text-sm text-gray-400">As a Top Note</div>
+                                <div className={`${theme.card.primary} rounded-xl p-4 text-center border border-gray-700`}>
+                                    <div className="text-3xl font-bold text-green-500">{noteStats.topNotes}</div>
+                                    <div className={`text-sm ${theme.text.secondary}`}>As a Top Note</div>
                                 </div>
-                                <div className="bg-gray-900 rounded-xl p-4 text-center border border-gray-700">
-                                    <div className="text-3xl font-bold text-yellow-400">{noteStats.middleNotes}</div>
-                                    <div className="text-sm text-gray-400">As a Middle Note</div>
+                                <div className={`${theme.card.primary} rounded-xl p-4 text-center border border-gray-700`}>
+                                    <div className="text-3xl font-bold text-yellow-500">{noteStats.middleNotes}</div>
+                                    <div className={`text-sm ${theme.text.secondary}`}>As a Middle Note</div>
                                 </div>
-                                <div className="bg-gray-900 rounded-xl p-4 text-center border border-gray-700">
-                                    <div className="text-3xl font-bold text-purple-400">{noteStats.baseNotes}</div>
-                                    <div className="text-sm text-gray-400">As a Base Note</div>
+                                <div className={`${theme.card.primary} rounded-xl p-4 text-center border border-gray-700`}>
+                                    <div className="text-3xl font-bold text-purple-500">{noteStats.baseNotes}</div>
+                                    <div className={`text-sm ${theme.text.secondary}`}>As a Base Note</div>
                                 </div>
-                                <div className="bg-gray-900 rounded-xl p-4 text-center border border-gray-700">
-                                    <div className="text-3xl font-bold text-orange-400">{noteStats.uncategorizedNotes}</div>
-                                    <div className="text-sm text-gray-400">As an Uncategorized Note</div>
+                                <div className={`${theme.card.primary} rounded-xl p-4 text-center border border-gray-700`}>
+                                    <div className="text-3xl font-bold text-orange-500">{noteStats.uncategorizedNotes}</div>
+                                    <div className={`text-sm ${theme.text.secondary}`}>As an Uncategorized Note</div>
                                 </div>
                             </div>
 
                             {/* Search Bar */}
-                            <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-                                <div className="relative group">
-                                    <input
-                                        type="text"
-                                        value={searchQuery}
-                                        onChange={handleSearchChange}
-                                        placeholder="Search fragrances, brands, or accords..."
-                                        className="w-full px-8 py-6 text-2xl bg-gray-900 border border-gray-700 rounded-2xl focus:outline-none focus:border-blue-400 transition-all duration-300 group-hover:border-blue-600 placeholder-gray-500"
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-blue-800 hover:bg-blue-700 text-white p-4 rounded-xl transition-all duration-300 hover:scale-105"
-                                    >
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </form>
+                            <SearchBar size={3} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search fragrances, brands, or accords..."}/>
 
                             {/* Gender Filter */}
-                            <div className="flex justify-center space-x-4 mb-4">
-                                {['all', 'men', 'women', 'unisex'].map((gender) => (
-                                    <button
-                                        key={gender}
-                                        onClick={() => handleGenderChange(gender)}
-                                        className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 text-lg cursor-pointer ${
-                                            selectedGender === gender
-                                                ? 'bg-blue-800 text-white shadow-lg'
-                                                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                                        }`}
-                                    >
-                                        {gender === 'all' ? 'All' : gender.charAt(0).toUpperCase() + gender.slice(1)}
-                                    </button>
-                                ))}
-                            </div>
+                            <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender} />
 
                             {/* Position Filter */}
                             <div className="flex justify-center space-x-4 flex-wrap">
@@ -343,8 +317,8 @@ const NotePage = () => {
                                         onClick={() => handlePositionChange(position)}
                                         className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 text-lg cursor-pointer mb-2 ${
                                             selectedPosition === position
-                                                ? 'bg-green-800 text-white shadow-lg'
-                                                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                                                ? 'bg-green-700 text-white shadow-lg'
+                                                : theme.card.primary
                                         }`}
                                     >
                                         {position === 'all' ? 'Anywhere' :
@@ -357,15 +331,8 @@ const NotePage = () => {
                             </div>
 
                             {/* Results Counter */}
-                            <div className="text-center">
-                                <BlurText
-                                    text={`Showing ${displayedFragrances.length} of ${getFilteredCount()} fragrances`}
-                                    delay={150}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-xl text-gray-400"
-                                />
-                            </div>
+                            <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={getFilteredCount()} type={"fragrances"} />
+
                         </div>
 
                         {/* Fragrances Grid */}
