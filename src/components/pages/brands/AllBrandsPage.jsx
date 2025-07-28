@@ -9,6 +9,7 @@ import {useTheme} from "../../contexts/ThemeContext.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
 import LoadMoreButton from "../../utils/LoadMoreButton.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
+import HeroSection from "../../utils/HeroSection.jsx";
 
 const AllBrandsPage = () => {
     const navigate = useNavigate();
@@ -189,22 +190,7 @@ const AllBrandsPage = () => {
                     <main className="max-w-7xl mx-auto px-4 py-8 pt-[160px]">
                         {/* Hero Section */}
                         <div className="space-y-8 mb-16">
-                            <div className="space-y-6 text-center">
-                                <BlurText
-                                    text="Explore Brands"
-                                    delay={100}
-                                    animateBy="words"
-                                    direction="top"
-                                    className="flex justify-center text-6xl text-white lg:text-7xl font-bold leading-tight"
-                                />
-                                <BlurText
-                                    text="Discover fragrances from the world's most prestigious and emerging brands"
-                                    delay={80}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-2xl text-gray-200 max-w-3xl mx-auto"
-                                />
-                            </div>
+                            <HeroSection primaryText={"Explore Brands"} secondaryText={"Discover fragrances from the world's most prestigious and emerging brands"}/>
 
                             {/* Search Bar */}
                             <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search for brands..."} />

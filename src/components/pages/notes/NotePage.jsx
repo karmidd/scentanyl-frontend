@@ -9,6 +9,7 @@ import {useTheme} from "../../contexts/ThemeContext.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
 import GenderFilterButtons from "../../utils/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
+import HeroSection from "../../utils/HeroSection.jsx";
 
 const NotePage = () => {
     const { note } = useParams();
@@ -261,23 +262,7 @@ const NotePage = () => {
                     <main className="max-w-7xl mx-auto px-4 py-8 pt-[160px]">
                         {/* Hero Section */}
                         <div className="space-y-8 mb-16">
-                            <div className="space-y-6 text-center">
-                                <BlurText
-                                    text={`Fragrances with ${note.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')
-                                    }`}
-                                    delay={100}
-                                    animateBy="words"
-                                    direction="top"
-                                    className="flex justify-center text-white text-6xl lg:text-7xl font-bold leading-tight"
-                                />
-                                <BlurText
-                                    text="Discover all fragrances featuring this beautiful note"
-                                    delay={80}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-2xl text-gray-300 max-w-3xl mx-auto"
-                                />
-                            </div>
+                            <HeroSection primaryText={`Fragrances with ${note.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')}`} secondaryText={"Discover all fragrances featuring this beautiful note"} />
 
                             {/* Note Statistics */}
                             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-5xl mx-auto mb-8">

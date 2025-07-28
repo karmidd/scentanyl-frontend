@@ -10,6 +10,7 @@ import LoadMoreButton from "../../utils/LoadMoreButton.jsx";
 import {useTheme} from "../../contexts/ThemeContext.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import SortButtons from "../../utils/SortButtons.jsx";
+import HeroSection from "../../utils/HeroSection.jsx";
 
 const AllAccordsPage = () => {
     const navigate = useNavigate();
@@ -143,22 +144,7 @@ const AllAccordsPage = () => {
                     <main className="max-w-7xl mx-auto px-4 py-8 pt-[160px]">
                         {/* Hero Section */}
                         <div className="space-y-8 mb-16">
-                            <div className="space-y-6 text-center">
-                                <BlurText
-                                    text="Explore Accords"
-                                    delay={100}
-                                    animateBy="words"
-                                    direction="top"
-                                    className="flex justify-center text-6xl text-white lg:text-7xl font-bold leading-tight"
-                                />
-                                <BlurText
-                                    text="Discover the harmonic structures that define fragrance families"
-                                    delay={80}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-2xl text-gray-200 max-w-3xl mx-auto"
-                                />
-                            </div>
+                            <HeroSection primaryText={"Explore Accords"} secondaryText={"Discover the harmonic structures that define fragrance families"}/>
 
                             {/* Search Bar */}
                             <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search for accords..."} />

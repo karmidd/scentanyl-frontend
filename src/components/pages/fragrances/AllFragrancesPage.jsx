@@ -152,29 +152,29 @@ const AllFragrancesPage = () => {
     return (
         <div className="relative min-h-screen overflow-hidden">
             <Background />
-            <div className="relative z-10 font-['Viaoda_Libre',serif] text-2xl">
+            <div className="relative z-10 font-['Viaoda_Libre',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
                 <div className={theme.text.primary}>
                     {/* Header */}
                     <Header page={1} />
 
                     {/* Main Content */}
-                    <main className="max-w-7xl mx-auto px-4 py-8 pt-[160px]">
+                    <main className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
                         {/* Hero Section */}
-                        <div className="space-y-8 mb-16">
-                            <div className="space-y-6 text-center">
+                        <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
+                            <div className="space-y-3 sm:space-y-4 md:space-y-6 text-center">
                                 <BlurText
                                     text="Discover Fragrances"
                                     delay={100}
                                     animateBy="words"
                                     direction="top"
-                                    className="text-white flex justify-center text-6xl lg:text-7xl font-bold leading-tight"
+                                    className="text-white flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight px-2"
                                 />
                                 <BlurText
                                     text="Explore thousands of exquisite fragrances from luxury to niche perfumes"
                                     delay={80}
                                     animateBy="words"
                                     direction="bottom"
-                                    className="flex justify-center text-2xl text-gray-200 max-w-3xl mx-auto"
+                                    className="flex justify-center text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-200 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                                 />
                             </div>
 
@@ -189,10 +189,10 @@ const AllFragrancesPage = () => {
                         </div>
 
                         {/* Fragrances Grid */}
-                        <div className="space-y-8">
+                        <div className="space-y-4 sm:space-y-6 md:space-y-8">
                             {displayedFragrances.length > 0 ? (
                                 <>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
                                         {displayedFragrances.map((fragrance, index) => (
                                             <div
                                                 key={fragrance.id}
@@ -210,19 +210,18 @@ const AllFragrancesPage = () => {
                                     {/* Load More Button */}
                                     {hasMore && (
                                         <LoadMoreButton onClick={loadMoreFragrances} disabled={loadingMore} message={"Load More Fragrances"}/>
-
                                     )}
                                 </>
                             ) : (
-                                <div className="text-center py-16">
+                                <div className="text-center py-8 sm:py-12 md:py-16">
                                     <BlurText
                                         text="No fragrances found"
                                         delay={100}
                                         animateBy="words"
                                         direction="bottom"
-                                        className="flex justify-center text-3xl text-gray-400 mb-4"
+                                        className="flex justify-center text-2xl sm:text-3xl text-gray-400 mb-2 sm:mb-3 md:mb-4"
                                     />
-                                    <p className="text-gray-500 text-xl">
+                                    <p className="text-gray-500 text-base sm:text-lg md:text-xl">
                                         Try adjusting your search terms or filters
                                     </p>
                                 </div>
@@ -230,24 +229,24 @@ const AllFragrancesPage = () => {
                         </div>
 
                         {/* Call to Action */}
-                        <div className="text-center space-y-6 pt-16">
+                        <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
                             <BlurText
                                 text="Ready to Build Your Collection?"
                                 delay={300}
                                 animateBy="words"
                                 direction="bottom"
-                                className="flex justify-center text-3xl font-bold text-white"
+                                className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
                             />
-                            <div className="flex gap-6 justify-center">
+                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
                                 <button
                                     onClick={() => navigate('/collection')}
-                                    className="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl"
+                                    className="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
                                 >
                                     Start Your Collection
                                 </button>
                                 <button
                                     onClick={() => navigate('/wishlist')}
-                                    className="border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl"
+                                    className="border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
                                 >
                                     Create Wishlist
                                 </button>
@@ -268,7 +267,7 @@ const AllFragrancesPage = () => {
                         transform: translateY(0);
                     }
                 }
-                
+
                 .animate-fadeIn {
                     animation: fadeIn 0.6s ease-out;
                 }

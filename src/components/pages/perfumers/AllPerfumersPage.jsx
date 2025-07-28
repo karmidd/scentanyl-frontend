@@ -10,6 +10,7 @@ import {useTheme} from "../../contexts/ThemeContext.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
 import SortButtons from "../../utils/SortButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
+import HeroSection from "../../utils/HeroSection.jsx";
 
 const AllPerfumersPage = () => {
     const navigate = useNavigate();
@@ -142,22 +143,7 @@ const AllPerfumersPage = () => {
                     <main className="max-w-7xl mx-auto px-4 py-8 pt-[160px]">
                         {/* Hero Section */}
                         <div className="space-y-8 mb-16">
-                            <div className="space-y-6 text-center">
-                                <BlurText
-                                    text="Explore Perfumers"
-                                    delay={100}
-                                    animateBy="words"
-                                    direction="top"
-                                    className="flex justify-center text-6xl text-white lg:text-7xl font-bold leading-tight"
-                                />
-                                <BlurText
-                                    text="Discover the noses behind your favorite fragrances"
-                                    delay={80}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-2xl text-gray-200 max-w-3xl mx-auto"
-                                />
-                            </div>
+                            <HeroSection primaryText={"Explore Perfumers"} secondaryText={"Discover the noses behind your favorite fragrances"}/>
 
                             {/* Search Bar */}
                             <SearchBar size={2} message={"Search for perfumers..."} value={searchQuery} onChange={handleSearchChange} onSubmit={handleSearch}/>
@@ -178,7 +164,7 @@ const AllPerfumersPage = () => {
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                         {displayedPerfumers.map((perfumer, index) => (
                                             <div
-                                                key={perfumer}
+                                                key={perfumer.id}
                                                 className="animate-fadeIn"
                                                 style={{
                                                     animationDelay: `${(index % PERFUMERS_PER_PAGE) * 50}ms`,

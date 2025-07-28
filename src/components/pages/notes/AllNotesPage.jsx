@@ -9,6 +9,8 @@ import {useTheme} from "../../contexts/ThemeContext.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
 import LoadMoreButton from "../../utils/LoadMoreButton.jsx";
 import SortButtons from "../../utils/SortButtons.jsx";
+import HeroSection from "../../utils/HeroSection.jsx";
+import ResultsCounter from "../../utils/ResultsCounter.jsx";
 
 const AllNotesPage = () => {
     const navigate = useNavigate();
@@ -142,22 +144,7 @@ const AllNotesPage = () => {
                     <main className="max-w-7xl mx-auto px-4 py-8 pt-[160px]">
                         {/* Hero Section */}
                         <div className="space-y-8 mb-16">
-                            <div className="space-y-6 text-center">
-                                <BlurText
-                                    text="Explore Notes"
-                                    delay={100}
-                                    animateBy="words"
-                                    direction="top"
-                                    className="flex justify-center text-white text-6xl lg:text-7xl font-bold leading-tight"
-                                />
-                                <BlurText
-                                    text="Discover the building blocks of your favorite fragrances"
-                                    delay={80}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-2xl text-gray-300 max-w-3xl mx-auto"
-                                />
-                            </div>
+                            <HeroSection primaryText={"Explore Notes"} secondaryText={"Discover the building blocks of your favorite fragrances"} />
 
                             {/* Search Bar */}
                             <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search for notes..."} />
@@ -166,15 +153,8 @@ const AllNotesPage = () => {
                             <SortButtons handleSortChange={handleSortChange} sortBy={sortBy} />
 
                             {/* Results Counter */}
-                            <div className="text-center">
-                                <BlurText
-                                    text={`Showing ${displayedNotes.length} of ${getFilteredCount()} notes`}
-                                    delay={150}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-xl text-gray-300"
-                                />
-                            </div>
+                            <ResultsCounter type={"notes"} displayedCount={displayedNotes.length} filteredCount={getFilteredCount()} />
+
                         </div>
 
                         {/* Notes Grid */}

@@ -10,6 +10,7 @@ import SearchBar from "../../utils/SearchBar.jsx";
 import GenderFilterButtons from "../../utils/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import LoadMoreButton from "../../utils/LoadMoreButton.jsx";
+import HeroSection from "../../utils/HeroSection.jsx";
 
 const AccordPage = () => {
     const { accord } = useParams();
@@ -189,22 +190,7 @@ const AccordPage = () => {
                     <main className="max-w-7xl mx-auto px-4 py-8 pt-[160px]">
                         {/* Hero Section */}
                         <div className="space-y-8 mb-16">
-                            <div className="space-y-6 text-center">
-                                <BlurText
-                                    text={`${accord.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Accord`}
-                                    delay={100}
-                                    animateBy="words"
-                                    direction="top"
-                                    className="flex justify-center text-6xl text-white lg:text-7xl font-bold leading-tight"
-                                />
-                                <BlurText
-                                    text="Discover all fragrances featuring this distinctive accord"
-                                    delay={80}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-2xl text-gray-200 max-w-3xl mx-auto"
-                                />
-                            </div>
+                            <HeroSection primaryText={`${accord.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Accord`} secondaryText={"Discover all fragrances featuring this distinctive accord"} />
 
                             {/* Accord Statistics */}
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-8">

@@ -9,6 +9,7 @@ import LoadingPage from "../LoadingPage.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import GenderFilterButtons from "../../utils/GenderFilterButtons.jsx";
+import HeroSection from "../../utils/HeroSection.jsx";
 
 const BrandPage = () => {
     const navigate = useNavigate();
@@ -253,15 +254,7 @@ const BrandPage = () => {
 
                         {/* Search and Filter Section */}
                         <div className="space-y-8 mb-16">
-                            <div className="space-y-6 text-center">
-                                <BlurText
-                                    text={`Discover all fragrances from ${brandInfo?.name || brand}`}
-                                    delay={300}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className={`flex justify-center text-xl text-gray-200 max-w-2xl mx-auto`}
-                                />
-                            </div>
+                            <HeroSection primaryText={`Discover all fragrances from ${brandInfo?.name || brand}`}/>
 
                             {/* Search Bar */}
                             <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search fragrances, notes, or accords..."}/>

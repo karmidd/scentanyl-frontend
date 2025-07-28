@@ -11,16 +11,16 @@ export default function BrandCard({brand, image}){
     return (
         <button
             onClick={() => handleBrandClick(brand)}
-            className="cursor-pointer"
+            className="cursor-pointer w-full"
         >
             <TiltedCard
                 imageSrc={image}
                 altText={brand}
                 captionText={brand}
-                containerHeight="170px"
-                containerWidth="170px"
-                imageHeight="170px"
-                imageWidth="170px"
+                containerHeight="100px"
+                containerWidth="100%"
+                imageHeight="100px"
+                imageWidth="100px"
                 rotateAmplitude={8}
                 scaleOnHover={1.1}
                 showMobileWarning={false}
@@ -29,7 +29,8 @@ export default function BrandCard({brand, image}){
                 overlayContent={
                     <p className="tilted-card-demo-text">
                         {brand}
-                    </p>}
+                    </p>
+                }
             />
         </button>
     );
