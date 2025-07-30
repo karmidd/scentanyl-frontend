@@ -65,7 +65,7 @@ const HomePage = () => {
                     <Header page={0} />
 
                     {/* Main Content */}
-                    <main className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
+                    <main className="mt-5 max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
                         {/* Hero Section */}
                         <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
                             <div className="space-y-3 sm:space-y-4 md:space-y-6">

@@ -10,7 +10,6 @@ import SearchBar from "../../utils/SearchBar.jsx";
 import GenderFilterButtons from "../../utils/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import LoadMoreButton from "../../utils/LoadMoreButton.jsx";
-import HeroSection from "../../utils/HeroSection.jsx";
 
 const AccordPage = () => {
     const { accord } = useParams();
@@ -55,7 +54,6 @@ const AccordPage = () => {
     const filterFragrances = () => {
         let filtered = fragrances;
 
-        // Filter by search query
         if (searchQuery.trim()) {
             filtered = filtered.filter(fragrance =>
                 fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -67,7 +65,6 @@ const AccordPage = () => {
             );
         }
 
-        // Filter by gender
         if (selectedGender !== 'all') {
             filtered = filtered.filter(fragrance =>
                 fragrance.gender?.toLowerCase() === selectedGender.toLowerCase()
@@ -87,7 +84,6 @@ const AccordPage = () => {
         setTimeout(() => {
             let filtered = fragrances;
 
-            // Apply same filters as in filterFragrances
             if (searchQuery.trim()) {
                 filtered = filtered.filter(fragrance =>
                     fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -171,9 +167,7 @@ const AccordPage = () => {
     };
 
     if (loading) {
-        return (
-            <LoadingPage/>
-        );
+        return <LoadingPage/>;
     }
 
     const genderCounts = getGenderCounts();
@@ -181,52 +175,62 @@ const AccordPage = () => {
     return (
         <div className="relative min-h-screen overflow-hidden">
             <Background />
-            <div className="relative z-10 font-['Viaoda_Libre',serif] text-2xl">
+            <div className="relative z-10 font-['Viaoda_Libre',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
                 <div className={theme.text.primary}>
-                    {/* Header */}
                     <Header page={4} />
 
-                    {/* Main Content */}
-                    <main className="max-w-7xl mx-auto px-4 py-8 pt-[160px]">
+                    <main className="mt-5 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
                         {/* Hero Section */}
-                        <div className="space-y-8 mb-16">
-                            <HeroSection primaryText={`${accord.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Accord`} secondaryText={"Discover all fragrances featuring this distinctive accord"} />
+                        <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
+                            <div className="space-y-3 sm:space-y-4 md:space-y-6 text-center">
+                                <BlurText
+                                    text={`${accord.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Accord`}
+                                    delay={100}
+                                    animateBy="words"
+                                    direction="top"
+                                    className="flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-bold leading-tight px-2"
+                                />
+                                <BlurText
+                                    text="Discover all fragrances featuring this distinctive accord"
+                                    delay={80}
+                                    animateBy="words"
+                                    direction="bottom"
+                                    className="flex justify-center text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-200 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                                />
+                            </div>
 
                             {/* Accord Statistics */}
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-8">
-                                <div className={`${theme.card.primary} rounded-xl p-4 text-center border border-gray-700`}>
-                                    <div className="text-3xl font-bold text-blue-500">{genderCounts.all}</div>
-                                    <div className={`text-sm ${theme.text.secondary}`}>Total Fragrances</div>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 max-w-4xl mx-auto mb-4 sm:mb-6 md:mb-8 px-2">
+                                <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-500">{genderCounts.all}</div>
+                                    <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Total Fragrances</div>
                                 </div>
-                                <div className={`${theme.card.primary} rounded-xl p-4 text-center border border-gray-700`}>
-                                    <div className="text-3xl font-bold text-green-500">{genderCounts.men}</div>
-                                    <div className={`text-sm ${theme.text.secondary}`}>Men's</div>
+                                <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-green-500">{genderCounts.men}</div>
+                                    <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Men's</div>
                                 </div>
-                                <div className={`${theme.card.primary} rounded-xl p-4 text-center border border-gray-700`}>
-                                    <div className="text-3xl font-bold text-pink-500">{genderCounts.women}</div>
-                                    <div className={`text-sm ${theme.text.secondary}`}>Women's</div>
+                                <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-pink-500">{genderCounts.women}</div>
+                                    <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Women's</div>
                                 </div>
-                                <div className={`${theme.card.primary} rounded-xl p-4 text-center border border-gray-700`}>
-                                    <div className="text-3xl font-bold text-purple-500">{genderCounts.unisex}</div>
-                                    <div className={`text-sm ${theme.text.secondary}`}>Unisex</div>
+                                <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-500">{genderCounts.unisex}</div>
+                                    <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Unisex</div>
                                 </div>
                             </div>
 
-                            {/* Search Bar */}
                             <SearchBar size={3} onChange={handleSearchChange} value={searchQuery} onSubmit={handleSearch} message={"Search fragrances, brands, or notes..."}/>
 
-                            {/* Gender Filter */}
                             <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender}/>
 
-                            {/* Results Counter */}
                             <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={getFilteredCount()} type={"fragrances"} />
                         </div>
 
                         {/* Fragrances Grid */}
-                        <div className="space-y-8">
+                        <div className="space-y-4 sm:space-y-6 md:space-y-8">
                             {displayedFragrances.length > 0 ? (
                                 <>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
                                         {displayedFragrances.map((fragrance, index) => (
                                             <div
                                                 key={fragrance.id}
@@ -241,21 +245,20 @@ const AccordPage = () => {
                                         ))}
                                     </div>
 
-                                    {/* Load More Button */}
                                     {hasMore && (
                                         <LoadMoreButton disabled={loadingMore} onClick={loadMoreFragrances} message={"Load more fragrances"}/>
                                     )}
                                 </>
                             ) : (
-                                <div className="text-center py-16">
+                                <div className="text-center py-8 sm:py-12 md:py-16">
                                     <BlurText
                                         text="No fragrances found"
                                         delay={100}
                                         animateBy="words"
                                         direction="bottom"
-                                        className="flex justify-center text-3xl text-gray-400 mb-4"
+                                        className="flex justify-center text-2xl sm:text-3xl text-gray-400 mb-2 sm:mb-3 md:mb-4"
                                     />
-                                    <p className="text-gray-500 text-xl">
+                                    <p className="text-gray-500 text-base sm:text-lg md:text-xl">
                                         Try adjusting your search terms or filters
                                     </p>
                                 </div>
@@ -263,24 +266,24 @@ const AccordPage = () => {
                         </div>
 
                         {/* Back to Accords Button */}
-                        <div className="text-center space-y-6 pt-16">
+                        <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
                             <BlurText
                                 text="Explore More Accords"
                                 delay={300}
                                 animateBy="words"
                                 direction="bottom"
-                                className="flex justify-center text-3xl font-bold text-white"
+                                className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
                             />
-                            <div className="flex gap-6 justify-center">
+                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
                                 <button
                                     onClick={() => navigate('/accords')}
-                                    className={`cursor-pointer ${theme.button.primary} text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl`}
+                                    className={`cursor-pointer ${theme.button.primary} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
                                 >
                                     Back to All Accords
                                 </button>
                                 <button
                                     onClick={() => navigate('/fragrances')}
-                                    className="cursor-pointer border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl"
+                                    className="cursor-pointer border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
                                 >
                                     Explore All Fragrances
                                 </button>
@@ -301,7 +304,7 @@ const AccordPage = () => {
                         transform: translateY(0);
                     }
                 }
-                
+
                 .animate-fadeIn {
                     animation: fadeIn 0.6s ease-out;
                 }

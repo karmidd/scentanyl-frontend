@@ -85,6 +85,10 @@ const FragrancePage = () => {
         navigate(`/brands/${encodeURIComponent(brand)}`);
     };
 
+    const handlePerfumerClick = (perfumer) => {
+        navigate(`/perfumers/${encodeURIComponent(perfumer)}`);
+    };
+
     const parseNotes = (notes) => {
         if (!notes) return [];
         return notes.split(',').map(note => note.trim()).filter(note => note);
@@ -106,7 +110,7 @@ const FragrancePage = () => {
             <div className="relative z-10 font-['Viaoda_Libre',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
                 <div className={theme.text.primary}>
                     <Header page={1}/>
-                    <main className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
+                    <main className="mt-5 max-w-4xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
                         <div className="text-center space-y-4 sm:space-y-6 md:space-y-8">
                             {/* Title Section */}
                             <div className="space-y-3 sm:space-y-4 md:space-y-6">
@@ -147,25 +151,59 @@ const FragrancePage = () => {
                                     </span>
                                 </div>
                                 {fragrance?.perfumerNames && (
-                                    <div className="flex flex-wrap gap-2 justify-center px-2">
-                                        {parsePerfumers(fragrance.perfumerNames).map((perfumer, index) => (
-                                            <span key={index} className="inline-flex gap-2 items-center">
-                                                <BlurText
-                                                    text={`Perfumer(s): `}
-                                                    delay={200}
-                                                    animateBy="words"
-                                                    direction="top"
-                                                    className="text-gray-200 text-base sm:text-lg md:text-xl lg:text-2xl"
-                                                />
-                                                <BlurText
-                                                    text={perfumer?.replaceAll(' | ', ', ')}
-                                                    delay={200}
-                                                    animateBy="words"
-                                                    direction="top"
-                                                    className="text-white text-base sm:text-lg md:text-xl lg:text-2xl"
-                                                />
-                                            </span>
-                                        ))}
+                                    <div className="flex flex-wrap gap-2 justify-center">
+                                        <div className="flex flex-wrap justify-center">
+                                            <BlurText
+                                                text="Perfumer(s): "
+                                                delay={200}
+                                                animateBy="words"
+                                                direction="top"
+                                                className="inline-flex items-center text-gray-200 text-base sm:text-lg md:text-xl lg:text-2xl"
+                                            />
+                                            {parsePerfumers(fragrance.perfumerNames).map((perfumerGroup, groupIndex) => {
+                                                // Split each perfumer group by comma to get individual names
+                                                const individualPerfumers = perfumerGroup.replaceAll(' | ', ', ').split(',').map(p => p.trim());
+
+                                                return (
+                                                    <span key={groupIndex} className="inline-flex gap-2 items-center">
+                                                        {individualPerfumers.map((perfumer, perfumerIndex) => {
+                                                            const isClickable = perfumer && perfumer.toLowerCase() !== 'n/a';
+                                                            return (
+                                                                <span key={perfumerIndex} className="inline-flex items-center">
+                                                                    {isClickable ? (
+                                                                        <button
+                                                                            onClick={() => handlePerfumerClick(perfumer)}
+                                                                            className="cursor-pointer hover:scale-105 transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-lg px-2 py-1">
+                                                                            <BlurText
+                                                                                text={perfumer}
+                                                                                delay={200}
+                                                                                animateBy="words"
+                                                                                direction="top"
+                                                                                className={`text-base sm:text-lg md:text-xl lg:text-2xl text-2xl font-bold ${theme.text.accent}`}
+                                                                            />
+                                                                        </button>
+                                                                    ) : (
+                                                                        <BlurText
+                                                                            text={perfumer}
+                                                                            delay={200}
+                                                                            animateBy="words"
+                                                                            direction="top"
+                                                                            className="text-white text-base sm:text-lg md:text-xl lg:text-2xl text-2xl"
+                                                                        />
+                                                                    )}
+                                                                    {perfumerIndex < individualPerfumers.length - 1 && (
+                                                                        <span className="text-gray-200 text-2xl mx-1">,</span>
+                                                                    )}
+                                                                </span>
+                                                            );
+                                                        })}
+                                                        {groupIndex < parsePerfumers(fragrance.perfumerNames).length - 1 && (
+                                                            <span className="text-gray-200 text-2xl mx-1">;</span>
+                                                        )}
+                                                    </span>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 )}
                             </div>

@@ -9,7 +9,6 @@ import {useTheme} from "../../contexts/ThemeContext.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
 import GenderFilterButtons from "../../utils/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
-import HeroSection from "../../utils/HeroSection.jsx";
 
 const NotePage = () => {
     const { note } = useParams();
@@ -51,7 +50,6 @@ const NotePage = () => {
             const data = await response.json();
             setFragrances(data);
 
-            // Calculate note statistics
             const stats = categorizeNoteUsage(data, note);
             setNoteStats(stats);
 
@@ -96,7 +94,6 @@ const NotePage = () => {
     const filterFragrances = () => {
         let filtered = fragrances;
 
-        // Filter by search query
         if (searchQuery.trim()) {
             filtered = filtered.filter(fragrance =>
                 fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -105,14 +102,12 @@ const NotePage = () => {
             );
         }
 
-        // Filter by gender
         if (selectedGender !== 'all') {
             filtered = filtered.filter(fragrance =>
                 fragrance.gender?.toLowerCase() === selectedGender.toLowerCase()
             );
         }
 
-        // Filter by note position
         if (selectedPosition !== 'all') {
             const noteLower = note.toLowerCase();
             filtered = filtered.filter(fragrance => {
@@ -144,7 +139,6 @@ const NotePage = () => {
         setTimeout(() => {
             let filtered = fragrances;
 
-            // Apply same filters as in filterFragrances
             if (searchQuery.trim()) {
                 filtered = filtered.filter(fragrance =>
                     fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -245,62 +239,71 @@ const NotePage = () => {
     };
 
     if (loading) {
-        return (
-            <LoadingPage/>
-        );
+        return <LoadingPage/>;
     }
 
     return (
         <div className="relative min-h-screen overflow-hidden">
             <Background />
-            <div className="relative z-10 font-['Viaoda_Libre',serif] text-2xl">
+            <div className="relative z-10 font-['Viaoda_Libre',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
                 <div className={theme.text.primary}>
-                    {/* Header */}
                     <Header page={3} />
 
-                    {/* Main Content */}
-                    <main className="max-w-7xl mx-auto px-4 py-8 pt-[160px]">
+                    <main className="mt-5 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
                         {/* Hero Section */}
-                        <div className="space-y-8 mb-16">
-                            <HeroSection primaryText={`Fragrances with ${note.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')}`} secondaryText={"Discover all fragrances featuring this beautiful note"} />
+                        <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
+                            <div className="space-y-3 sm:space-y-4 md:space-y-6 text-center">
+                                <BlurText
+                                    text={`Fragrances with ${note.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')}`}
+                                    delay={100}
+                                    animateBy="words"
+                                    direction="top"
+                                    className="flex justify-center text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight px-2"
+                                />
+                                <BlurText
+                                    text="Discover all fragrances featuring this beautiful note"
+                                    delay={80}
+                                    animateBy="words"
+                                    direction="bottom"
+                                    className="flex justify-center text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-300 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                                />
+                            </div>
 
                             {/* Note Statistics */}
-                            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-5xl mx-auto mb-8">
-                                <div className={`${theme.card.primary} rounded-xl p-4 text-center border border-gray-700`}>
-                                    <div className="text-3xl font-bold text-blue-500">{noteStats.total}</div>
-                                    <div className={`text-sm ${theme.text.secondary}`}>Total</div>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 md:gap-4 max-w-5xl mx-auto mb-4 sm:mb-6 md:mb-8 px-2">
+                                <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-500">{noteStats.total}</div>
+                                    <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Total</div>
                                 </div>
-                                <div className={`${theme.card.primary} rounded-xl p-4 text-center border border-gray-700`}>
-                                    <div className="text-3xl font-bold text-green-500">{noteStats.topNotes}</div>
-                                    <div className={`text-sm ${theme.text.secondary}`}>As a Top Note</div>
+                                <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-green-500">{noteStats.topNotes}</div>
+                                    <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>As a Top Note</div>
                                 </div>
-                                <div className={`${theme.card.primary} rounded-xl p-4 text-center border border-gray-700`}>
-                                    <div className="text-3xl font-bold text-yellow-500">{noteStats.middleNotes}</div>
-                                    <div className={`text-sm ${theme.text.secondary}`}>As a Middle Note</div>
+                                <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-yellow-500">{noteStats.middleNotes}</div>
+                                    <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>As a Middle Note</div>
                                 </div>
-                                <div className={`${theme.card.primary} rounded-xl p-4 text-center border border-gray-700`}>
-                                    <div className="text-3xl font-bold text-purple-500">{noteStats.baseNotes}</div>
-                                    <div className={`text-sm ${theme.text.secondary}`}>As a Base Note</div>
+                                <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-500">{noteStats.baseNotes}</div>
+                                    <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>As a Base Note</div>
                                 </div>
-                                <div className={`${theme.card.primary} rounded-xl p-4 text-center border border-gray-700`}>
-                                    <div className="text-3xl font-bold text-orange-500">{noteStats.uncategorizedNotes}</div>
-                                    <div className={`text-sm ${theme.text.secondary}`}>As an Uncategorized Note</div>
+                                <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700 col-span-2 sm:col-span-1`}>
+                                    <div className="text-xl sm:text-2xl md:text-3xl font-bold text-orange-500">{noteStats.uncategorizedNotes}</div>
+                                    <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>As an Uncategorized Note</div>
                                 </div>
                             </div>
 
-                            {/* Search Bar */}
                             <SearchBar size={3} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search fragrances, brands, or accords..."}/>
 
-                            {/* Gender Filter */}
                             <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender} />
 
                             {/* Position Filter */}
-                            <div className="flex justify-center space-x-4 flex-wrap">
+                            <div className="flex justify-center space-x-2 sm:space-x-3 md:space-x-4 flex-wrap gap-y-2 px-2">
                                 {['all', 'top', 'middle', 'base', 'uncategorized'].map((position) => (
                                     <button
                                         key={position}
                                         onClick={() => handlePositionChange(position)}
-                                        className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 text-lg cursor-pointer mb-2 ${
+                                        className={`px-3 sm:px-4 md:px-5 lg:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 hover:scale-105 text-xs sm:text-sm md:text-base lg:text-lg cursor-pointer mb-2 ${
                                             selectedPosition === position
                                                 ? 'bg-green-700 text-white shadow-lg'
                                                 : theme.card.primary
@@ -315,16 +318,14 @@ const NotePage = () => {
                                 ))}
                             </div>
 
-                            {/* Results Counter */}
                             <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={getFilteredCount()} type={"fragrances"} />
-
                         </div>
 
                         {/* Fragrances Grid */}
-                        <div className="space-y-8">
+                        <div className="space-y-4 sm:space-y-6 md:space-y-8">
                             {displayedFragrances.length > 0 ? (
                                 <>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
                                         {displayedFragrances.map((fragrance, index) => (
                                             <div
                                                 key={fragrance.id}
@@ -341,23 +342,23 @@ const NotePage = () => {
 
                                     {/* Load More Button */}
                                     {hasMore && (
-                                        <div className="flex justify-center pt-12">
+                                        <div className="flex justify-center pt-6 sm:pt-8 md:pt-12">
                                             <button
                                                 onClick={loadMoreFragrances}
                                                 disabled={loadingMore}
-                                                className="cursor-pointer relative inline-flex items-center justify-center px-12 py-4 text-xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-blue-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0"
+                                                className="cursor-pointer relative inline-flex items-center justify-center px-6 sm:px-8 md:px-10 lg:px-12 py-3 sm:py-4 text-base sm:text-lg md:text-xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg sm:rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-blue-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0"
                                             >
-                                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
-                                                <div className="relative flex items-center space-x-3">
+                                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg sm:rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+                                                <div className="relative flex items-center space-x-2 sm:space-x-3">
                                                     {loadingMore ? (
                                                         <>
-                                                            <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+                                                            <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-t-2 border-b-2 border-white"></div>
                                                             <span>Loading...</span>
                                                         </>
                                                     ) : (
                                                         <>
                                                             <span>Load More Fragrances</span>
-                                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                                                             </svg>
                                                         </>
@@ -368,15 +369,15 @@ const NotePage = () => {
                                     )}
                                 </>
                             ) : (
-                                <div className="text-center py-16">
+                                <div className="text-center py-8 sm:py-12 md:py-16">
                                     <BlurText
                                         text="No fragrances found"
                                         delay={100}
                                         animateBy="words"
                                         direction="bottom"
-                                        className="flex justify-center text-3xl text-gray-400 mb-4"
+                                        className="flex justify-center text-2xl sm:text-3xl text-gray-400 mb-2 sm:mb-3 md:mb-4"
                                     />
-                                    <p className="text-gray-500 text-xl">
+                                    <p className="text-gray-500 text-base sm:text-lg md:text-xl">
                                         Try adjusting your search terms or filters
                                     </p>
                                 </div>
@@ -384,24 +385,24 @@ const NotePage = () => {
                         </div>
 
                         {/* Back to Notes Button */}
-                        <div className="text-center space-y-6 pt-16">
+                        <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
                             <BlurText
                                 text="Explore More Notes"
                                 delay={300}
                                 animateBy="words"
                                 direction="bottom"
-                                className="flex justify-center text-3xl font-bold text-white"
+                                className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
                             />
-                            <div className="flex gap-6 justify-center">
+                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
                                 <button
                                     onClick={() => navigate('/notes')}
-                                    className="cursor-pointer bg-blue-800 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl"
+                                    className="cursor-pointer bg-blue-800 hover:bg-blue-700 text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
                                 >
                                     Back to All Notes
                                 </button>
                                 <button
                                     onClick={() => navigate('/fragrances')}
-                                    className="cursor-pointer border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl"
+                                    className="cursor-pointer border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
                                 >
                                     Explore All Fragrances
                                 </button>
@@ -422,7 +423,7 @@ const NotePage = () => {
                         transform: translateY(0);
                     }
                 }
-                
+
                 .animate-fadeIn {
                     animation: fadeIn 0.6s ease-out;
                 }

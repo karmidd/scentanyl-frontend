@@ -1,29 +1,30 @@
-// components/ThemeToggleButton.jsx
+// components/ThemeToggle.jsx
 import React from 'react';
 import { useTheme } from '../contexts/ThemeContext.jsx';
 
 const ThemeToggleButton = ({ className = '' }) => {
-    const { isDarkMode, toggleTheme, theme } = useTheme();
+    const { isDarkMode, toggleTheme } = useTheme();
 
     return (
         <button
             onClick={toggleTheme}
             className={`
-        relative inline-flex items-center justify-center w-12 h-12 
-        rounded-full transition-all duration-300 
-        ${theme.button.ghost} 
-        hover:scale-105 
-        ${className}
-      `}
+                relative inline-flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12
+                rounded-full transition-all duration-300
+                ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}
+                border border-gray-300 dark:border-gray-700
+                shadow-md hover:scale-105
+                ${className}
+            `}
             aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
         >
-            <div className="relative w-6 h-6">
+            <div className="relative w-5 h-5 sm:w-6 sm:h-6">
                 {/* Sun Icon */}
                 <svg
                     className={`
-            absolute inset-0 w-6 h-6 transition-all duration-300 transform
-            ${isDarkMode ? 'rotate-90 scale-0 opacity-0' : 'rotate-0 scale-100 opacity-100'}
-          `}
+                        absolute inset-0 w-5 h-5 sm:w-6 sm:h-6 transition-all duration-300 transform
+                        ${isDarkMode ? 'rotate-90 scale-0 opacity-0' : 'rotate-0 scale-100 opacity-100'}
+                    `}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -40,9 +41,9 @@ const ThemeToggleButton = ({ className = '' }) => {
                 {/* Moon Icon */}
                 <svg
                     className={`
-            absolute inset-0 w-6 h-6 transition-all duration-300 transform
-            ${isDarkMode ? 'rotate-0 scale-100 opacity-100' : '-rotate-90 scale-0 opacity-0'}
-          `}
+                        absolute inset-0 w-5 h-5 sm:w-6 sm:h-6 transition-all duration-300 transform
+                        ${isDarkMode ? 'rotate-0 scale-100 opacity-100' : '-rotate-90 scale-0 opacity-0'}
+                    `}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"

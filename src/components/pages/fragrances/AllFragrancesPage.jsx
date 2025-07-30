@@ -192,7 +192,7 @@ const AllFragrancesPage = () => {
                         <div className="space-y-4 sm:space-y-6 md:space-y-8">
                             {displayedFragrances.length > 0 ? (
                                 <>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+                                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
                                         {displayedFragrances.map((fragrance, index) => (
                                             <div
                                                 key={fragrance.id}

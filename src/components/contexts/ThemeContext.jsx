@@ -60,6 +60,7 @@ export const ThemeProvider = ({ children }) => {
             secondary: isDarkMode ? 'border-gray-600' : 'border-gray-400',
             accent: isDarkMode ? 'border-blue-400' : 'border-indigo-400',
             hover: isDarkMode ? 'hover:border-blue-600' : 'hover:border-indigo-500',
+            focus: isDarkMode ? 'focus:border-blue-400' : 'focus:border-indigo-400',
         },
 
         // Button styles

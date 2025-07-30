@@ -9,7 +9,6 @@ import {useTheme} from "../../contexts/ThemeContext.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
 import LoadMoreButton from "../../utils/LoadMoreButton.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
-import HeroSection from "../../utils/HeroSection.jsx";
 
 const AllBrandsPage = () => {
     const navigate = useNavigate();
@@ -49,7 +48,6 @@ const AllBrandsPage = () => {
         }
     };
 
-    // Get unique countries and parents from brands data
     const getUniqueCountries = () => {
         const countries = brands
             .map(brand => brand.country)
@@ -71,19 +69,16 @@ const AllBrandsPage = () => {
     const filterBrands = () => {
         let filtered = brands;
 
-        // Apply search filter
         if (searchQuery.trim()) {
             filtered = filtered.filter(brand =>
                 brand.name?.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
 
-        // Apply country filter
         if (selectedCountry) {
             filtered = filtered.filter(brand => brand.country === selectedCountry);
         }
 
-        // Apply parent company filter
         if (selectedParent) {
             filtered = filtered.filter(brand => brand.parent === selectedParent);
         }
@@ -101,7 +96,6 @@ const AllBrandsPage = () => {
         setTimeout(() => {
             let filtered = brands;
 
-            // Apply all filters
             if (searchQuery.trim()) {
                 filtered = filtered.filter(brand =>
                     brand.name?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -173,39 +167,50 @@ const AllBrandsPage = () => {
     };
 
     if (loading) {
-        return (
-            <LoadingPage/>
-        );
+        return <LoadingPage/>;
     }
 
     return (
         <div className="relative min-h-screen overflow-hidden">
             <Background />
-            <div className="relative z-10 font-['Viaoda_Libre',serif] text-2xl">
+            <div className="relative z-10 font-['Viaoda_Libre',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
                 <div className={theme.text.primary}>
-                    {/* Header */}
                     <Header page={2} />
 
-                    {/* Main Content */}
-                    <main className="max-w-7xl mx-auto px-4 py-8 pt-[160px]">
+                    <main className="mt-5 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
                         {/* Hero Section */}
-                        <div className="space-y-8 mb-16">
-                            <HeroSection primaryText={"Explore Brands"} secondaryText={"Discover fragrances from the world's most prestigious and emerging brands"}/>
+                        <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
+                            <div className="space-y-3 sm:space-y-4 md:space-y-6 text-center">
+                                <BlurText
+                                    text="Explore Brands"
+                                    delay={100}
+                                    animateBy="words"
+                                    direction="top"
+                                    className="flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-bold leading-tight px-2"
+                                />
+                                <BlurText
+                                    text="Discover fragrances from the world's most prestigious and emerging brands"
+                                    delay={80}
+                                    animateBy="words"
+                                    direction="bottom"
+                                    className="flex justify-center text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-200 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                                />
+                            </div>
 
                             {/* Search Bar */}
                             <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search for brands..."} />
 
                             {/* Filters Section */}
-                            <div className="max-w-2xl mx-auto">
-                                <div className={`${theme.card.blur} border border-gray-700 rounded-2xl p-6`}>
-                                    <div className="flex flex-wrap gap-4 items-center justify-center">
+                            <div className="max-w-2xl mx-auto px-2">
+                                <div className={`${theme.card.blur} border border-gray-700 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6`}>
+                                    <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 items-center justify-center">
                                         {/* Country Filter */}
-                                        <div className="flex flex-col space-y-2">
-                                            <label className="text-sm text-gray-400 font-medium">Country</label>
+                                        <div className="flex flex-col space-y-1 sm:space-y-2 w-full sm:w-auto">
+                                            <label className="text-xs sm:text-sm text-gray-400 font-medium">Country</label>
                                             <select
                                                 value={selectedCountry}
                                                 onChange={handleCountryChange}
-                                                className={`cursor-pointer px-6 py-3 ${theme.bg.card} border border-gray-600 rounded-xl focus:outline-none focus:border-blue-400 transition-all duration-300 ${theme.text.primary} min-w-[150px]`}
+                                                className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 ${theme.bg.card} border border-gray-600 rounded-lg sm:rounded-xl focus:outline-none ${theme.border.focus} transition-all duration-300 ${theme.text.primary} text-sm sm:text-base w-full sm:min-w-[150px]`}
                                             >
                                                 <option value="">All Countries</option>
                                                 {getUniqueCountries().map(country => (
@@ -217,12 +222,12 @@ const AllBrandsPage = () => {
                                         </div>
 
                                         {/* Parent Company Filter */}
-                                        <div className="flex flex-col space-y-2">
-                                            <label className="text-sm text-gray-400 font-medium">Parent Company</label>
+                                        <div className="flex flex-col space-y-1 sm:space-y-2 w-full sm:w-auto">
+                                            <label className="text-xs sm:text-sm text-gray-400 font-medium">Parent Company</label>
                                             <select
                                                 value={selectedParent}
                                                 onChange={handleParentChange}
-                                                className={`cursor-pointer px-6 py-3 ${theme.bg.card} border border-gray-600 rounded-xl focus:outline-none focus:border-blue-400 transition-all duration-300 ${theme.text.primary} min-w-[150px]`}
+                                                className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 ${theme.bg.card} border border-gray-600 rounded-lg sm:rounded-xl focus:outline-none ${theme.border.focus} transition-all duration-300 ${theme.text.primary} text-sm sm:text-base w-full sm:min-w-[150px]`}
                                             >
                                                 <option value="">All Parents</option>
                                                 {getUniqueParents().map(parent => (
@@ -235,11 +240,11 @@ const AllBrandsPage = () => {
 
                                         {/* Clear Filters Button */}
                                         {(searchQuery || selectedCountry || selectedParent) && (
-                                            <div className="flex flex-col space-y-2">
-                                                <label className="text-sm text-transparent font-medium">Clear</label>
+                                            <div className="flex flex-col space-y-1 sm:space-y-2 w-full sm:w-auto">
+                                                <label className="text-xs sm:text-sm text-transparent font-medium">Clear</label>
                                                 <button
                                                     onClick={clearFilters}
-                                                    className="cursor-pointer px-5 py-3 bg-red-700 hover:bg-red-700 text-white rounded-xl transition-all duration-300 hover:scale-105 font-medium"
+                                                    className="cursor-pointer px-4 sm:px-5 py-2 sm:py-2.5 md:py-3 bg-red-700 hover:bg-red-600 text-white rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 font-medium text-sm sm:text-base"
                                                 >
                                                     Clear Filters
                                                 </button>
@@ -254,10 +259,10 @@ const AllBrandsPage = () => {
                         </div>
 
                         {/* Brands Grid */}
-                        <div className="space-y-8">
+                        <div className="space-y-4 sm:space-y-6 md:space-y-8">
                             {displayedBrands.length > 0 ? (
                                 <>
-                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
                                         {displayedBrands.map((brand, index) => (
                                             <div
                                                 key={brand.id || brand.name || index}
@@ -281,15 +286,15 @@ const AllBrandsPage = () => {
                                     )}
                                 </>
                             ) : (
-                                <div className="text-center py-16">
+                                <div className="text-center py-8 sm:py-12 md:py-16">
                                     <BlurText
                                         text="No brands found"
                                         delay={100}
                                         animateBy="words"
                                         direction="bottom"
-                                        className="flex justify-center text-3xl text-gray-400 mb-4"
+                                        className="flex justify-center text-2xl sm:text-3xl text-gray-400 mb-2 sm:mb-3 md:mb-4"
                                     />
-                                    <p className="text-gray-500 text-xl">
+                                    <p className="text-gray-500 text-base sm:text-lg md:text-xl">
                                         Try adjusting your search terms or filters
                                     </p>
                                 </div>
@@ -297,24 +302,24 @@ const AllBrandsPage = () => {
                         </div>
 
                         {/* Call to Action */}
-                        <div className="text-center space-y-6 pt-16">
+                        <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
                             <BlurText
                                 text="Can't Find Your Favorite Brand?"
                                 delay={300}
                                 animateBy="words"
                                 direction="bottom"
-                                className="flex justify-center text-3xl font-bold text-white"
+                                className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
                             />
-                            <div className="flex gap-6 justify-center">
+                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
                                 <button
                                     onClick={() => navigate('/fragrances')}
-                                    className="cursor-pointer bg-blue-800 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl"
+                                    className="cursor-pointer bg-blue-800 hover:bg-blue-700 text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
                                 >
                                     Browse All Fragrances
                                 </button>
                                 <button
                                     onClick={() => navigate('/contact')}
-                                    className="border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 text-xl"
+                                    className="border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
                                 >
                                     Suggest a Brand
                                 </button>
