@@ -14,7 +14,6 @@ const AllAccordsPage = lazy(() => import("./components/pages/accords/AllAccordsP
 const AccordPage = lazy(() => import("./components/pages/accords/AccordPage.jsx"));
 const AllPerfumersPage = lazy(() => import("./components/pages/perfumers/AllPerfumersPage.jsx"));
 const PerfumerPage = lazy(() => import("./components/pages/perfumers/PerfumerPage.jsx"));
-const LoadingPage = lazy(() => import("./components/pages/LoadingPage.jsx"));
 
 function App() {
     return (
@@ -25,8 +24,8 @@ function App() {
                         <Routes>
                             <Route path="" element={<HomePage />} />
                             <Route path="/" element={<HomePage />} />
-                            <Route path="/fragrances/:brand/:name" element={<FragrancePage />} />
-                            <Route path="/fragrances/:brand/:name/" element={<FragrancePage />} />
+                            <Route path="/fragrances/:brand/:name/:id" element={<FragrancePage />} />
+                            <Route path="/fragrances/:brand/:name/:id/" element={<FragrancePage />} />
                             <Route path="/brands" element={<AllBrandsPage />} />
                             <Route path="/brands/" element={<AllBrandsPage />} />
                             <Route path="/brands/:brand" element={<BrandPage />} />

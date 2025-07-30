@@ -1,4 +1,4 @@
-import RandomFragranceButton from "./RandomFragranceButton.jsx";
+import RandomFragranceButton from "./buttons/RandomFragranceButton.jsx";
 import React from "react";
 import {useTheme} from "../contexts/ThemeContext.jsx";
 
@@ -15,7 +15,7 @@ export default function SearchBar({size, onSubmit, value, onChange, message, inc
                         placeholder={message}
                         className={`
                             w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 lg:py-6 
-                            text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 
+                            text-xs sm:text-base md:text-lg lg:text-xl xl:text-2xl 
                             ${theme.bg.input} ${theme.border.primary} ${theme.text.primary}
                             border rounded-lg sm:rounded-xl md:rounded-2xl focus:outline-none
                             transition-all duration-300 ${theme.border.hover} 

@@ -6,7 +6,7 @@ export default function FragranceCard({fragrance}) {
     const navigate = useNavigate();
     const { theme } = useTheme();
     const handleFragranceClick = (fragrance) => {
-        navigate(`/fragrances/${fragrance.brand}/${fragrance.name}`);
+        navigate(`/fragrances/${fragrance.brand}/${fragrance.name}/${fragrance.id}`);
     };
     return (
         <div
@@ -22,7 +22,7 @@ export default function FragranceCard({fragrance}) {
                     <span className={`${theme.text.secondary} font-bold text-xs sm:text-sm md:text-lg`}>{fragrance.year}</span>
                 </div>
                 <div className="space-y-0.5 sm:space-y-1 md:space-y-1.5 lg:space-y-2 flex-grow">
-                    <h3 className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold ${theme.text.hover} transition-colors line-clamp-2`}>
+                    <h3 className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold ${theme.text.groupHover} transition-colors line-clamp-2`}>
                         {fragrance.name}
                     </h3>
                     <p className={`${theme.text.secondary} text-xs sm:text-sm md:text-base lg:text-lg line-clamp-1`}>
@@ -30,7 +30,7 @@ export default function FragranceCard({fragrance}) {
                     </p>
                 </div>
                 <div className="flex items-center justify-between pt-1 sm:pt-1.5 md:pt-2 lg:pt-3 xl:pt-4">
-                    <span className={`${theme.text.accent} text-[10px] sm:text-xs md:text-sm`}>Tap to explore</span>
+                    <span className={`${theme.text.secondary} ${theme.text.groupHover} text-[10px] sm:text-xs md:text-sm`}>Tap to explore</span>
                     <svg className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-blue-400 transform group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="gray" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>

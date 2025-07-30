@@ -7,8 +7,10 @@ import NoteCard from "../../cards/NoteCard.jsx";
 import LoadingPage from "../LoadingPage.jsx";
 import {useTheme} from "../../contexts/ThemeContext.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
-import LoadMoreButton from "../../utils/LoadMoreButton.jsx";
-import SortButtons from "../../utils/SortButtons.jsx";
+import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
+import SortButtons from "../../utils/buttons/SortButtons.jsx";
+import HeroSection from "../../utils/HeroSection.jsx";
+import Footer from "../../primary/Footer.jsx";
 
 const AllNotesPage = () => {
     const navigate = useNavigate();
@@ -136,22 +138,7 @@ const AllNotesPage = () => {
                     <main className="mt-5 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
                         {/* Hero Section */}
                         <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
-                            <div className="space-y-3 sm:space-y-4 md:space-y-6 text-center">
-                                <BlurText
-                                    text="Explore Notes"
-                                    delay={100}
-                                    animateBy="words"
-                                    direction="top"
-                                    className="flex justify-center text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight px-2"
-                                />
-                                <BlurText
-                                    text="Discover the building blocks of your favorite fragrances"
-                                    delay={80}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-300 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
-                                />
-                            </div>
+                            <HeroSection primaryText={"Explore Notes"} secondaryText={"Discover the building blocks of your favorite fragrances"}/>
 
                             <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search for notes..."} />
 
@@ -216,31 +203,7 @@ const AllNotesPage = () => {
                                 </div>
                             )}
                         </div>
-
-                        {/* Call to Action */}
-                        <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
-                            <BlurText
-                                text="Ready to Discover Your Signature Scent?"
-                                delay={300}
-                                animateBy="words"
-                                direction="bottom"
-                                className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
-                            />
-                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
-                                <button
-                                    onClick={() => navigate('/fragrances')}
-                                    className="cursor-pointer bg-blue-800 hover:bg-blue-700 text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
-                                >
-                                    Explore Fragrances
-                                </button>
-                                <button
-                                    onClick={() => navigate('/brands')}
-                                    className="cursor-pointer border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
-                                >
-                                    Browse Brands
-                                </button>
-                            </div>
-                        </div>
+                        <Footer/>
                     </main>
                 </div>
             </div>

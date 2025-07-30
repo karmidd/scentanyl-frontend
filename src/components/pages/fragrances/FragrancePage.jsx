@@ -3,12 +3,13 @@ import {useNavigate, useParams} from 'react-router-dom';
 import Background from "../../primary/Background.jsx";
 import Header from "../../primary/Header.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
-import RandomFragranceButton from "../../utils/RandomFragranceButton.jsx";
+import RandomFragranceButton from "../../utils/buttons/RandomFragranceButton.jsx";
 import LoadingPage from "../LoadingPage.jsx";
 import {useTheme} from "../../contexts/ThemeContext.jsx";
+import Footer from "../../primary/Footer.jsx";
 
 const FragrancePage = () => {
-    const { brand, name } = useParams();
+    const { brand, name, id } = useParams();
     const [fragrance, setFragrance] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -19,7 +20,7 @@ const FragrancePage = () => {
         const fetchFragrance = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:8080/fragrances/${brand}/${name}`);
+                const response = await fetch(`http://localhost:8080/fragrances/${brand}/${name}/${id}`);
                 if (!response.ok) {
                     throw new Error(`Fragrance "${name}" from the brand "${brand}" not found`);
                 }
@@ -36,7 +37,7 @@ const FragrancePage = () => {
         };
 
         fetchFragrance();
-    }, [brand, name]);
+    }, [brand, name, id]);
 
     if (loading) {
         return <LoadingPage/>;
@@ -110,7 +111,7 @@ const FragrancePage = () => {
             <div className="relative z-10 font-['Viaoda_Libre',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
                 <div className={theme.text.primary}>
                     <Header page={1}/>
-                    <main className="mt-5 max-w-4xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
+                    <main className="mt-5 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
                         <div className="text-center space-y-4 sm:space-y-6 md:space-y-8">
                             {/* Title Section */}
                             <div className="space-y-3 sm:space-y-4 md:space-y-6">
@@ -389,29 +390,26 @@ const FragrancePage = () => {
                                     </div>
                                 )}
                             </div>
-
-                            {/* Action Buttons */}
-                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 pt-4 sm:pt-6 md:pt-8 justify-center px-2">
-                                <button className="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl">
-                                    <BlurText
-                                        text="Add to Collection"
-                                        delay={100}
-                                        animateBy="words"
-                                        direction="top"
-                                        className="text-base sm:text-lg md:text-xl font-semibold"
-                                    />
-                                </button>
-                                <button className="border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl">
-                                    <BlurText
-                                        text="Add to Wishlist"
-                                        delay={300}
-                                        animateBy="words"
-                                        direction="top"
-                                        className="text-base sm:text-lg md:text-xl font-semibold"
-                                    />
-                                </button>
+                            {/* Back to Fragrances Button */}
+                            <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
+                                <BlurText
+                                    text="Explore More Fragrances"
+                                    delay={300}
+                                    animateBy="words"
+                                    direction="bottom"
+                                    className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
+                                />
+                                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
+                                    <button
+                                        onClick={() => navigate('/fragrances')}
+                                        className={`cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
+                                    >
+                                        Back to All Fragrances
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                        <Footer/>
                     </main>
                 </div>
             </div>

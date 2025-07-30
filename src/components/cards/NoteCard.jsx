@@ -11,7 +11,7 @@ const NoteCard = ({ note, noteData, onClick }) => {
         >
             <div className="space-y-1.5 sm:space-y-2 md:space-y-3 lg:space-y-4 flex flex-col h-full">
                 <div className="flex items-center justify-between">
-                    <h3 className={`text-sm sm:text-base md:text-lg lg:text-xl font-bold ${theme.text.hover} transition-colors duration-300 capitalize line-clamp-1`}>
+                    <h3 className={`text-sm sm:text-base md:text-lg lg:text-xl font-bold ${theme.text.groupHover} transition-colors duration-300 capitalize line-clamp-1`}>
                         {note}
                     </h3>
                     <div className={`${theme.card.selected} text-white px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs md:text-sm font-semibold`}>
@@ -39,7 +39,7 @@ const NoteCard = ({ note, noteData, onClick }) => {
                 </div>
 
                 <div className="pt-1 sm:pt-1.5 md:pt-2 border-t border-gray-700">
-                    <div className={`text-center ${theme.text.secondary} text-[9px] sm:text-[10px] md:text-xs lg:text-sm ${theme.text.hover} transition-colors duration-300`}>
+                    <div className={`text-center ${theme.text.secondary} text-[9px] sm:text-[10px] md:text-xs lg:text-sm ${theme.text.groupHover} transition-colors duration-300`}>
                         Click to explore fragrances with this note
                     </div>
                 </div>

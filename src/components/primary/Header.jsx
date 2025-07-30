@@ -1,7 +1,7 @@
 import GooeyNav from "../../blocks/Components/GooeyNav/GooeyNav.jsx";
 import React, { useEffect, useState } from "react";
 import {Link} from "react-router-dom";
-import ThemeToggleButton from "../utils/ThemeToggleButton.jsx";
+import ThemeToggleButton from "../utils/buttons/ThemeToggleButton.jsx";
 
 const items = [
     { label: "Home", href: "/" },

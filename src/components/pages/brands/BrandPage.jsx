@@ -8,7 +8,10 @@ import {useTheme} from "../../contexts/ThemeContext.jsx";
 import LoadingPage from "../LoadingPage.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
-import GenderFilterButtons from "../../utils/GenderFilterButtons.jsx";
+import GenderFilterButtons from "../../utils/buttons/GenderFilterButtons.jsx";
+import HeroSection from "../../utils/HeroSection.jsx";
+import Footer from "../../primary/Footer.jsx";
+import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 
 const BrandPage = () => {
     const navigate = useNavigate();
@@ -254,15 +257,7 @@ const BrandPage = () => {
 
                         {/* Search and Filter Section */}
                         <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
-                            <div className="space-y-3 sm:space-y-4 md:space-y-6 text-center">
-                                <BlurText
-                                    text={`Discover all fragrances from ${brandInfo?.name || brand}`}
-                                    delay={300}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className={`flex justify-center text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 max-w-xs sm:max-w-lg md:max-w-2xl mx-auto px-2`}
-                                />
-                            </div>
+                            <HeroSection primaryText={`Discover all fragrances from ${brandInfo?.name || brand}`}/>
 
                             <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search fragrances, notes, or accords..."}/>
 
@@ -292,30 +287,7 @@ const BrandPage = () => {
 
                                     {/* Load More Button */}
                                     {hasMore && (
-                                        <div className="flex justify-center pt-6 sm:pt-8 md:pt-12">
-                                            <button
-                                                onClick={loadMoreFragrances}
-                                                disabled={loadingMore}
-                                                className="cursor-pointer group relative inline-flex items-center justify-center px-6 sm:px-8 md:px-10 lg:px-12 py-3 sm:py-4 text-base sm:text-lg md:text-xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg sm:rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-blue-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0"
-                                            >
-                                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg sm:rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
-                                                <div className="relative flex items-center space-x-2 sm:space-x-3">
-                                                    {loadingMore ? (
-                                                        <>
-                                                            <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-t-2 border-b-2 border-white"></div>
-                                                            <span>Loading...</span>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <span>Load More Fragrances</span>
-                                                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                                            </svg>
-                                                        </>
-                                                    )}
-                                                </div>
-                                            </button>
-                                        </div>
+                                        <LoadMoreButton onClick={loadMoreFragrances} disabled={loadingMore} message={"Load More Fragrances"}/>
                                     )}
                                 </>
                             ) : (
@@ -335,32 +307,26 @@ const BrandPage = () => {
                                     </p>
                                 </div>
                             )}
-                        </div>
-
-                        {/* Call to Action */}
-                        <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
-                            <BlurText
-                                text="Discover More Brands"
-                                delay={400}
-                                animateBy="words"
-                                direction="bottom"
-                                className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
-                            />
-                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
-                                <button
-                                    onClick={() => navigate('/fragrances')}
-                                    className="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
-                                >
-                                    Browse All Fragrances
-                                </button>
-                                <button
-                                    onClick={() => navigate('/collection')}
-                                    className="border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
-                                >
-                                    Start Your Collection
-                                </button>
+                            {/* Back to Brands Button */}
+                            <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
+                                <BlurText
+                                    text="Explore More Brands"
+                                    delay={300}
+                                    animateBy="words"
+                                    direction="bottom"
+                                    className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
+                                />
+                                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
+                                    <button
+                                        onClick={() => navigate('/brands')}
+                                        className={`cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
+                                    >
+                                        Back to All Brands
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                        <Footer/>
                     </main>
                 </div>
             </div>

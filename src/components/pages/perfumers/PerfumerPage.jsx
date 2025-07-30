@@ -5,10 +5,13 @@ import Header from "../../primary/Header.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import FragranceCard from "../../cards/FragranceCard.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
-import LoadMoreButton from "../../utils/LoadMoreButton.jsx";
+import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import {useTheme} from "../../contexts/ThemeContext.jsx";
-import GenderFilterButtons from "../../utils/GenderFilterButtons.jsx";
+import GenderFilterButtons from "../../utils/buttons/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
+import HeroSection from "../../utils/HeroSection.jsx";
+import LoadingPage from "../LoadingPage.jsx";
+import Footer from "../../primary/Footer.jsx";
 
 const PerfumerPage = () => {
     const navigate = useNavigate();
@@ -167,9 +170,7 @@ const PerfumerPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-black flex items-center justify-center">
-                <div className="animate-spin rounded-full h-24 w-24 sm:h-32 sm:w-32 border-t-2 border-b-2 border-blue-800"></div>
-            </div>
+            <LoadingPage/>
         );
     }
 
@@ -314,36 +315,30 @@ const PerfumerPage = () => {
                                     </p>
                                 </div>
                             )}
-                        </div>
 
-                        {/* Call to Action */}
-                        <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
-                            <BlurText
-                                text="Discover More Perfumers"
-                                delay={450}
-                                animateBy="words"
-                                direction="bottom"
-                                className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
-                            />
-                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
-                                <button
-                                    onClick={() => navigate('/fragrances')}
-                                    className="cursor-pointer bg-blue-800 hover:bg-blue-700 text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
-                                >
-                                    Browse All Fragrances
-                                </button>
-                                <button
-                                    onClick={() => navigate('/collection')}
-                                    className="cursor-pointer border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
-                                >
-                                    Start Your Collection
-                                </button>
+                            {/* Back to Perfumers Button */}
+                            <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
+                                <BlurText
+                                    text="Explore More Perfumers"
+                                    delay={300}
+                                    animateBy="words"
+                                    direction="bottom"
+                                    className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
+                                />
+                                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
+                                    <button
+                                        onClick={() => navigate('/perfumers')}
+                                        className={`cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
+                                    >
+                                        Back to All Perfumers
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                        <Footer/>
                     </main>
                 </div>
             </div>
-
             <style jsx>{`
                 @keyframes fadeIn {
                     from {

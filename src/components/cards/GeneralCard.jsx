@@ -10,7 +10,7 @@ const GeneralCard = ({ name, total, message, onClick }) => {
         >
             <div className="space-y-1.5 sm:space-y-2 md:space-y-3 lg:space-y-4 flex flex-col h-full">
                 {/* Item Name */}
-                <h3 className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold ${theme.text.hover} transition-colors duration-300 capitalize line-clamp-2`}>
+                <h3 className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold ${theme.text.groupHover} transition-colors duration-300 capitalize line-clamp-2`}>
                     {name}
                 </h3>
 
@@ -33,7 +33,7 @@ const GeneralCard = ({ name, total, message, onClick }) => {
                 </div>
 
                 {/* Hover Effect Text */}
-                <div className={`text-center ${theme.text.secondary} text-[10px] sm:text-xs md:text-sm ${theme.text.hover} transition-colors duration-300 line-clamp-2`}>
+                <div className={`text-center ${theme.text.secondary} text-[10px] sm:text-xs md:text-sm ${theme.text.groupHover} transition-colors duration-300 line-clamp-2`}>
                     {message}
                 </div>
             </div>

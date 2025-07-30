@@ -50,7 +50,8 @@ export const ThemeProvider = ({ children }) => {
             secondary: isDarkMode ? 'text-gray-400' : 'text-gray-700',
             accent: isDarkMode ? 'text-blue-500' : 'text-[#c8d1ff]',
             muted: isDarkMode ? 'text-gray-500' : 'text-gray-500',
-            hover: isDarkMode ? 'group-hover:text-blue-500' : 'group-hover:text-[#676adc]',
+            groupHover: isDarkMode ? 'group-hover:text-blue-500' : 'group-hover:text-[#676adc]',
+            hover: isDarkMode ? 'hover:text-blue-500' : 'hover:text-[#676adc]',
             other_accent: isDarkMode ? 'text-blue-500' : 'text-[#676adc]',
         },
 

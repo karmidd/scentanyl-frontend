@@ -7,8 +7,11 @@ import FragranceCard from "../../cards/FragranceCard.jsx";
 import LoadingPage from "../LoadingPage.jsx";
 import {useTheme} from "../../contexts/ThemeContext.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
-import GenderFilterButtons from "../../utils/GenderFilterButtons.jsx";
+import GenderFilterButtons from "../../utils/buttons/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
+import HeroSection from "../../utils/HeroSection.jsx";
+import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
+import Footer from "../../primary/Footer.jsx";
 
 const NotePage = () => {
     const { note } = useParams();
@@ -252,22 +255,7 @@ const NotePage = () => {
                     <main className="mt-5 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
                         {/* Hero Section */}
                         <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
-                            <div className="space-y-3 sm:space-y-4 md:space-y-6 text-center">
-                                <BlurText
-                                    text={`Fragrances with ${note.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')}`}
-                                    delay={100}
-                                    animateBy="words"
-                                    direction="top"
-                                    className="flex justify-center text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight px-2"
-                                />
-                                <BlurText
-                                    text="Discover all fragrances featuring this beautiful note"
-                                    delay={80}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-300 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
-                                />
-                            </div>
+                            <HeroSection secondaryText={"Discover all fragrances featuring this beautiful note"} primaryText={`Fragrances with ${note.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')}`}/>
 
                             {/* Note Statistics */}
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 md:gap-4 max-w-5xl mx-auto mb-4 sm:mb-6 md:mb-8 px-2">
@@ -342,30 +330,7 @@ const NotePage = () => {
 
                                     {/* Load More Button */}
                                     {hasMore && (
-                                        <div className="flex justify-center pt-6 sm:pt-8 md:pt-12">
-                                            <button
-                                                onClick={loadMoreFragrances}
-                                                disabled={loadingMore}
-                                                className="cursor-pointer relative inline-flex items-center justify-center px-6 sm:px-8 md:px-10 lg:px-12 py-3 sm:py-4 text-base sm:text-lg md:text-xl font-bold text-white bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg sm:rounded-xl shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-blue-400/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0"
-                                            >
-                                                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg sm:rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
-                                                <div className="relative flex items-center space-x-2 sm:space-x-3">
-                                                    {loadingMore ? (
-                                                        <>
-                                                            <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-t-2 border-b-2 border-white"></div>
-                                                            <span>Loading...</span>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <span>Load More Fragrances</span>
-                                                            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                                            </svg>
-                                                        </>
-                                                    )}
-                                                </div>
-                                            </button>
-                                        </div>
+                                        <LoadMoreButton onClick={loadMoreFragrances} disabled={loadingMore} message={"Load More Fragrances"}/>
                                     )}
                                 </>
                             ) : (
@@ -396,18 +361,13 @@ const NotePage = () => {
                             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
                                 <button
                                     onClick={() => navigate('/notes')}
-                                    className="cursor-pointer bg-blue-800 hover:bg-blue-700 text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
+                                    className={`cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
                                 >
                                     Back to All Notes
                                 </button>
-                                <button
-                                    onClick={() => navigate('/fragrances')}
-                                    className="cursor-pointer border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
-                                >
-                                    Explore All Fragrances
-                                </button>
                             </div>
                         </div>
+                        <Footer/>
                     </main>
                 </div>
             </div>
