@@ -12,7 +12,7 @@ export default function RandomFragranceButton({className, text}) {
             const encodedBrand = encodeURIComponent(fragrance.brand);
             const encodedName = encodeURIComponent(fragrance.name);
             // Navigate to the fragrance page
-            navigate(`/fragrances/${encodedBrand}/${encodedName}`);
+            navigate(`/fragrances/${encodedBrand}/${encodedName}/${fragrance.id}`);
         } catch (error) {
             console.error('Error fetching random fragrance:', error);
             // Optionally handle error

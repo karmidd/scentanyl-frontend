@@ -64,7 +64,7 @@ const FragrancePage = () => {
                                     delay={80}
                                     animateBy="words"
                                     direction="bottom"
-                                    className="text-gray-400 text-base sm:text-lg md:text-xl lg:text-2xl pt-2 sm:pt-3 md:pt-5 mb-2 sm:mb-3 md:mb-4 text-center flex justify-center"
+                                    className="text-gray-200 text-base sm:text-lg md:text-xl lg:text-2xl pt-2 sm:pt-3 md:pt-5 mb-2 sm:mb-3 md:mb-4 text-center flex justify-center"
                                 />
                             </div>
                         </main>
@@ -142,7 +142,7 @@ const FragrancePage = () => {
                                 delay={200}
                                 animateBy="words"
                                 direction="top"
-                                className="text-xl sm:text-2xl md:text-3xl text-gray-300 font-semibold"
+                                className="text-xl sm:text-2xl md:text-3xl text-gray-200"
                             />
                             <button onClick={() => handleBrandClick(fragrance?.brand)} className="cursor-pointer hover:scale-105 transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-lg px-1 sm:px-2 py-0.5 sm:py-1">
                                 <BlurText

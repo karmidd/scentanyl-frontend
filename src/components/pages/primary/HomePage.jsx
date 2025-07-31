@@ -13,22 +13,24 @@ import PageLayout from "../../utils/PageLayout.jsx";
 const HomePage = () => {
     const { theme } = useTheme();
     const [featuredFragrances, setFeaturedFragrances] = useState([]);
+    const [featuredBrands, setFeaturedBrands] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Fetch 4 random fragrances from the API
-        const fetchFeaturedContent = async () => {
+        const fetchFeaturedFragrances = async () => {
             try {
                 setLoading(true);
 
                 // Make 4 separate API calls to get random fragrances
                 const promises = Array.from({ length: 4 }, () =>
-                    fetch('http://localhost:8080/random').then(response => response.json())
+                    fetch('http://localhost:8080/random-frag').then(response => response.json())
                 );
 
                 const fragrances = await Promise.all(promises);
 
                 setFeaturedFragrances(fragrances);
+
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching featured content:', error);
@@ -36,9 +38,33 @@ const HomePage = () => {
             }
         };
 
-        fetchFeaturedContent();
+        fetchFeaturedFragrances();
     }, []);
 
+    useEffect(() => {
+        // Fetch 4 random brands from the API
+        const fetchFeaturedBrands = async () => {
+            try {
+                setLoading(true);
+
+                // Make 4 separate API calls to get random brands
+                const promises = Array.from({ length: 4 }, () =>
+                    fetch('http://localhost:8080/random-brand').then(response => response.json())
+                );
+
+                const brands = await Promise.all(promises);
+
+                setFeaturedBrands(brands);
+
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching featured content:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchFeaturedBrands();
+    }, []);
 
     if (loading) {
         return (
@@ -82,19 +108,16 @@ const HomePage = () => {
             {/* Popular Brands */}
             <div className="space-y-4 sm:space-y-6 md:space-y-8">
                 <BlurText
-                    text="Popular Brands"
+                    text="Featured Brands"
                     delay={250}
                     animateBy="words"
                     direction="right"
                     className={`flex justify-center text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white px-2`}
                 />
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4">
-                    <BrandCard image={"https://images.seeklogo.com/logo-png/41/1/christian-dior-logo-png_seeklogo-410283.png"} brand={"dior"}/>
-                    <BrandCard image={"https://images.seeklogo.com/logo-png/28/1/yves-saint-laurent-logo-png_seeklogo-288938.png"} brand={"yves-saint-laurent"}/>
-                    <BrandCard image={"https://images.seeklogo.com/logo-png/7/1/jean-paul-gaultier-logo-png_seeklogo-75250.png"} brand={"jean-paul-gaultier"}/>
-                    <BrandCard image={"https://images.seeklogo.com/logo-png/29/1/parfums-de-marly-logo-png_seeklogo-297710.png"} brand={"parfums-de-marly"}/>
-                    <BrandCard image={"https://fimgs.net/mdimg/dizajneri/o.2260.jpg"} brand={"initio-parfums-prives"}/>
-                    <BrandCard image={"https://fimgs.net/mdimg/dizajneri/o.50.jpg"} brand={"creed"}/>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
+                    {featuredBrands.map((brand) => (
+                        <BrandCard brand={brand} key={brand.id} />
+                    ))}
                 </div>
             </div>
         </PageLayout>

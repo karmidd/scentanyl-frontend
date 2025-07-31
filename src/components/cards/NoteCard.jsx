@@ -19,7 +19,7 @@ const NoteCard = ({ note, noteData, onClick }) => {
                     </div>
                 </div>
 
-                <div className={`space-y-0.5 sm:space-y-1 md:space-y-1.5 lg:space-y-2 ${theme.text.secondary} font-bold text-[10px] sm:text-xs md:text-sm flex-grow`}>
+                <div className={`space-y-0.5 sm:space-y-1 md:space-y-1.5 lg:space-y-2 ${theme.text.secondary} ${theme.text.groupHover} duration-300 font-bold text-[10px] sm:text-xs md:text-sm flex-grow`}>
                     <div className="flex justify-between">
                         <span className="truncate pr-1">As a Top Note:</span>
                         <span>{topNotes}</span>
@@ -38,7 +38,7 @@ const NoteCard = ({ note, noteData, onClick }) => {
                     </div>
                 </div>
 
-                <div className="pt-1 sm:pt-1.5 md:pt-2 border-t border-gray-700">
+                <div className="pt-1 sm:pt-1.5 md:pt-2 border-t border-gray-600/30">
                     <div className={`text-center ${theme.text.secondary} text-[9px] sm:text-[10px] md:text-xs lg:text-sm ${theme.text.groupHover} transition-colors duration-300`}>
                         Click to explore fragrances with this note
                     </div>

@@ -16,7 +16,7 @@ const GeneralCard = ({ name, total, message, onClick }) => {
 
                 {/* Total Fragrances */}
                 <div className="flex items-center justify-between flex-grow">
-                    <div className={`${theme.text.secondary} text-xs sm:text-sm md:text-base`}>
+                    <div className={`${theme.text.secondary} text-xs sm:text-sm md:text-base lg:text-xl`}>
                         Total
                     </div>
                     <div className={`text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold ${theme.text.other_accent}`}>

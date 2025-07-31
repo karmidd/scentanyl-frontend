@@ -196,14 +196,14 @@ const AllBrandsPage = () => {
                 {/* Filters Section */}
                 <div className="max-w-2xl mx-auto px-2">
                     <div className={`${theme.card.blur} border border-gray-700 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6`}>
-                        <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 items-center justify-center">
+                        <div className="flex flex-row flex-wrap gap-3 sm:gap-4 items-end justify-center">
                             {/* Country Filter */}
-                            <div className="flex flex-col space-y-1 sm:space-y-2 w-full sm:w-auto">
-                                <label className="text-xs sm:text-sm text-gray-400 font-medium">Country</label>
+                            <div className="flex flex-col space-y-1 sm:space-y-2 flex-1 min-w-[120px]">
+                                <label className="text-xs sm:text-sm text-gray-300 font-medium">Country</label>
                                 <select
                                     value={selectedCountry}
                                     onChange={handleCountryChange}
-                                    className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 ${theme.bg.card} border border-gray-600 rounded-lg sm:rounded-xl focus:outline-none ${theme.border.focus} transition-all duration-300 ${theme.text.primary} text-sm sm:text-base w-full sm:min-w-[150px]`}
+                                    className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 ${theme.bg.card} border border-gray-600 rounded-lg sm:rounded-xl focus:outline-none ${theme.border.focus} transition-all duration-300 ${theme.text.primary} text-sm sm:text-base w-full`}
                                 >
                                     <option value="">All Countries</option>
                                     {getUniqueCountries().map(country => (
@@ -215,12 +215,12 @@ const AllBrandsPage = () => {
                             </div>
 
                             {/* Parent Company Filter */}
-                            <div className="flex flex-col space-y-1 sm:space-y-2 w-full sm:w-auto">
-                                <label className="text-xs sm:text-sm text-gray-400 font-medium">Parent Company</label>
+                            <div className="flex flex-col space-y-1 sm:space-y-2 flex-1 min-w-[120px]">
+                                <label className="text-xs sm:text-sm text-gray-300 font-medium">Parent Company</label>
                                 <select
                                     value={selectedParent}
                                     onChange={handleParentChange}
-                                    className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 ${theme.bg.card} border border-gray-600 rounded-lg sm:rounded-xl focus:outline-none ${theme.border.focus} transition-all duration-300 ${theme.text.primary} text-sm sm:text-base w-full sm:min-w-[150px]`}
+                                    className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 ${theme.bg.card} border border-gray-600 rounded-lg sm:rounded-xl focus:outline-none ${theme.border.focus} transition-all duration-300 ${theme.text.primary} text-sm sm:text-base w-full`}
                                 >
                                     <option value="">All Parents</option>
                                     {getUniqueParents().map(parent => (
@@ -233,11 +233,11 @@ const AllBrandsPage = () => {
 
                             {/* Clear Filters Button */}
                             {(searchQuery || selectedCountry || selectedParent) && (
-                                <div className="flex flex-col space-y-1 sm:space-y-2 w-full sm:w-auto">
+                                <div className="flex flex-col space-y-1 sm:space-y-2">
                                     <label className="text-xs sm:text-sm text-transparent font-medium">Clear</label>
                                     <button
                                         onClick={clearFilters}
-                                        className="cursor-pointer px-4 sm:px-5 py-2 sm:py-2.5 md:py-3 bg-red-700 hover:bg-red-600 text-white rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 font-medium text-sm sm:text-base"
+                                        className="cursor-pointer px-4 sm:px-5 py-2 sm:py-2.5 md:py-3 bg-red-600 hover:bg-red-500 text-white rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 font-medium text-sm sm:text-base whitespace-nowrap"
                                     >
                                         Clear Filters
                                     </button>
@@ -266,8 +266,7 @@ const AllBrandsPage = () => {
                                     }}
                                 >
                                     <BrandCard
-                                        image={brand.image}
-                                        brand={brand.name}
+                                        brand={brand}
                                     />
                                 </div>
                             ))}

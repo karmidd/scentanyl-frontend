@@ -175,14 +175,14 @@ const BrandPage = () => {
                                     delay={100}
                                     animateBy="words"
                                     direction="bottom"
-                                    className="flex justify-center text-3xl sm:text-4xl text-red-400 mb-2 sm:mb-3 md:mb-4"
+                                    className="flex justify-center text-3xl sm:text-4xl font-bold text-red-600 mb-2 sm:mb-3 md:mb-4"
                                 />
-                                <p className="text-gray-500 text-base sm:text-lg md:text-xl mb-4 sm:mb-6 md:mb-8">
+                                <p className="text-gray-200 text-base sm:text-lg md:text-xl mb-4 sm:mb-6 md:mb-8">
                                     The brand "{brand}" could not be found.
                                 </p>
                                 <button
                                     onClick={() => navigate('/fragrances')}
-                                    className="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
+                                    className={`${theme.button.hover} ${theme.button.primary} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
                                 >
                                     Browse All Fragrances
                                 </button>
@@ -214,7 +214,7 @@ const BrandPage = () => {
         >
             {/* Brand Info Section */}
             {brandInfo && (
-                <div className="space-y-6 sm:space-y-8 md:space-y-10 mb-8 sm:mb-12 md:mb-16">
+                <div className="space-y-6 sm:space-y-8 md:space-y-10 mb-4 sm:mb-6 md:mb-8">
                     <div className="text-center space-y-3 sm:space-y-4 md:space-y-6">
                         <BlurText
                             text={brandInfo.name}
@@ -223,45 +223,38 @@ const BrandPage = () => {
                             direction="top"
                             className="flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-bold leading-tight px-2"
                         />
-                        {brandInfo.country && (
-                            <div className="inline-flex items-center">
-                                <BlurText
-                                    text={`From `}
-                                    delay={150}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className={`flex justify-center text-base sm:text-lg md:text-xl lg:text-2xl ${theme.text.secondary}`}
-                                />
-                                <BlurText
-                                    text={`${brandInfo.country}`}
-                                    delay={150}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className={`flex justify-center font-bold text-base sm:text-lg md:text-xl lg:text-2xl ${theme.text.accent}`}
-                                />
-                            </div>
-                        )}
-                        {brandInfo.parent && (
-                            <BlurText
-                                text={`Part of ${brandInfo.parent}`}
-                                delay={200}
-                                animateBy="words"
-                                direction="bottom"
-                                className={`flex justify-center text-sm sm:text-base md:text-lg lg:text-xl ${theme.text.secondary}`}
-                            />
-                        )}
-                    </div>
-
-                    {/* Brand Image */}
-                    {brandInfo.image && (
-                        <div className="flex justify-center px-4">
-                            <img
-                                src={brandInfo.image}
-                                alt={brandInfo.name}
-                                className="max-w-[150px] sm:max-w-[200px] md:max-w-xs max-h-32 sm:max-h-40 md:max-h-50 object-contain rounded-lg shadow-lg"
-                            />
+                        <div className="space-y-2 sm:space-y-3">
+                            {brandInfo.country && (
+                                <div className="inline-flex items-center">
+                                    <BlurText
+                                        text={`From `}
+                                        delay={150}
+                                        animateBy="words"
+                                        direction="bottom"
+                                        className={`text-xl sm:text-2xl md:text-3xl text-gray-200`}
+                                    />
+                                    <BlurText
+                                        text={`${brandInfo.country}`}
+                                        delay={150}
+                                        animateBy="words"
+                                        direction="bottom"
+                                        className={`text-xl sm:text-2xl md:text-3xl font-semibold ${theme.text.accent}`}
+                                    />
+                                </div>
+                            )}
+                            {brandInfo.parent && (
+                                <div className="items-center">
+                                    <BlurText
+                                        text={`Part of ${brandInfo.parent}`}
+                                        delay={200}
+                                        animateBy="words"
+                                        direction="bottom"
+                                        className={`flex justify-center text-sm sm:text-base md:text-lg text-gray-300 italic`}
+                                    />
+                                </div>
+                            )}
                         </div>
-                    )}
+                    </div>
                 </div>
             )}
 

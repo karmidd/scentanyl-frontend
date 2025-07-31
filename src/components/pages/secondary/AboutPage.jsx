@@ -12,7 +12,7 @@ export default function AboutPage() {
                     text={"I started my fragrance journey in the fall of 2023. Like many newcomers, I dove deep—exploring scent profiles, following releases, and slowly building a collection. But as I searched for a place to keep up with the fragrance world, I noticed something frustrating: most websites felt outdated, cluttered, or just not built with the user in mind."}
                     delay={10}
                     animateBy="words"
-                    direction="bottom"
+                    direction="top"
                     className="mt-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                 />
 
@@ -20,7 +20,7 @@ export default function AboutPage() {
                     text={"They lacked the clean, modern experience I was looking for. Still, I found myself relying on them simply because there were no better alternatives. That’s why I created Scentanyl — a fragrance platform built from the ground up with simplicity, clarity, and modern design at its core. It’s a place where you can explore fragrances, brands, notes, and more without being overwhelmed."}
                     delay={10}
                     animateBy="words"
-                    direction="bottom"
+                    direction="top"
                     className="mt-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                 />
 
