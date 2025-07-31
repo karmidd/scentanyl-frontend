@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import Background from "../../primary/Background.jsx";
-import Header from "../../primary/Header.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import FragranceCard from "../../cards/FragranceCard.jsx";
-import { useTheme } from '../../contexts/ThemeContext.jsx';
-import LoadingPage from "../LoadingPage.jsx";
+import LoadingPage from "../primary/LoadingPage.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
 import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import GenderFilterButtons from "../../utils/buttons/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
-import Footer from "../../primary/Footer.jsx";
+import PageLayout from "../../utils/PageLayout.jsx";
 
 const AllFragrancesPage = () => {
-    const { theme } = useTheme();
     const [fragrances, setFragrances] = useState([]);
     const [displayedFragrances, setDisplayedFragrances] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -149,74 +145,7 @@ const AllFragrancesPage = () => {
     }
 
     return (
-        <div className="relative min-h-screen overflow-hidden">
-            <Background />
-            <div className="relative z-10 font-['Viaoda_Libre',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
-                <div className={theme.text.primary}>
-                    {/* Header */}
-                    <Header page={1} />
-
-                    {/* Main Content */}
-                    <main className="mt-5 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
-                        {/* Hero Section */}
-                        <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
-                            <HeroSection primaryText={"Discover Fragrances"} secondaryText={"Explore thousands of exquisite fragrances from luxury to niche perfumes"}/>
-
-                            {/* Search Bar */}
-                            <SearchBar size={4} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search fragrances, brands, notes, or accords..."} includeRandomButton={true}/>
-
-                            {/* Gender Filter */}
-                            <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender} />
-
-                            {/* Results Counter */}
-                            <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={getFilteredCount()} type={"fragrances"}/>
-                        </div>
-
-                        {/* Fragrances Grid */}
-                        <div className="space-y-4 sm:space-y-6 md:space-y-8">
-                            {displayedFragrances.length > 0 ? (
-                                <>
-                                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
-                                        {displayedFragrances.map((fragrance, index) => (
-                                            <div
-                                                key={fragrance.id}
-                                                className="animate-fadeIn"
-                                                style={{
-                                                    animationDelay: `${(index % FRAGRANCES_PER_PAGE) * 50}ms`,
-                                                    animationFillMode: 'both'
-                                                }}
-                                            >
-                                                <FragranceCard fragrance={fragrance} />
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    {/* Load More Button */}
-                                    {hasMore && (
-                                        <LoadMoreButton onClick={loadMoreFragrances} disabled={loadingMore} message={"Load More Fragrances"}/>
-                                    )}
-                                </>
-                            ) : (
-                                <div className="text-center py-8 sm:py-12 md:py-16">
-                                    <BlurText
-                                        text="No fragrances found"
-                                        delay={100}
-                                        animateBy="words"
-                                        direction="bottom"
-                                        className="flex justify-center text-2xl sm:text-3xl text-gray-400 mb-2 sm:mb-3 md:mb-4"
-                                    />
-                                    <p className="text-gray-500 text-base sm:text-lg md:text-xl">
-                                        Try adjusting your search terms or filters
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-                        <Footer/>
-                    </main>
-                </div>
-            </div>
-
-            <style jsx>{`
+        <PageLayout headerNum={1} style={<style jsx>{`
                 @keyframes fadeIn {
                     from {
                         opacity: 0;
@@ -231,8 +160,62 @@ const AllFragrancesPage = () => {
                 .animate-fadeIn {
                     animation: fadeIn 0.6s ease-out;
                 }
-            `}</style>
-        </div>
+            `}</style>}
+        >
+            {/* Hero Section */}
+            <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
+                <HeroSection primaryText={"Discover Fragrances"} secondaryText={"Explore thousands of exquisite fragrances from luxury to niche perfumes"}/>
+
+                {/* Search Bar */}
+                <SearchBar size={4} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search fragrances, brands, notes, or accords..."} includeRandomButton={true}/>
+
+                {/* Gender Filter */}
+                <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender} />
+
+                {/* Results Counter */}
+                <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={getFilteredCount()} type={"fragrances"}/>
+            </div>
+
+            {/* Fragrances Grid */}
+            <div className="space-y-4 sm:space-y-6 md:space-y-8">
+                {displayedFragrances.length > 0 ? (
+                    <>
+                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
+                            {displayedFragrances.map((fragrance, index) => (
+                                <div
+                                    key={fragrance.id}
+                                    className="animate-fadeIn"
+                                    style={{
+                                        animationDelay: `${(index % FRAGRANCES_PER_PAGE) * 50}ms`,
+                                        animationFillMode: 'both'
+                                    }}
+                                >
+                                    <FragranceCard fragrance={fragrance} />
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Load More Button */}
+                        {hasMore && (
+                            <LoadMoreButton onClick={loadMoreFragrances} disabled={loadingMore} message={"Load More Fragrances"}/>
+                        )}
+                    </>
+                ) : (
+                    <div className="text-center py-8 sm:py-12 md:py-16">
+                        <BlurText
+                            text="No fragrances found"
+                            delay={100}
+                            animateBy="words"
+                            direction="bottom"
+                            className="flex justify-center text-2xl sm:text-3xl text-gray-400 mb-2 sm:mb-3 md:mb-4"
+                        />
+                        <p className="text-gray-500 text-base sm:text-lg md:text-xl">
+                            Try adjusting your search terms or filters
+                        </p>
+                    </div>
+                )}
+            </div>
+        </PageLayout>
     );
 };
 

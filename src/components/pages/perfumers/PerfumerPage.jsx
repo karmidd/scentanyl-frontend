@@ -9,9 +9,8 @@ import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import {useTheme} from "../../contexts/ThemeContext.jsx";
 import GenderFilterButtons from "../../utils/buttons/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
-import HeroSection from "../../utils/HeroSection.jsx";
-import LoadingPage from "../LoadingPage.jsx";
-import Footer from "../../primary/Footer.jsx";
+import LoadingPage from "../primary/LoadingPage.jsx";
+import PageLayout from "../../utils/PageLayout.jsx";
 
 const PerfumerPage = () => {
     const navigate = useNavigate();
@@ -208,138 +207,7 @@ const PerfumerPage = () => {
     }
 
     return (
-        <div className="relative min-h-screen overflow-hidden">
-            <Background />
-            <div className="relative z-10 font-['Viaoda_Libre',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
-                <div className={theme.text.primary}>
-                    <Header page={5} />
-
-                    <main className="mt-5 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
-                        {/* Perfumer Info Section */}
-                        <div className="space-y-6 sm:space-y-8 md:space-y-10 mb-8 sm:mb-12 md:mb-16">
-                            <div className="text-center space-y-3 sm:space-y-4 md:space-y-6">
-                                <BlurText
-                                    text={perfumer.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
-                                    delay={100}
-                                    animateBy="words"
-                                    direction="top"
-                                    className="flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-bold leading-tight px-2"
-                                />
-
-                                <BlurText
-                                    text={`${genderCounts.total} ${genderCounts.total === 1 ? 'Fragrance' : 'Fragrances'} Created`}
-                                    delay={150}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200"
-                                />
-
-                                {/* Gender Statistics */}
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 max-w-4xl mx-auto mb-4 sm:mb-6 md:mb-8 px-2">
-                                    <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
-                                        <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-500">{genderCounts.total}</div>
-                                        <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Total Fragrances</div>
-                                    </div>
-                                    <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
-                                        <div className="text-xl sm:text-2xl md:text-3xl font-bold text-green-500">{genderCounts.men}</div>
-                                        <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Men's</div>
-                                    </div>
-                                    <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
-                                        <div className="text-xl sm:text-2xl md:text-3xl font-bold text-pink-500">{genderCounts.women}</div>
-                                        <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Women's</div>
-                                    </div>
-                                    <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
-                                        <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-500">{genderCounts.unisex}</div>
-                                        <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Unisex</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Search and Filter Section */}
-                        <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
-                            <div className="space-y-3 sm:space-y-4 md:space-y-6 text-center">
-                                <BlurText
-                                    text={`Explore all fragrances created by ${perfumer.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}`}
-                                    delay={350}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 max-w-xs sm:max-w-lg md:max-w-2xl mx-auto px-2"
-                                />
-                            </div>
-
-                            <SearchBar size={3} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search fragrances, brands, notes, or accords..."}/>
-
-                            <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender}/>
-
-                            <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={getFilteredCount()} type={"fragrances"}/>
-                        </div>
-
-                        {/* Fragrances Grid */}
-                        <div className="space-y-4 sm:space-y-6 md:space-y-8">
-                            {displayedFragrances.length > 0 ? (
-                                <>
-                                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
-                                        {displayedFragrances.map((fragrance, index) => (
-                                            <div
-                                                key={fragrance.id}
-                                                className="animate-fadeIn"
-                                                style={{
-                                                    animationDelay: `${(index % FRAGRANCES_PER_PAGE) * 50}ms`,
-                                                    animationFillMode: 'both'
-                                                }}
-                                            >
-                                                <FragranceCard fragrance={fragrance} />
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    {hasMore && (
-                                        <LoadMoreButton onClick={loadMoreFragrances} disabled={loadingMore} message={"Load More Fragrances"}/>
-                                    )}
-                                </>
-                            ) : (
-                                <div className="text-center py-8 sm:py-12 md:py-16">
-                                    <BlurText
-                                        text="No fragrances found"
-                                        delay={100}
-                                        animateBy="words"
-                                        direction="bottom"
-                                        className="flex justify-center text-2xl sm:text-3xl text-gray-200 mb-2 sm:mb-3 md:mb-4"
-                                    />
-                                    <p className="text-gray-500 text-base sm:text-lg md:text-xl">
-                                        {searchQuery || selectedGender !== 'all'
-                                            ? 'Try adjusting your search terms or filters'
-                                            : `No fragrances available for ${perfumer.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}`
-                                        }
-                                    </p>
-                                </div>
-                            )}
-
-                            {/* Back to Perfumers Button */}
-                            <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
-                                <BlurText
-                                    text="Explore More Perfumers"
-                                    delay={300}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
-                                />
-                                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
-                                    <button
-                                        onClick={() => navigate('/perfumers')}
-                                        className={`cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
-                                    >
-                                        Back to All Perfumers
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <Footer/>
-                    </main>
-                </div>
-            </div>
-            <style jsx>{`
+        <PageLayout headerNum={5} style={<style jsx>{`
                 @keyframes fadeIn {
                     from {
                         opacity: 0;
@@ -354,8 +222,129 @@ const PerfumerPage = () => {
                 .animate-fadeIn {
                     animation: fadeIn 0.6s ease-out;
                 }
-            `}</style>
-        </div>
+            `}</style>}
+        >
+            {/* Perfumer Info Section */}
+            <div className="space-y-6 sm:space-y-8 md:space-y-10 mb-8 sm:mb-12 md:mb-16">
+                <div className="text-center space-y-3 sm:space-y-4 md:space-y-6">
+                    <BlurText
+                        text={perfumer.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                        delay={100}
+                        animateBy="words"
+                        direction="top"
+                        className="flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-bold leading-tight px-2"
+                    />
+
+                    <BlurText
+                        text={`${genderCounts.total} ${genderCounts.total === 1 ? 'Fragrance' : 'Fragrances'} Created`}
+                        delay={150}
+                        animateBy="words"
+                        direction="bottom"
+                        className="flex justify-center text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200"
+                    />
+
+                    {/* Gender Statistics */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 max-w-4xl mx-auto mb-4 sm:mb-6 md:mb-8 px-2">
+                        <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-500">{genderCounts.total}</div>
+                            <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Total Fragrances</div>
+                        </div>
+                        <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-green-500">{genderCounts.men}</div>
+                            <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Men's</div>
+                        </div>
+                        <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-pink-500">{genderCounts.women}</div>
+                            <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Women's</div>
+                        </div>
+                        <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-500">{genderCounts.unisex}</div>
+                            <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Unisex</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Search and Filter Section */}
+            <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
+                <div className="space-y-3 sm:space-y-4 md:space-y-6 text-center">
+                    <BlurText
+                        text={`Explore all fragrances created by ${perfumer.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}`}
+                        delay={350}
+                        animateBy="words"
+                        direction="bottom"
+                        className="flex justify-center text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 max-w-xs sm:max-w-lg md:max-w-2xl mx-auto px-2"
+                    />
+                </div>
+
+                <SearchBar size={3} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search fragrances, brands, notes, or accords..."}/>
+
+                <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender}/>
+
+                <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={getFilteredCount()} type={"fragrances"}/>
+            </div>
+
+            {/* Fragrances Grid */}
+            <div className="space-y-4 sm:space-y-6 md:space-y-8">
+                {displayedFragrances.length > 0 ? (
+                    <>
+                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
+                            {displayedFragrances.map((fragrance, index) => (
+                                <div
+                                    key={fragrance.id}
+                                    className="animate-fadeIn"
+                                    style={{
+                                        animationDelay: `${(index % FRAGRANCES_PER_PAGE) * 50}ms`,
+                                        animationFillMode: 'both'
+                                    }}
+                                >
+                                    <FragranceCard fragrance={fragrance} />
+                                </div>
+                            ))}
+                        </div>
+
+                        {hasMore && (
+                            <LoadMoreButton onClick={loadMoreFragrances} disabled={loadingMore} message={"Load More Fragrances"}/>
+                        )}
+                    </>
+                ) : (
+                    <div className="text-center py-8 sm:py-12 md:py-16">
+                        <BlurText
+                            text="No fragrances found"
+                            delay={100}
+                            animateBy="words"
+                            direction="bottom"
+                            className="flex justify-center text-2xl sm:text-3xl text-gray-200 mb-2 sm:mb-3 md:mb-4"
+                        />
+                        <p className="text-gray-500 text-base sm:text-lg md:text-xl">
+                            {searchQuery || selectedGender !== 'all'
+                                ? 'Try adjusting your search terms or filters'
+                                : `No fragrances available for ${perfumer.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}`
+                            }
+                        </p>
+                    </div>
+                )}
+
+                {/* Back to Perfumers Button */}
+                <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
+                    <BlurText
+                        text="Explore More Perfumers"
+                        delay={300}
+                        animateBy="words"
+                        direction="bottom"
+                        className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
+                    />
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
+                        <button
+                            onClick={() => navigate('/perfumers')}
+                            className={`cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
+                        >
+                            Back to All Perfumers
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </PageLayout>
     );
 };
 

@@ -5,13 +5,13 @@ import Header from "../../primary/Header.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import FragranceCard from "../../cards/FragranceCard.jsx";
 import {useTheme} from "../../contexts/ThemeContext.jsx";
-import LoadingPage from "../LoadingPage.jsx";
+import LoadingPage from "../primary/LoadingPage.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import GenderFilterButtons from "../../utils/buttons/GenderFilterButtons.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
-import Footer from "../../primary/Footer.jsx";
 import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
+import PageLayout from "../../utils/PageLayout.jsx";
 
 const BrandPage = () => {
     const navigate = useNavigate();
@@ -195,143 +195,7 @@ const BrandPage = () => {
     }
 
     return (
-        <div className="relative min-h-screen overflow-hidden">
-            <Background />
-            <div className="relative z-10 font-['Viaoda_Libre',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
-                <div className={theme.text.primary}>
-                    <Header page={2} />
-
-                    <main className="mt-5 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
-                        {/* Brand Info Section */}
-                        {brandInfo && (
-                            <div className="space-y-6 sm:space-y-8 md:space-y-10 mb-8 sm:mb-12 md:mb-16">
-                                <div className="text-center space-y-3 sm:space-y-4 md:space-y-6">
-                                    <BlurText
-                                        text={brandInfo.name}
-                                        delay={100}
-                                        animateBy="words"
-                                        direction="top"
-                                        className="flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-bold leading-tight px-2"
-                                    />
-                                    {brandInfo.country && (
-                                        <div className="inline-flex items-center">
-                                            <BlurText
-                                                text={`From `}
-                                                delay={150}
-                                                animateBy="words"
-                                                direction="bottom"
-                                                className={`flex justify-center text-base sm:text-lg md:text-xl lg:text-2xl ${theme.text.secondary}`}
-                                            />
-                                            <BlurText
-                                                text={`${brandInfo.country}`}
-                                                delay={150}
-                                                animateBy="words"
-                                                direction="bottom"
-                                                className={`flex justify-center font-bold text-base sm:text-lg md:text-xl lg:text-2xl ${theme.text.accent}`}
-                                            />
-                                        </div>
-                                    )}
-                                    {brandInfo.parent && (
-                                        <BlurText
-                                            text={`Part of ${brandInfo.parent}`}
-                                            delay={200}
-                                            animateBy="words"
-                                            direction="bottom"
-                                            className={`flex justify-center text-sm sm:text-base md:text-lg lg:text-xl ${theme.text.secondary}`}
-                                        />
-                                    )}
-                                </div>
-
-                                {/* Brand Image */}
-                                {brandInfo.image && (
-                                    <div className="flex justify-center px-4">
-                                        <img
-                                            src={brandInfo.image}
-                                            alt={brandInfo.name}
-                                            className="max-w-[150px] sm:max-w-[200px] md:max-w-xs max-h-32 sm:max-h-40 md:max-h-50 object-contain rounded-lg shadow-lg"
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Search and Filter Section */}
-                        <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
-                            <HeroSection primaryText={`Discover all fragrances from ${brandInfo?.name || brand}`}/>
-
-                            <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search fragrances, notes, or accords..."}/>
-
-                            <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender} />
-
-                            <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={getFilteredCount()} type={"fragrances"}/>
-                        </div>
-
-                        {/* Fragrances Grid */}
-                        <div className="space-y-4 sm:space-y-6 md:space-y-8">
-                            {displayedFragrances.length > 0 ? (
-                                <>
-                                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
-                                        {displayedFragrances.map((fragrance, index) => (
-                                            <div
-                                                key={fragrance.id}
-                                                className="animate-fadeIn"
-                                                style={{
-                                                    animationDelay: `${(index % FRAGRANCES_PER_PAGE) * 50}ms`,
-                                                    animationFillMode: 'both'
-                                                }}
-                                            >
-                                                <FragranceCard fragrance={fragrance} />
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    {/* Load More Button */}
-                                    {hasMore && (
-                                        <LoadMoreButton onClick={loadMoreFragrances} disabled={loadingMore} message={"Load More Fragrances"}/>
-                                    )}
-                                </>
-                            ) : (
-                                <div className="text-center py-8 sm:py-12 md:py-16">
-                                    <BlurText
-                                        text="No fragrances found"
-                                        delay={100}
-                                        animateBy="words"
-                                        direction="bottom"
-                                        className="flex justify-center text-2xl sm:text-3xl text-gray-400 mb-2 sm:mb-3 md:mb-4"
-                                    />
-                                    <p className="text-gray-500 text-base sm:text-lg md:text-xl">
-                                        {searchQuery || selectedGender !== 'all'
-                                            ? 'Try adjusting your search terms or filters'
-                                            : `No fragrances available for ${brandInfo?.name || brand}`
-                                        }
-                                    </p>
-                                </div>
-                            )}
-                            {/* Back to Brands Button */}
-                            <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
-                                <BlurText
-                                    text="Explore More Brands"
-                                    delay={300}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
-                                />
-                                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
-                                    <button
-                                        onClick={() => navigate('/brands')}
-                                        className={`cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
-                                    >
-                                        Back to All Brands
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <Footer/>
-                    </main>
-                </div>
-            </div>
-
-            <style jsx>{`
+        <PageLayout headerNum={2} style={<style jsx>{`
                 @keyframes fadeIn {
                     from {
                         opacity: 0;
@@ -346,8 +210,133 @@ const BrandPage = () => {
                 .animate-fadeIn {
                     animation: fadeIn 0.6s ease-out;
                 }
-            `}</style>
-        </div>
+            `}</style>}
+        >
+            {/* Brand Info Section */}
+            {brandInfo && (
+                <div className="space-y-6 sm:space-y-8 md:space-y-10 mb-8 sm:mb-12 md:mb-16">
+                    <div className="text-center space-y-3 sm:space-y-4 md:space-y-6">
+                        <BlurText
+                            text={brandInfo.name}
+                            delay={100}
+                            animateBy="words"
+                            direction="top"
+                            className="flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-bold leading-tight px-2"
+                        />
+                        {brandInfo.country && (
+                            <div className="inline-flex items-center">
+                                <BlurText
+                                    text={`From `}
+                                    delay={150}
+                                    animateBy="words"
+                                    direction="bottom"
+                                    className={`flex justify-center text-base sm:text-lg md:text-xl lg:text-2xl ${theme.text.secondary}`}
+                                />
+                                <BlurText
+                                    text={`${brandInfo.country}`}
+                                    delay={150}
+                                    animateBy="words"
+                                    direction="bottom"
+                                    className={`flex justify-center font-bold text-base sm:text-lg md:text-xl lg:text-2xl ${theme.text.accent}`}
+                                />
+                            </div>
+                        )}
+                        {brandInfo.parent && (
+                            <BlurText
+                                text={`Part of ${brandInfo.parent}`}
+                                delay={200}
+                                animateBy="words"
+                                direction="bottom"
+                                className={`flex justify-center text-sm sm:text-base md:text-lg lg:text-xl ${theme.text.secondary}`}
+                            />
+                        )}
+                    </div>
+
+                    {/* Brand Image */}
+                    {brandInfo.image && (
+                        <div className="flex justify-center px-4">
+                            <img
+                                src={brandInfo.image}
+                                alt={brandInfo.name}
+                                className="max-w-[150px] sm:max-w-[200px] md:max-w-xs max-h-32 sm:max-h-40 md:max-h-50 object-contain rounded-lg shadow-lg"
+                            />
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {/* Search and Filter Section */}
+            <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
+                <HeroSection secondaryText={`Discover all fragrances from ${brandInfo?.name || brand}`}/>
+
+                <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search fragrances, notes, or accords..."}/>
+
+                <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender} />
+
+                <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={getFilteredCount()} type={"fragrances"}/>
+            </div>
+
+            {/* Fragrances Grid */}
+            <div className="space-y-4 sm:space-y-6 md:space-y-8">
+                {displayedFragrances.length > 0 ? (
+                    <>
+                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
+                            {displayedFragrances.map((fragrance, index) => (
+                                <div
+                                    key={fragrance.id}
+                                    className="animate-fadeIn"
+                                    style={{
+                                        animationDelay: `${(index % FRAGRANCES_PER_PAGE) * 50}ms`,
+                                        animationFillMode: 'both'
+                                    }}
+                                >
+                                    <FragranceCard fragrance={fragrance} />
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Load More Button */}
+                        {hasMore && (
+                            <LoadMoreButton onClick={loadMoreFragrances} disabled={loadingMore} message={"Load More Fragrances"}/>
+                        )}
+                    </>
+                ) : (
+                    <div className="text-center py-8 sm:py-12 md:py-16">
+                        <BlurText
+                            text="No fragrances found"
+                            delay={100}
+                            animateBy="words"
+                            direction="bottom"
+                            className="flex justify-center text-2xl sm:text-3xl text-gray-400 mb-2 sm:mb-3 md:mb-4"
+                        />
+                        <p className="text-gray-500 text-base sm:text-lg md:text-xl">
+                            {searchQuery || selectedGender !== 'all'
+                                ? 'Try adjusting your search terms or filters'
+                                : `No fragrances available for ${brandInfo?.name || brand}`
+                            }
+                        </p>
+                    </div>
+                )}
+                {/* Back to Brands Button */}
+                <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
+                    <BlurText
+                        text="Explore More Brands"
+                        delay={300}
+                        animateBy="words"
+                        direction="bottom"
+                        className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
+                    />
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
+                        <button
+                            onClick={() => navigate('/brands')}
+                            className={`cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
+                        >
+                            Back to All Brands
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </PageLayout>
     );
 };
 

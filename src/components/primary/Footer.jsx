@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
-        <footer className="text-white font-bold py-6 px-4 sm:px-6 lg:px-12 mt-10">
+        <footer className="text-white py-4 px-4 sm:px-6 lg:px-20 mt-10 bg-black/24 backdrop-blur-md">
             <div className="mx-auto flex flex-col sm:flex-row justify-between items-center text-sm xs:text-xs lg:text-xl space-y-2 sm:space-y-0">
                 <div>&copy; {new Date().getFullYear()} Scentanyl. All rights reserved.</div>
                 <div className="flex space-x-6">

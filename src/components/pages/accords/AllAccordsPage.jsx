@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Background from "../../primary/Background.jsx";
-import Header from "../../primary/Header.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
-import LoadingPage from "../LoadingPage.jsx";
+import LoadingPage from "../primary/LoadingPage.jsx";
 import GeneralCard from "../../cards/GeneralCard.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
 import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
-import {useTheme} from "../../contexts/ThemeContext.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import SortButtons from "../../utils/buttons/SortButtons.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
-import Footer from "../../primary/Footer.jsx";
+import PageLayout from "../../utils/PageLayout.jsx";
 
 const AllAccordsPage = () => {
     const navigate = useNavigate();
@@ -23,7 +20,6 @@ const AllAccordsPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [sortBy, setSortBy] = useState('alphabetical');
-    const { theme } = useTheme();
 
     const ACCORDS_PER_PAGE = 20;
 
@@ -130,72 +126,7 @@ const AllAccordsPage = () => {
     }
 
     return (
-        <div className="relative min-h-screen overflow-hidden">
-            <Background />
-            <div className="relative z-10 font-['Viaoda_Libre',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
-                <div className={theme.text.primary}>
-                    <Header page={4} />
-
-                    <main className="mt-5 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
-                        {/* Hero Section */}
-                        <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
-                            <HeroSection primaryText={"Explore Accords"} secondaryText={"Discover the harmonic structures that define fragrance families"}/>
-
-                            <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search for accords..."} />
-
-                            <SortButtons handleSortChange={handleSortChange} sortBy={sortBy} />
-
-                            <ResultsCounter displayedCount={displayedAccords.length} filteredCount={getFilteredCount()} type={"accords"}/>
-                        </div>
-
-                        {/* Accords Grid */}
-                        <div className="space-y-4 sm:space-y-6 md:space-y-8">
-                            {displayedAccords.length > 0 ? (
-                                <>
-                                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
-                                        {displayedAccords.map((accord, index) => (
-                                            <div
-                                                key={accord.id}
-                                                className="animate-fadeIn"
-                                                style={{
-                                                    animationDelay: `${(index % ACCORDS_PER_PAGE) * 50}ms`,
-                                                    animationFillMode: 'both'
-                                                }}
-                                            >
-                                                <GeneralCard
-                                                    name={accord.name}
-                                                    total={accord.totalAppearances}
-                                                    message={"Click to explore fragrances with this accord"}
-                                                    onClick={() => handleAccordClick(accord)}
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    {hasMore && (
-                                        <LoadMoreButton onClick={loadMoreAccords} disabled={loadingMore} message={"Load More Accords"} />
-                                    )}
-                                </>
-                            ) : (
-                                <div className="text-center py-8 sm:py-12 md:py-16">
-                                    <BlurText
-                                        text="No accords found"
-                                        delay={100}
-                                        animateBy="words"
-                                        direction="bottom"
-                                        className="flex justify-center text-2xl sm:text-3xl text-gray-400 mb-2 sm:mb-3 md:mb-4"
-                                    />
-                                    <p className="text-gray-500 text-base sm:text-lg md:text-xl">
-                                        Try adjusting your search terms
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-                        <Footer/>
-                    </main>
-                </div>
-            </div>
-            <style jsx>{`
+        <PageLayout headerNum={4} style={<style jsx>{`
                 @keyframes fadeIn {
                     from {
                         opacity: 0;
@@ -210,8 +141,63 @@ const AllAccordsPage = () => {
                 .animate-fadeIn {
                     animation: fadeIn 0.6s ease-out;
                 }
-            `}</style>
-        </div>
+            `}</style>}
+        >
+            {/* Hero Section */}
+            <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
+                <HeroSection primaryText={"Explore Accords"} secondaryText={"Discover the harmonic structures that define fragrance families"}/>
+
+                <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search for accords..."} />
+
+                <SortButtons handleSortChange={handleSortChange} sortBy={sortBy} />
+
+                <ResultsCounter displayedCount={displayedAccords.length} filteredCount={getFilteredCount()} type={"accords"}/>
+            </div>
+
+            {/* Accords Grid */}
+            <div className="space-y-4 sm:space-y-6 md:space-y-8">
+                {displayedAccords.length > 0 ? (
+                    <>
+                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
+                            {displayedAccords.map((accord, index) => (
+                                <div
+                                    key={accord.id}
+                                    className="animate-fadeIn"
+                                    style={{
+                                        animationDelay: `${(index % ACCORDS_PER_PAGE) * 50}ms`,
+                                        animationFillMode: 'both'
+                                    }}
+                                >
+                                    <GeneralCard
+                                        name={accord.name}
+                                        total={accord.totalAppearances}
+                                        message={"Click to explore fragrances with this accord"}
+                                        onClick={() => handleAccordClick(accord)}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+
+                        {hasMore && (
+                            <LoadMoreButton onClick={loadMoreAccords} disabled={loadingMore} message={"Load More Accords"} />
+                        )}
+                    </>
+                ) : (
+                    <div className="text-center py-8 sm:py-12 md:py-16">
+                        <BlurText
+                            text="No accords found"
+                            delay={100}
+                            animateBy="words"
+                            direction="bottom"
+                            className="flex justify-center text-2xl sm:text-3xl text-gray-400 mb-2 sm:mb-3 md:mb-4"
+                        />
+                        <p className="text-gray-500 text-base sm:text-lg md:text-xl">
+                            Try adjusting your search terms
+                        </p>
+                    </div>
+                )}
+            </div>
+        </PageLayout>
     );
 };
 

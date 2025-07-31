@@ -3,7 +3,7 @@ import { Suspense, lazy } from 'react';
 import {ThemeProvider} from "./components/contexts/ThemeContext.jsx";
 
 // Lazy load all components
-const HomePage = lazy(() => import("./components/pages/HomePage.jsx"));
+const HomePage = lazy(() => import("./components/pages/primary/HomePage.jsx"));
 const FragrancePage = lazy(() => import("./components/pages/fragrances/FragrancePage.jsx"));
 const AllBrandsPage = lazy(() => import("./components/pages/brands/AllBrandsPage.jsx"));
 const BrandPage = lazy(() => import("./components/pages/brands/BrandPage.jsx"));
@@ -14,6 +14,9 @@ const AllAccordsPage = lazy(() => import("./components/pages/accords/AllAccordsP
 const AccordPage = lazy(() => import("./components/pages/accords/AccordPage.jsx"));
 const AllPerfumersPage = lazy(() => import("./components/pages/perfumers/AllPerfumersPage.jsx"));
 const PerfumerPage = lazy(() => import("./components/pages/perfumers/PerfumerPage.jsx"));
+const AboutPage = lazy(() => import("./components/pages/secondary/AboutPage.jsx"));
+const PrivacyPage = lazy(() => import("./components/pages/secondary/PrivacyPage.jsx"));
+const ContactPage = lazy(() => import("./components/pages/secondary/ContactPage.jsx"));
 
 function App() {
     return (
@@ -44,6 +47,12 @@ function App() {
                             <Route path="/perfumers/" element={<AllPerfumersPage />} />
                             <Route path="/perfumers/:perfumer" element={<PerfumerPage />} />
                             <Route path="/perfumers/:perfumer/" element={<PerfumerPage />} />
+                            <Route path="/about" element={<AboutPage />} />
+                            <Route path="/about/" element={<AboutPage />} />
+                            <Route path="/contact" element={<ContactPage />} />
+                            <Route path="/contact/" element={<ContactPage />} />
+                            <Route path="/privacy" element={<PrivacyPage />} />
+                            <Route path="/privacy/" element={<PrivacyPage />} />
                         </Routes>
                     </div>
                 </Router>

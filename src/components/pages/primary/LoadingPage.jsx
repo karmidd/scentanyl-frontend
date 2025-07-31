@@ -1,6 +1,6 @@
-import Background from "../primary/Background.jsx";
+import Background from "../../primary/Background.jsx";
 import React from "react";
-import {useTheme} from "../contexts/ThemeContext.jsx";
+import {useTheme} from "../../contexts/ThemeContext.jsx";
 export default function LoadingPage() {
     const {theme} = useTheme();
     return (<>
