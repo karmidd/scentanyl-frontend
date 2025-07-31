@@ -7,9 +7,9 @@ export default function ContactPage() {
     return (
         <PageLayout headerNum={0}>
             <HeroSection primaryText={"Contact Us"} secondaryText={"Last updated: July 30, 2025"} />
-            <div className="py-4 px-9 mb-20 sm:px-6 lg:px-10 mt-10 bg-black/34 backdrop-blur-md">
+            <div className="py-4 px-9 sm:px-6 lg:px-10 mt-10 bg-black/34 backdrop-blur-md">
                 <BlurText
-                    text={"At Scentanyl, we respect your privacy. This website does not collect personal information, does not use cookies, and does not track users."}
+                    text={"PLACEHOLDER"}
                     delay={10}
                     animateBy="words"
                     direction="bottom"

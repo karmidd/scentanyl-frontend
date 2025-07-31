@@ -7,7 +7,7 @@ export default function AboutPage() {
     return (
         <PageLayout headerNum={0}>
             <HeroSection primaryText={"About Scentanyl"} />
-            <div className="py-4 px-9 mb-20 sm:px-6 lg:px-10 mt-10 bg-black/34 backdrop-blur-md">
+            <div className="py-4 px-9 sm:px-6 lg:px-10 mt-10 bg-black/34 backdrop-blur-md">
                 <BlurText
                     text={"I started my fragrance journey in the fall of 2023. Like many newcomers, I dove deep—exploring scent profiles, following releases, and slowly building a collection. But as I searched for a place to keep up with the fragrance world, I noticed something frustrating: most websites felt outdated, cluttered, or just not built with the user in mind."}
                     delay={10}
@@ -36,7 +36,7 @@ export default function AboutPage() {
                     delay={10}
                     animateBy="words"
                     direction="bottom"
-                    className="mt-10 mb-15 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                    className="mt-10 mb-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                 />
             </div>
         </PageLayout>
