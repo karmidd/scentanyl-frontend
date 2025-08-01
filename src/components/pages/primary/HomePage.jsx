@@ -8,7 +8,7 @@ import FragranceCard from "../../cards/FragranceCard.jsx";
 import LoadingPage from "./LoadingPage.jsx";
 import BrowseAllButton from "../../utils/buttons/BrowseAllButton.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
-import PageLayout from "../../utils/PageLayout.jsx";
+import PageLayout from "../../primary/PageLayout.jsx";
 
 const HomePage = () => {
     const { theme } = useTheme();

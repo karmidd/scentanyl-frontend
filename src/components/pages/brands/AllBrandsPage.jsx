@@ -7,7 +7,7 @@ import SearchBar from "../../utils/SearchBar.jsx";
 import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
-import PageLayout from "../../utils/PageLayout.jsx";
+import PageLayout from "../../primary/PageLayout.jsx";
 
 const AllBrandsPage = () => {
     const [brands, setBrands] = useState([]);

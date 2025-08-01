@@ -1,7 +1,7 @@
-import Background from "../primary/Background.jsx";
-import Header from "../primary/Header.jsx";
+import Background from "./Background.jsx";
+import Header from "./Header.jsx";
 import React from "react";
-import Footer from "../primary/Footer.jsx";
+import Footer from "./Footer.jsx";
 import {useTheme} from "../contexts/ThemeContext.jsx";
 
 export default function PageLayout({ headerNum = 0, children, style }) {

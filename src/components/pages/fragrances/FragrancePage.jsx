@@ -6,7 +6,7 @@ import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import RandomFragranceButton from "../../utils/buttons/RandomFragranceButton.jsx";
 import LoadingPage from "../primary/LoadingPage.jsx";
 import {useTheme} from "../../contexts/ThemeContext.jsx";
-import PageLayout from "../../utils/PageLayout.jsx";
+import PageLayout from "../../primary/PageLayout.jsx";
 
 const FragrancePage = () => {
     const { brand, name, id } = useParams();

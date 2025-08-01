@@ -8,7 +8,7 @@ import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import SortButtons from "../../utils/buttons/SortButtons.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
-import PageLayout from "../../utils/PageLayout.jsx";
+import PageLayout from "../../primary/PageLayout.jsx";
 
 const AllAccordsPage = () => {
     const navigate = useNavigate();

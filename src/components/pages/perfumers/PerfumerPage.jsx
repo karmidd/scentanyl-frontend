@@ -10,7 +10,7 @@ import {useTheme} from "../../contexts/ThemeContext.jsx";
 import GenderFilterButtons from "../../utils/buttons/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import LoadingPage from "../primary/LoadingPage.jsx";
-import PageLayout from "../../utils/PageLayout.jsx";
+import PageLayout from "../../primary/PageLayout.jsx";
 
 const PerfumerPage = () => {
     const navigate = useNavigate();

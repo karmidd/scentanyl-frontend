@@ -7,7 +7,7 @@ import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import GenderFilterButtons from "../../utils/buttons/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
-import PageLayout from "../../utils/PageLayout.jsx";
+import PageLayout from "../../primary/PageLayout.jsx";
 
 const AllFragrancesPage = () => {
     const [fragrances, setFragrances] = useState([]);
@@ -53,6 +53,9 @@ const AllFragrancesPage = () => {
                 fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 fragrance.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 fragrance.accords?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                fragrance.topNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                fragrance.middleNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                fragrance.baseNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 fragrance.uncategorizedNotes?.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
@@ -83,6 +86,9 @@ const AllFragrancesPage = () => {
                     fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     fragrance.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     fragrance.accords?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    fragrance.topNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    fragrance.middleNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    fragrance.baseNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     fragrance.uncategorizedNotes?.toLowerCase().includes(searchQuery.toLowerCase())
                 );
             }

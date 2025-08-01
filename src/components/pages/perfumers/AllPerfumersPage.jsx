@@ -8,7 +8,7 @@ import SearchBar from "../../utils/SearchBar.jsx";
 import SortButtons from "../../utils/buttons/SortButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
-import PageLayout from "../../utils/PageLayout.jsx";
+import PageLayout from "../../primary/PageLayout.jsx";
 
 const AllPerfumersPage = () => {
     const navigate = useNavigate();
