@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Background from "../../primary/Background.jsx";
-import Header from "../../primary/Header.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import FragranceCard from "../../cards/FragranceCard.jsx";
 import LoadingPage from "../primary/LoadingPage.jsx";
@@ -11,7 +9,6 @@ import GenderFilterButtons from "../../utils/buttons/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
-import Footer from "../../primary/Footer.jsx";
 import PageLayout from "../../utils/PageLayout.jsx";
 
 const AccordPage = () => {
@@ -41,7 +38,7 @@ const AccordPage = () => {
     const fetchAccordFragrances = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:8080/accords/${encodeURIComponent(accord)}`);
+            const response = await fetch(`/api/accords/${encodeURIComponent(accord)}`);
             const data = await response.json();
             setFragrances(data);
 

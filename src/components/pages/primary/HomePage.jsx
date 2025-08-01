@@ -17,23 +17,16 @@ const HomePage = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Fetch 4 random fragrances from the API
         const fetchFeaturedFragrances = async () => {
             try {
                 setLoading(true);
-
-                // Make 4 separate API calls to get random fragrances
-                const promises = Array.from({ length: 4 }, () =>
-                    fetch('http://localhost:8080/random-frag').then(response => response.json())
-                );
-
-                const fragrances = await Promise.all(promises);
-
+                const response = await fetch('/api/random-frag?count=4');
+                if (!response.ok) throw new Error('Failed to fetch fragrances');
+                const fragrances = await response.json();
                 setFeaturedFragrances(fragrances);
-
-                setLoading(false);
             } catch (error) {
-                console.error('Error fetching featured content:', error);
+                console.error('Error fetching fragrances:', error);
+            } finally {
                 setLoading(false);
             }
         };
@@ -42,23 +35,16 @@ const HomePage = () => {
     }, []);
 
     useEffect(() => {
-        // Fetch 4 random brands from the API
         const fetchFeaturedBrands = async () => {
             try {
                 setLoading(true);
-
-                // Make 4 separate API calls to get random brands
-                const promises = Array.from({ length: 4 }, () =>
-                    fetch('http://localhost:8080/random-brand').then(response => response.json())
-                );
-
-                const brands = await Promise.all(promises);
-
+                const response = await fetch('/api/random-brand?count=4');
+                if (!response.ok) throw new Error('Failed to fetch brands');
+                const brands = await response.json();
                 setFeaturedBrands(brands);
-
-                setLoading(false);
             } catch (error) {
-                console.error('Error fetching featured content:', error);
+                console.error('Error fetching brands:', error);
+            } finally {
                 setLoading(false);
             }
         };
@@ -66,14 +52,31 @@ const HomePage = () => {
         fetchFeaturedBrands();
     }, []);
 
+
+    const BRANDS_PER_PAGE = 4;
+    const FRAGRANCES_PER_PAGE = 4;
+
     if (loading) {
-        return (
-            <LoadingPage />
-        );
+        return <LoadingPage/>;
     }
 
     return (
-        <PageLayout headerNum={0}>
+        <PageLayout headerNum={0} style={<style jsx>{`
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .animate-fadeIn {
+                    animation: fadeIn 0.6s ease-out;
+                }
+            `}</style>}>
             {/* Hero Section */}
             <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
                 <HeroSection primaryText={"Get Addicted"} secondaryText={"Explore thousands of fragrances from the world's most prestigious brands"}/>
@@ -98,14 +101,23 @@ const HomePage = () => {
                     className={`flex justify-center text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white px-2`}
                 />
 
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
-                    {featuredFragrances.map((fragrance) => (
-                        <FragranceCard fragrance={fragrance} key={fragrance.id} />
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
+                    {featuredFragrances.map((fragrance, index) => (
+                        <div
+                            key={fragrance.id || fragrance.name || index}
+                            className="animate-fadeIn"
+                            style={{
+                                animationDelay: `${(index % FRAGRANCES_PER_PAGE) * 50}ms`,
+                                animationFillMode: 'both'
+                            }}
+                        >
+                            <FragranceCard fragrance={fragrance} key={fragrance.id} />
+                        </div>
                     ))}
                 </div>
             </div>
 
-            {/* Popular Brands */}
+            {/* Featured Brands */}
             <div className="space-y-4 sm:space-y-6 md:space-y-8">
                 <BlurText
                     text="Featured Brands"
@@ -114,9 +126,18 @@ const HomePage = () => {
                     direction="right"
                     className={`flex justify-center text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white px-2`}
                 />
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
-                    {featuredBrands.map((brand) => (
-                        <BrandCard brand={brand} key={brand.id} />
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
+                    {featuredBrands.map((brand, index) => (
+                        <div
+                            key={brand.id || brand.name || index}
+                            className="animate-fadeIn"
+                            style={{
+                                animationDelay: `${(index % BRANDS_PER_PAGE) * 50}ms`,
+                                animationFillMode: 'both'
+                            }}
+                        >
+                            <BrandCard brand={brand}/>
+                        </div>
                     ))}
                 </div>
             </div>

@@ -36,7 +36,7 @@ const AllAccordsPage = () => {
     const fetchAccords = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:8080/accords');
+            const response = await fetch('/api/accords');
             const accordsArray = await response.json();
             setAccords(accordsArray);
             setLoading(false);

@@ -34,7 +34,7 @@ const AllBrandsPage = () => {
     const fetchBrands = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:8080/brands');
+            const response = await fetch('/api/brands');
             const data = await response.json();
             setBrands(data);
             setDisplayedBrands(data.slice(0, BRANDS_PER_PAGE));

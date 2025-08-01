@@ -47,7 +47,7 @@ const NotePage = () => {
     const fetchNoteFragrances = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:8080/notes/${encodeURIComponent(note)}`);
+            const response = await fetch(`/api/notes/${encodeURIComponent(note)}`);
             const data = await response.json();
             setFragrances(data);
 

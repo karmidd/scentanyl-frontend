@@ -49,7 +49,7 @@ const PerfumerPage = () => {
             setLoading(true);
             setError(null);
 
-            const response = await fetch(`http://localhost:8080/perfumers/${encodeURIComponent(perfumer)}`);
+            const response = await fetch(`/api/perfumers/${encodeURIComponent(perfumer)}`);
 
             if (!response.ok) {
                 throw new Error('Perfumer not found');

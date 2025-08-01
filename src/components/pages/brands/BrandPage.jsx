@@ -46,8 +46,8 @@ const BrandPage = () => {
             setError(null);
 
             const [brandInfoResponse, fragrancesResponse] = await Promise.all([
-                fetch(`http://localhost:8080/brands/${encodeURIComponent(brand)}/info`),
-                fetch(`http://localhost:8080/brands/${encodeURIComponent(brand)}`)
+                fetch(`/api/brands/${encodeURIComponent(brand)}/info`),
+                fetch(`/api/brands/${encodeURIComponent(brand)}`)
             ]);
 
             if (!brandInfoResponse.ok || !fragrancesResponse.ok) {

@@ -35,7 +35,7 @@ const AllNotesPage = () => {
     const fetchNotes = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:8080/notes');
+            const response = await fetch('/api/notes');
             const notesArray = await response.json();
             setNotes(notesArray);
             setLoading(false);

@@ -35,7 +35,7 @@ const AllPerfumersPage = () => {
     const fetchPerfumers = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:8080/perfumers');
+            const response = await fetch('/api/perfumers');
             const perfumersArray = await response.json();
             setPerfumers(perfumersArray);
             setLoading(false);

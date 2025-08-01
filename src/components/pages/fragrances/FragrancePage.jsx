@@ -20,7 +20,7 @@ const FragrancePage = () => {
         const fetchFragrance = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:8080/fragrances/${brand}/${name}/${id}`);
+                const response = await fetch(`/api/fragrances/${brand}/${name}/${id}`);
                 if (!response.ok) {
                     throw new Error(`Fragrance "${name}" from the brand "${brand}" not found`);
                 }

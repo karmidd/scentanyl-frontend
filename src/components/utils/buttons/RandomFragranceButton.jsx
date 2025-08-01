@@ -5,7 +5,7 @@ export default function RandomFragranceButton({className, text}) {
     const navigate = useNavigate();
     const handleRandomClick = async () => {
         try {
-            const response = await fetch('http://localhost:8080/random');
+            const response = await fetch('/api/random-frag');
             const fragrance = await response.json();
 
             // Encode for URL safety

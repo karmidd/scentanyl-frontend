@@ -32,7 +32,7 @@ const AllFragrancesPage = () => {
     const fetchFragrances = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:8080/fragrances');
+            const response = await fetch('/api/fragrances');
             const data = await response.json();
             setFragrances(data);
             setDisplayedFragrances(data.slice(0, FRAGRANCES_PER_PAGE));
