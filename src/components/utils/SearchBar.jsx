@@ -506,7 +506,7 @@ export default function SearchBar({
 
                     {includeRandomButton && (
                         <RandomFragranceButton
-                            className={`cursor-pointer group relative inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 text-base sm:text-lg md:text-xl font-bold ${theme.text.primary} bg-gradient-to-r ${theme.randomDiscoveryButton.primary} rounded-full shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30`}
+                            className={`cursor-pointer group relative inline-flex items-center justify-center w-12 h-12 sm:w-20 sm:h-20 md:w-24 md:h-24 text-base sm:text-lg md:text-xl font-bold ${theme.text.primary} bg-gradient-to-r ${theme.randomDiscoveryButton.primary} rounded-full shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30`}
                         />
                     )}
                 </div>
