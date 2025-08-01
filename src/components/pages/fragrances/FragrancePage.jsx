@@ -265,7 +265,7 @@ const FragrancePage = () => {
                     </div>
                 )}
                 {fragrance?.imageUrl && (
-                    <p className="mb-6 sm:mb-8 md:mb-12 text-gray-400 text-center flex justify-center">
+                    <div className="mb-6 sm:mb-8 md:mb-12 text-gray-400 text-center flex justify-center">
                         <BlurText
                             text="Image courtesy of Fragrantica."
                             delay={200}
@@ -273,7 +273,7 @@ const FragrancePage = () => {
                             direction="top"
                             className="text-xs sm:text-sm md:text-base lg:text-[1.1rem] text-gray-200 text-center"
                         />
-                    </p>
+                    </div>
                 )}
 
                 {/* Accords */}

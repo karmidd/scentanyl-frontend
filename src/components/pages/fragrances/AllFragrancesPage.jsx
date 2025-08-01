@@ -117,9 +117,6 @@ const AllFragrancesPage = () => {
                 fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 fragrance.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 fragrance.accords?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                fragrance.topNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                fragrance.middleNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                fragrance.baseNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 fragrance.uncategorizedNotes?.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
@@ -152,9 +149,6 @@ const AllFragrancesPage = () => {
                     fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     fragrance.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     fragrance.accords?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    fragrance.topNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    fragrance.middleNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    fragrance.baseNotes?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     fragrance.uncategorizedNotes?.toLowerCase().includes(searchQuery.toLowerCase())
                 );
             }
@@ -265,7 +259,6 @@ const AllFragrancesPage = () => {
                     includeRandomButton={true}
                     enableAdvancedSearch={true}
                     onAdvancedSearchChange={handleAdvancedSearchChange}
-                    advancedSearchData={advancedSearchData}
                 />
 
                 {/* Search Mode Indicator */}

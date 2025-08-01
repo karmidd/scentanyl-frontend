@@ -26,7 +26,7 @@ export default function RandomFragranceButton({className, text}) {
             className={className}
         >
             <div className="relative flex items-center space-x-3">
-                <span className="text-2xl lg:text-4xl">🎲</span>
+                <span className="text-xl lg:text-4xl">🎲</span>
                 {text? <span>{text}</span> : undefined}
             </div>
         </button>
