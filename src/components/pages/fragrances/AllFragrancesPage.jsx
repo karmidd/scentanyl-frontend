@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import FragranceCard from "../../cards/FragranceCard.jsx";
 import LoadingPage from "../primary/LoadingPage.jsx";
@@ -18,6 +18,11 @@ const AllFragrancesPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [selectedGender, setSelectedGender] = useState('all');
+    const [advancedSearchData, setAdvancedSearchData] = useState({
+        mode: 'regular',
+        accords: [],
+        notes: { top: [], middle: [], base: [], uncategorized: [] }
+    });
 
     const FRAGRANCES_PER_PAGE = 20;
 
@@ -27,7 +32,7 @@ const AllFragrancesPage = () => {
 
     useEffect(() => {
         filterFragrances();
-    }, [searchQuery, selectedGender, fragrances]);
+    }, [searchQuery, selectedGender, fragrances, advancedSearchData.mode, JSON.stringify(advancedSearchData.accords), JSON.stringify(advancedSearchData.notes)]);
 
     const fetchFragrances = async () => {
         try {
@@ -44,11 +49,70 @@ const AllFragrancesPage = () => {
         }
     };
 
+    const matchesAdvancedSearch = (fragrance) => {
+        if (advancedSearchData.mode === 'regular') {
+            return true; // Regular search handled separately
+        }
+
+        // Check accords
+        if (advancedSearchData.accords.length > 0) {
+            const fragranceAccords = fragrance.accords?.toLowerCase().split(',').map(a => a.trim()) || [];
+            const hasAllAccords = advancedSearchData.accords.every(accord =>
+                fragranceAccords.some(fa => fa.includes(accord.toLowerCase()))
+            );
+            if (!hasAllAccords) return false;
+        }
+
+        // Check notes based on mode
+        if (advancedSearchData.mode === 'layered') {
+            // Check top notes
+            if (advancedSearchData.notes.top.length > 0) {
+                const fragranceTopNotes = fragrance.topNotes?.toLowerCase().split(',').map(n => n.trim()) || [];
+                const hasAllTopNotes = advancedSearchData.notes.top.every(note =>
+                    fragranceTopNotes.some(fn => fn.includes(note.toLowerCase()))
+                );
+                if (!hasAllTopNotes) return false;
+            }
+
+            // Check middle notes
+            if (advancedSearchData.notes.middle.length > 0) {
+                const fragranceMiddleNotes = fragrance.middleNotes?.toLowerCase().split(',').map(n => n.trim()) || [];
+                const hasAllMiddleNotes = advancedSearchData.notes.middle.every(note =>
+                    fragranceMiddleNotes.some(fn => fn.includes(note.toLowerCase()))
+                );
+                if (!hasAllMiddleNotes) return false;
+            }
+
+            // Check base notes
+            if (advancedSearchData.notes.base.length > 0) {
+                const fragranceBaseNotes = fragrance.baseNotes?.toLowerCase().split(',').map(n => n.trim()) || [];
+                const hasAllBaseNotes = advancedSearchData.notes.base.every(note =>
+                    fragranceBaseNotes.some(fn => fn.includes(note.toLowerCase()))
+                );
+                if (!hasAllBaseNotes) return false;
+            }
+        } else if (advancedSearchData.mode === 'uncategorized') {
+            // Check uncategorized notes
+            if (advancedSearchData.notes.uncategorized.length > 0) {
+                const fragranceUncategorizedNotes = fragrance.uncategorizedNotes?.toLowerCase().split(',').map(n => n.trim()) || [];
+                const hasAllUncategorizedNotes = advancedSearchData.notes.uncategorized.every(note =>
+                    fragranceUncategorizedNotes.some(fn => fn.includes(note.toLowerCase()))
+                );
+                if (!hasAllUncategorizedNotes) return false;
+            }
+        }
+
+        return true;
+    };
+
     const filterFragrances = () => {
         let filtered = fragrances;
 
-        // Filter by search query
-        if (searchQuery.trim()) {
+        // Apply advanced search filter first
+        if (advancedSearchData.mode !== 'regular') {
+            filtered = filtered.filter(matchesAdvancedSearch);
+        } else if (searchQuery.trim()) {
+            // Apply regular search filter
             filtered = filtered.filter(fragrance =>
                 fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 fragrance.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -80,8 +144,10 @@ const AllFragrancesPage = () => {
         setTimeout(() => {
             let filtered = fragrances;
 
-            // Apply same filters as in filterFragrances
-            if (searchQuery.trim()) {
+            // Apply the same filtering logic as in filterFragrances
+            if (advancedSearchData.mode !== 'regular') {
+                filtered = filtered.filter(matchesAdvancedSearch);
+            } else if (searchQuery.trim()) {
                 filtered = filtered.filter(fragrance =>
                     fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     fragrance.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -123,10 +189,17 @@ const AllFragrancesPage = () => {
         setCurrentPage(1);
     };
 
+    const handleAdvancedSearchChange = useCallback((newAdvancedSearchData) => {
+        setAdvancedSearchData(newAdvancedSearchData);
+        setCurrentPage(1);
+    }, []);
+
     const getFilteredCount = () => {
         let filtered = fragrances;
 
-        if (searchQuery.trim()) {
+        if (advancedSearchData.mode !== 'regular') {
+            filtered = filtered.filter(matchesAdvancedSearch);
+        } else if (searchQuery.trim()) {
             filtered = filtered.filter(fragrance =>
                 fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 fragrance.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -144,6 +217,16 @@ const AllFragrancesPage = () => {
         return filtered.length;
     };
 
+    const getSearchModeText = () => {
+        if (advancedSearchData.mode === 'regular') {
+            return 'Standard search mode';
+        } else if (advancedSearchData.mode === 'layered') {
+            return 'Advanced layered search mode';
+        } else {
+            return 'Advanced uncategorized search mode';
+        }
+    };
+
     if (loading) {
         return (
             <LoadingPage />
@@ -152,28 +235,47 @@ const AllFragrancesPage = () => {
 
     return (
         <PageLayout headerNum={1} style={<style jsx>{`
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
                 }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
 
-                .animate-fadeIn {
-                    animation: fadeIn 0.6s ease-out;
-                }
-            `}</style>}
+            .animate-fadeIn {
+                animation: fadeIn 0.6s ease-out;
+            }
+        `}</style>}
         >
             {/* Hero Section */}
             <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
                 <HeroSection primaryText={"Discover Fragrances"} secondaryText={"Explore thousands of exquisite fragrances from luxury to niche perfumes"}/>
 
                 {/* Search Bar */}
-                <SearchBar size={4} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search fragrances, brands, notes, or accords..."} includeRandomButton={true}/>
+                <SearchBar
+                    size={4}
+                    onSubmit={handleSearch}
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    message={"Search fragrances, brands, notes, or accords..."}
+                    includeRandomButton={true}
+                    enableAdvancedSearch={true}
+                    onAdvancedSearchChange={handleAdvancedSearchChange}
+                    advancedSearchData={advancedSearchData}
+                />
+
+                {/* Search Mode Indicator */}
+                {advancedSearchData.mode !== 'regular' && (
+                    <div className="text-center">
+                        <p className="text-sm text-gray-400">
+                            {getSearchModeText()}
+                        </p>
+                    </div>
+                )}
 
                 {/* Gender Filter */}
                 <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender} />
@@ -216,7 +318,10 @@ const AllFragrancesPage = () => {
                             className="flex justify-center text-2xl sm:text-3xl text-gray-400 mb-2 sm:mb-3 md:mb-4"
                         />
                         <p className="text-gray-500 text-base sm:text-lg md:text-xl">
-                            Try adjusting your search terms or filters
+                            {advancedSearchData.mode !== 'regular'
+                                ? 'Try adjusting your selected notes, accords, or filters'
+                                : 'Try adjusting your search terms or filters'
+                            }
                         </p>
                     </div>
                 )}
