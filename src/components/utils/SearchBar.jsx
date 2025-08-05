@@ -14,6 +14,7 @@ export default function SearchBar({
                                   }) {
     const { theme } = useTheme();
     const [searchMode, setSearchMode] = useState('regular'); // 'regular', 'layered', 'uncategorized'
+    const [isAnimating, setIsAnimating] = useState(false);
     const [availableNotes, setAvailableNotes] = useState([]);
     const [availableAccords, setAvailableAccords] = useState([]);
     const [selectedAccords, setSelectedAccords] = useState([]);
@@ -98,12 +99,25 @@ export default function SearchBar({
     };
 
     const handleModeSwitch = (newMode) => {
-        // Always reset everything when switching modes for instant response
-        setSelectedAccords([]);
-        setSelectedNotes({ top: [], middle: [], base: [], uncategorized: [] });
-        setSearchMode(newMode);
-        setActiveDropdown(null);
-        setSearchTerm('');
+        if (newMode === 'regular' && searchMode !== 'regular') {
+            // Animate out the advanced search
+            setIsAnimating(true);
+            setTimeout(() => {
+                setSelectedAccords([]);
+                setSelectedNotes({ top: [], middle: [], base: [], uncategorized: [] });
+                setSearchMode(newMode);
+                setActiveDropdown(null);
+                setSearchTerm('');
+                setIsAnimating(false);
+            }, 150); // Match the fadeOut animation duration
+        } else {
+            // Immediate switch for other cases
+            setSelectedAccords([]);
+            setSelectedNotes({ top: [], middle: [], base: [], uncategorized: [] });
+            setSearchMode(newMode);
+            setActiveDropdown(null);
+            setSearchTerm('');
+        }
     };
 
     const addAccord = (accord) => {
@@ -226,7 +240,7 @@ export default function SearchBar({
     };
 
     const renderAdvancedSearch = () => (
-        <div className="space-y-3 sm:space-y-4 animate-fadeIn">
+        <div className={`space-y-3 sm:space-y-4`}>
             {/* Mode Selection */}
             <div className="flex justify-center space-x-3 sm:space-x-4">
                 <button
@@ -395,7 +409,7 @@ export default function SearchBar({
     );
 
     const renderRegularSearch = () => (
-        <div className="relative flex-1 group">
+        <div className={`relative flex-1 group ${searchMode === 'regular' && !isAnimating ? 'animate-expandDown' : ''}`}>
             <input
                 type="text"
                 value={value}
@@ -424,14 +438,29 @@ export default function SearchBar({
     return (
         <form onSubmit={onSubmit} className={`max-w-${size}xl mx-auto px-2 sm:px-0`}>
             <style jsx>{`
-                @keyframes fadeIn {
+                @keyframes expandDown {
                     from {
                         opacity: 0;
-                        transform: translateY(10px);
+                        transform: scaleY(0.3);
+                        transform-origin: top;
                     }
                     to {
                         opacity: 1;
-                        transform: translateY(0);
+                        transform: scaleY(1);
+                        transform-origin: top;
+                    }
+                }
+
+                @keyframes shrinkUp {
+                    from {
+                        opacity: 1;
+                        transform: scaleY(1);
+                        transform-origin: top;
+                    }
+                    to {
+                        opacity: 0;
+                        transform: scaleY(0.3);
+                        transform-origin: top;
                     }
                 }
 
@@ -459,8 +488,13 @@ export default function SearchBar({
                     }
                 }
 
-                .animate-fadeIn {
-                    animation: fadeIn 0.5s ease-out;
+                .animate-expandDown {
+                    animation: expandDown 0.15s ease-out;
+                }
+
+                .animate-shrinkUp {
+                    animation: shrinkUp 0.15s ease-out;
+                    animation-fill-mode: forwards;
                 }
 
                 .animate-slideIn {
@@ -476,7 +510,7 @@ export default function SearchBar({
                 {/* Toggle Button Row */}
                 <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
                     {searchMode === 'regular' ? renderRegularSearch() : (
-                        <div className={`flex-1 p-3 sm:p-4 ${theme.bg.input} border ${theme.border.primary} rounded-lg sm:rounded-xl md:rounded-2xl transition-all duration-300`}>
+                        <div className={`flex-1 p-3 sm:p-4 ${theme.bg.input} border ${theme.border.primary} rounded-lg sm:rounded-xl md:rounded-2xl transition-all duration-300 ${isAnimating ? 'animate-shrinkUp' : 'animate-expandDown'}`}>
                             {renderAdvancedSearch()}
                         </div>
                     )}
