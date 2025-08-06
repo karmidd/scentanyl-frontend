@@ -221,15 +221,6 @@ const BrandPage = () => {
                     onAdvancedSearchChange={handleAdvancedSearchChange}
                 />
 
-                {/* Search Mode Indicator */}
-                {advancedSearchData.mode !== 'regular' && (
-                    <div className="text-center">
-                        <p className="text-sm text-gray-400">
-                            {searchModeText}
-                        </p>
-                    </div>
-                )}
-
                 <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender} />
 
                 <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={filteredFragrances.length} type={"fragrances"}/>

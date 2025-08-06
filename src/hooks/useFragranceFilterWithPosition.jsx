@@ -1,3 +1,6 @@
+import {useFragranceFilter} from "./useFragranceFilter.jsx";
+import {useMemo, useState} from "react";
+
 export const useFragranceFilterWithPosition = () => {
     const baseFilter = useFragranceFilter();
     const [selectedPosition, setSelectedPosition] = useState('all');

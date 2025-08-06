@@ -2,7 +2,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import {useDebouncedValue} from "./useDebouncedValue.jsx";
 
-// Main fragrance filter hook
+// Main fragrance filter hook with exclusion support
 export const useFragranceFilter = () => {
     const [fragrances, setFragrances] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -10,25 +10,36 @@ export const useFragranceFilter = () => {
     const [advancedSearchData, setAdvancedSearchData] = useState({
         mode: 'regular',
         accords: [],
-        notes: { top: [], middle: [], base: [], uncategorized: [] }
+        excludedAccords: [],
+        notes: { top: [], middle: [], base: [], uncategorized: [] },
+        excludedNotes: { top: [], middle: [], base: [], uncategorized: [] }
     });
 
     // Debounced search query
     const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
 
-    // Memoized advanced search matcher
+    // Memoized advanced search matcher with exclusion logic
     const matchesAdvancedSearch = useCallback((fragrance) => {
         if (advancedSearchData.mode === 'regular') {
             return true;
         }
 
-        // Check accords
-        if (advancedSearchData.accords.length > 0) {
+        // Check included accords (fragrance must have ALL included accords)
+        if (advancedSearchData.accords && advancedSearchData.accords.length > 0) {
             const fragranceAccords = fragrance.accords?.toLowerCase().split(',').map(a => a.trim()) || [];
             const hasAllAccords = advancedSearchData.accords.every(accord =>
                 fragranceAccords.some(fa => fa.includes(accord.toLowerCase()))
             );
             if (!hasAllAccords) return false;
+        }
+
+        // Check excluded accords (fragrance must NOT have ANY excluded accords)
+        if (advancedSearchData.excludedAccords && advancedSearchData.excludedAccords.length > 0) {
+            const fragranceAccords = fragrance.accords?.toLowerCase().split(',').map(a => a.trim()) || [];
+            const hasExcludedAccord = advancedSearchData.excludedAccords.some(accord =>
+                fragranceAccords.some(fa => fa.includes(accord.toLowerCase()))
+            );
+            if (hasExcludedAccord) return false;
         }
 
         // Check notes based on mode
@@ -40,20 +51,44 @@ export const useFragranceFilter = () => {
             ];
 
             for (const { type, key } of noteTypes) {
-                if (advancedSearchData.notes[type].length > 0) {
-                    const fragranceNotes = fragrance[key]?.toLowerCase().split(',').map(n => n.trim()) || [];
+                const fragranceNotes = fragrance[key]?.toLowerCase().split(',').map(n => n.trim()) || [];
+
+                // Check included notes (must have ALL included notes for this layer)
+                if (advancedSearchData.notes[type] && advancedSearchData.notes[type].length > 0) {
                     const hasAllNotes = advancedSearchData.notes[type].every(note =>
                         fragranceNotes.some(fn => fn.includes(note.toLowerCase()))
                     );
                     if (!hasAllNotes) return false;
                 }
+
+                // Check excluded notes (must NOT have ANY excluded notes for this layer)
+                if (advancedSearchData.excludedNotes && advancedSearchData.excludedNotes[type] &&
+                    advancedSearchData.excludedNotes[type].length > 0) {
+                    const hasExcludedNote = advancedSearchData.excludedNotes[type].some(note =>
+                        fragranceNotes.some(fn => fn.includes(note.toLowerCase()))
+                    );
+                    if (hasExcludedNote) return false;
+                }
             }
-        } else if (advancedSearchData.mode === 'uncategorized' && advancedSearchData.notes.uncategorized.length > 0) {
+        } else if (advancedSearchData.mode === 'uncategorized') {
             const fragranceNotes = fragrance.uncategorizedNotes?.toLowerCase().split(',').map(n => n.trim()) || [];
-            const hasAllNotes = advancedSearchData.notes.uncategorized.every(note =>
-                fragranceNotes.some(fn => fn.includes(note.toLowerCase()))
-            );
-            if (!hasAllNotes) return false;
+
+            // Check included uncategorized notes
+            if (advancedSearchData.notes.uncategorized && advancedSearchData.notes.uncategorized.length > 0) {
+                const hasAllNotes = advancedSearchData.notes.uncategorized.every(note =>
+                    fragranceNotes.some(fn => fn.includes(note.toLowerCase()))
+                );
+                if (!hasAllNotes) return false;
+            }
+
+            // Check excluded uncategorized notes
+            if (advancedSearchData.excludedNotes && advancedSearchData.excludedNotes.uncategorized &&
+                advancedSearchData.excludedNotes.uncategorized.length > 0) {
+                const hasExcludedNote = advancedSearchData.excludedNotes.uncategorized.some(note =>
+                    fragranceNotes.some(fn => fn.includes(note.toLowerCase()))
+                );
+                if (hasExcludedNote) return false;
+            }
         }
 
         return true;
@@ -109,6 +144,35 @@ export const useFragranceFilter = () => {
         return counts;
     }, [fragrances]);
 
+    // Helper function to check if any filters are active
+    const hasActiveFilters = useMemo(() => {
+        if (advancedSearchData.mode !== 'regular') {
+            const hasIncludedItems =
+                (advancedSearchData.accords && advancedSearchData.accords.length > 0) ||
+                Object.values(advancedSearchData.notes || {}).some(notes => notes && notes.length > 0);
+
+            const hasExcludedItems =
+                (advancedSearchData.excludedAccords && advancedSearchData.excludedAccords.length > 0) ||
+                Object.values(advancedSearchData.excludedNotes || {}).some(notes => notes && notes.length > 0);
+
+            return hasIncludedItems || hasExcludedItems;
+        }
+        return debouncedSearchQuery.trim() !== '' || selectedGender !== 'all';
+    }, [advancedSearchData, debouncedSearchQuery, selectedGender]);
+
+    // Clear all filters
+    const clearAllFilters = useCallback(() => {
+        setSearchQuery('');
+        setSelectedGender('all');
+        setAdvancedSearchData({
+            mode: 'regular',
+            accords: [],
+            excludedAccords: [],
+            notes: { top: [], middle: [], base: [], uncategorized: [] },
+            excludedNotes: { top: [], middle: [], base: [], uncategorized: [] }
+        });
+    }, []);
+
     return {
         fragrances,
         setFragrances,
@@ -121,6 +185,8 @@ export const useFragranceFilter = () => {
         setAdvancedSearchData,
         genderCounts,
         matchesAdvancedSearch,
-        debouncedSearchQuery
+        debouncedSearchQuery,
+        hasActiveFilters,
+        clearAllFilters
     };
 };

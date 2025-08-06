@@ -11,7 +11,6 @@ import HeroSection from "../../utils/HeroSection.jsx";
 import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
 import {useFragranceFilterWithPosition} from "../../../hooks/useFragranceFilterWithPosition.jsx";
-import {useSearchMode} from "../../../hooks/useSearchMode.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
 import {useNoteStatistics} from "../../../hooks/useNoteStatistics.jsx";
 
@@ -50,7 +49,6 @@ const NotePage = () => {
         reset: resetPagination
     } = usePagination(filteredFragrances, 20);
 
-    const searchModeText = useSearchMode(advancedSearchData);
     const noteStats = useNoteStatistics(fragrances, note);
 
     useEffect(() => {
@@ -158,15 +156,6 @@ const NotePage = () => {
                     enableAdvancedSearch={true}
                     onAdvancedSearchChange={handleAdvancedSearchChange}
                 />
-
-                {/* Search Mode Indicator */}
-                {advancedSearchData.mode !== 'regular' && (
-                    <div className="text-center">
-                        <p className="text-sm text-gray-400">
-                            {searchModeText}
-                        </p>
-                    </div>
-                )}
 
                 <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender} />
 

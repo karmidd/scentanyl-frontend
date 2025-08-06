@@ -18,7 +18,14 @@ export default function SearchBar({
     const [availableNotes, setAvailableNotes] = useState([]);
     const [availableAccords, setAvailableAccords] = useState([]);
     const [selectedAccords, setSelectedAccords] = useState([]);
+    const [excludedAccords, setExcludedAccords] = useState([]);
     const [selectedNotes, setSelectedNotes] = useState({
+        top: [],
+        middle: [],
+        base: [],
+        uncategorized: []
+    });
+    const [excludedNotes, setExcludedNotes] = useState({
         top: [],
         middle: [],
         base: [],
@@ -59,17 +66,19 @@ export default function SearchBar({
             onAdvancedSearchChange({
                 mode: searchMode,
                 accords: selectedAccords,
-                notes: selectedNotes
+                excludedAccords: excludedAccords,
+                notes: selectedNotes,
+                excludedNotes: excludedNotes
             });
         }
-    }, [searchMode, JSON.stringify(selectedAccords), JSON.stringify(selectedNotes), enableAdvancedSearch]);
+    }, [searchMode, JSON.stringify(selectedAccords), JSON.stringify(excludedAccords),
+        JSON.stringify(selectedNotes), JSON.stringify(excludedNotes), enableAdvancedSearch]);
 
     const fetchNotes = async () => {
         try {
             const response = await fetch('/api/notes');
             if (response.ok) {
                 const data = await response.json();
-                // Extract names from objects if API returns objects with {id, name, totalAppearances}
                 const noteNames = Array.isArray(data)
                     ? data.map(item => typeof item === 'object' && item.name ? item.name : item)
                     : [];
@@ -86,7 +95,6 @@ export default function SearchBar({
             const response = await fetch('/api/accords');
             if (response.ok) {
                 const data = await response.json();
-                // Extract names from objects if API returns objects with {id, name, totalAppearances}
                 const accordNames = Array.isArray(data)
                     ? data.map(item => typeof item === 'object' && item.name ? item.name : item)
                     : [];
@@ -100,20 +108,22 @@ export default function SearchBar({
 
     const handleModeSwitch = (newMode) => {
         if (newMode === 'regular' && searchMode !== 'regular') {
-            // Animate out the advanced search
             setIsAnimating(true);
             setTimeout(() => {
                 setSelectedAccords([]);
+                setExcludedAccords([]);
                 setSelectedNotes({ top: [], middle: [], base: [], uncategorized: [] });
+                setExcludedNotes({ top: [], middle: [], base: [], uncategorized: [] });
                 setSearchMode(newMode);
                 setActiveDropdown(null);
                 setSearchTerm('');
                 setIsAnimating(false);
-            }, 150); // Match the fadeOut animation duration
+            }, 150);
         } else {
-            // Immediate switch for other cases
             setSelectedAccords([]);
+            setExcludedAccords([]);
             setSelectedNotes({ top: [], middle: [], base: [], uncategorized: [] });
+            setExcludedNotes({ top: [], middle: [], base: [], uncategorized: [] });
             setSearchMode(newMode);
             setActiveDropdown(null);
             setSearchTerm('');
@@ -122,11 +132,24 @@ export default function SearchBar({
 
     const addAccord = (accord) => {
         try {
-            if (accord && !selectedAccords.includes(accord)) {
+            if (accord && !selectedAccords.includes(accord) && !excludedAccords.includes(accord)) {
                 setSelectedAccords(prev => [...prev, accord]);
             }
         } catch (error) {
             console.error('Error adding accord:', error);
+        } finally {
+            setActiveDropdown(null);
+            setSearchTerm('');
+        }
+    };
+
+    const excludeAccord = (accord) => {
+        try {
+            if (accord && !excludedAccords.includes(accord) && !selectedAccords.includes(accord)) {
+                setExcludedAccords(prev => [...prev, accord]);
+            }
+        } catch (error) {
+            console.error('Error excluding accord:', error);
         } finally {
             setActiveDropdown(null);
             setSearchTerm('');
@@ -141,9 +164,17 @@ export default function SearchBar({
         }
     };
 
+    const removeExcludedAccord = (accord) => {
+        try {
+            setExcludedAccords(prev => prev.filter(a => a !== accord));
+        } catch (error) {
+            console.error('Error removing excluded accord:', error);
+        }
+    };
+
     const addNote = (layer, note) => {
         try {
-            if (note && selectedNotes[layer] && !selectedNotes[layer].includes(note)) {
+            if (note && selectedNotes[layer] && !selectedNotes[layer].includes(note) && !excludedNotes[layer].includes(note)) {
                 setSelectedNotes(prev => ({
                     ...prev,
                     [layer]: [...(prev[layer] || []), note]
@@ -151,6 +182,22 @@ export default function SearchBar({
             }
         } catch (error) {
             console.error('Error adding note:', error);
+        } finally {
+            setActiveDropdown(null);
+            setSearchTerm('');
+        }
+    };
+
+    const excludeNote = (layer, note) => {
+        try {
+            if (note && excludedNotes[layer] && !excludedNotes[layer].includes(note) && !selectedNotes[layer].includes(note)) {
+                setExcludedNotes(prev => ({
+                    ...prev,
+                    [layer]: [...(prev[layer] || []), note]
+                }));
+            }
+        } catch (error) {
+            console.error('Error excluding note:', error);
         } finally {
             setActiveDropdown(null);
             setSearchTerm('');
@@ -168,15 +215,34 @@ export default function SearchBar({
         }
     };
 
-    const getFilteredItems = (items, searchTerm) => {
-        if (!Array.isArray(items)) return [];
-        if (!searchTerm) return items.slice(0, 10); // Show first 10 items when no search
-        return items.filter(item =>
-            item && typeof item === 'string' && item.toLowerCase().includes(searchTerm.toLowerCase())
-        ).slice(0, 10);
+    const removeExcludedNote = (layer, note) => {
+        try {
+            setExcludedNotes(prev => ({
+                ...prev,
+                [layer]: (prev[layer] || []).filter(n => n !== note)
+            }));
+        } catch (error) {
+            console.error('Error removing excluded note:', error);
+        }
     };
 
-    const renderDropdown = (items, onSelect, type) => {
+    const getFilteredItems = (items, searchTerm, excludeSelected, excludeExcluded) => {
+        if (!Array.isArray(items)) return [];
+        let filtered = items;
+
+        // Filter out already selected/excluded items
+        if (excludeSelected && excludeExcluded) {
+            const allUsed = [...(excludeSelected || []), ...(excludeExcluded || [])];
+            filtered = items.filter(item => !allUsed.includes(item));
+        }
+
+        if (!searchTerm) return filtered.slice(0, 30);
+        return filtered.filter(item =>
+            item && typeof item === 'string' && item.toLowerCase().includes(searchTerm.toLowerCase())
+        ).slice(0, 30);
+    };
+
+    const renderDropdown = (items, onSelect, type, excludeSelected = [], excludeExcluded = []) => {
         if (!Array.isArray(items) || items.length === 0) {
             return (
                 <div
@@ -191,7 +257,7 @@ export default function SearchBar({
             );
         }
 
-        const filteredItems = getFilteredItems(items, searchTerm);
+        const filteredItems = getFilteredItems(items, searchTerm, excludeSelected, excludeExcluded);
 
         return (
             <div
@@ -231,7 +297,7 @@ export default function SearchBar({
                         ))
                     ) : (
                         <div className="px-3 py-2 text-sm text-gray-500">
-                            No {type} found
+                            No available {type} to add
                         </div>
                     )}
                 </div>
@@ -269,84 +335,230 @@ export default function SearchBar({
 
             {/* Accords Section */}
             <div className="space-y-2 sm:space-y-3">
-                <div className="flex items-center justify-center relative">
-                    <h3 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>Accords</h3>
-                    <div className="absolute right-0">
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setActiveDropdown(activeDropdown === 'accords' ? null : 'accords');
-                            }}
-                            type="button"
-                            className={`cursor-pointer ${theme.button.primary} p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
-                        >
-                            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                            </svg>
-                        </button>
-                        {activeDropdown === 'accords' && availableAccords.length > 0 && renderDropdown(availableAccords, addAccord, 'accords')}
+                {/* Include Accords */}
+                <div className="space-y-2">
+                    <div className="flex items-center justify-center relative">
+                        <h3 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>Include Accords</h3>
+                        <div className="absolute right-0">
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setActiveDropdown(activeDropdown === 'accords-include' ? null : 'accords-include');
+                                }}
+                                type="button"
+                                className={`cursor-pointer ${theme.button.primary} p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                            >
+                                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>
+                            </button>
+                            {activeDropdown === 'accords-include' && availableAccords.length > 0 &&
+                                renderDropdown(availableAccords, addAccord, 'accords', selectedAccords, excludedAccords)}
+                        </div>
+                    </div>
+                    <div className="min-h-[2rem] p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-900/10">
+                        {selectedAccords.map((accord, index) => (
+                            <span
+                                key={index}
+                                className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-900/30 rounded-lg text-xs sm:text-sm border border-green-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn text-green-300`}
+                                style={{animationDelay: `${index * 50}ms`}}
+                            >
+                                <span>{accord}</span>
+                                <button
+                                    onClick={() => removeAccord(accord)}
+                                    type="button"
+                                    className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-full w-5 h-5 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                >
+                                    ×
+                                </button>
+                            </span>
+                        ))}
                     </div>
                 </div>
-                <div className="min-h-[2rem] p-2 border border-gray-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center">
-                    {selectedAccords.map((accord, index) => (
-                        <span
-                            key={index}
-                            className={`px-2 sm:px-3 py-1 sm:py-1.5 ${theme.card.primary} rounded-lg text-xs sm:text-sm border border-gray-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn`}
-                            style={{animationDelay: `${index * 50}ms`}}
-                        >
-                            <span>{accord}</span>
+
+                {/* Exclude Accords */}
+                <div className="space-y-2">
+                    <div className="flex items-center justify-center relative">
+                        <h3 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>Exclude Accords</h3>
+                        <div className="absolute right-0">
                             <button
-                                onClick={() => removeAccord(accord)}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setActiveDropdown(activeDropdown === 'accords-exclude' ? null : 'accords-exclude');
+                                }}
                                 type="button"
-                                className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-full w-5 h-5 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                className={`cursor-pointer bg-red-600 hover:bg-red-700 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
                             >
-                                ×
+                                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                                </svg>
                             </button>
-                        </span>
-                    ))}
+                            {activeDropdown === 'accords-exclude' && availableAccords.length > 0 &&
+                                renderDropdown(availableAccords, excludeAccord, 'accords', selectedAccords, excludedAccords)}
+                        </div>
+                    </div>
+                    <div className="min-h-[2rem] p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-900/10">
+                        {excludedAccords.map((accord, index) => (
+                            <span
+                                key={index}
+                                className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-900/30 rounded-lg text-xs sm:text-sm border border-red-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn text-red-300`}
+                                style={{animationDelay: `${index * 50}ms`}}
+                            >
+                                <span>{accord}</span>
+                                <button
+                                    onClick={() => removeExcludedAccord(accord)}
+                                    type="button"
+                                    className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-full w-5 h-5 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                >
+                                    ×
+                                </button>
+                            </span>
+                        ))}
+                    </div>
                 </div>
             </div>
 
             {/* Notes Sections */}
             {searchMode === 'layered' && (
                 <div className="animate-slideDown">
-                    {/* Separator */}
                     <div className={`w-full h-px ${theme.border.primary} mb-4 rounded-full`}></div>
 
                     {['top', 'middle', 'base'].map((layer) => (
-                        <div key={layer} className="space-y-2 sm:space-y-3 mb-3 sm:mb-4">
-                            <div className="flex items-center justify-center relative">
-                                <h3 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>
-                                    {layer.charAt(0).toUpperCase() + layer.slice(1)} Notes
-                                </h3>
-                                <div className="absolute right-0">
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            setActiveDropdown(activeDropdown === layer ? null : layer);
-                                        }}
-                                        type="button"
-                                        className={`cursor-pointer ${theme.button.primary} p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
-                                    >
-                                        <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                        </svg>
-                                    </button>
-                                    {activeDropdown === layer && availableNotes.length > 0 && renderDropdown(availableNotes, (note) => addNote(layer, note), 'notes')}
+                        <div key={layer} className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+                            <h3 className={`text-center text-sm sm:text-base md:text-lg font-bold ${theme.text.other_accent} mb-3`}>
+                                {layer.charAt(0).toUpperCase() + layer.slice(1)} Notes
+                            </h3>
+
+                            {/* Include Notes */}
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-center relative">
+                                    <h4 className={`text-xs sm:text-sm font-semibold ${theme.text.primary}`}>Include</h4>
+                                    <div className="absolute right-0">
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                setActiveDropdown(activeDropdown === `${layer}-include` ? null : `${layer}-include`);
+                                            }}
+                                            type="button"
+                                            className={`cursor-pointer ${theme.button.primary} p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                        >
+                                            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                            </svg>
+                                        </button>
+                                        {activeDropdown === `${layer}-include` && availableNotes.length > 0 &&
+                                            renderDropdown(availableNotes, (note) => addNote(layer, note), 'notes', selectedNotes[layer], excludedNotes[layer])}
+                                    </div>
+                                </div>
+                                <div className={`min-h-[2rem] p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-900/10`}>
+                                    {selectedNotes[layer].map((note, index) => (
+                                        <span
+                                            key={index}
+                                            className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-900/30 rounded-lg text-xs sm:text-sm border border-green-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn text-green-300`}
+                                            style={{animationDelay: `${index * 50}ms`}}
+                                        >
+                                            <span>{note}</span>
+                                            <button
+                                                onClick={() => removeNote(layer, note)}
+                                                type="button"
+                                                className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-full w-5 h-5 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                            >
+                                                ×
+                                            </button>
+                                        </span>
+                                    ))}
                                 </div>
                             </div>
-                            <div className={`min-h-[2rem] p-2 border border-gray-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center`}>
-                                {selectedNotes[layer].map((note, index) => (
+
+                            {/* Exclude Notes */}
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-center relative">
+                                    <h4 className={`text-xs sm:text-sm font-semibold ${theme.text.primary}`}>Exclude</h4>
+                                    <div className="absolute right-0">
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                setActiveDropdown(activeDropdown === `${layer}-exclude` ? null : `${layer}-exclude`);
+                                            }}
+                                            type="button"
+                                            className={`cursor-pointer bg-red-600 hover:bg-red-700 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                        >
+                                            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                                            </svg>
+                                        </button>
+                                        {activeDropdown === `${layer}-exclude` && availableNotes.length > 0 &&
+                                            renderDropdown(availableNotes, (note) => excludeNote(layer, note), 'notes', selectedNotes[layer], excludedNotes[layer])}
+                                    </div>
+                                </div>
+                                <div className={`min-h-[2rem] p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-900/10`}>
+                                    {excludedNotes[layer].map((note, index) => (
+                                        <span
+                                            key={index}
+                                            className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-900/30 rounded-lg text-xs sm:text-sm border border-red-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn text-red-300`}
+                                            style={{animationDelay: `${index * 50}ms`}}
+                                        >
+                                            <span>{note}</span>
+                                            <button
+                                                onClick={() => removeExcludedNote(layer, note)}
+                                                type="button"
+                                                className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-full w-5 h-5 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                            >
+                                                ×
+                                            </button>
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {searchMode === 'uncategorized' && (
+                <div className="space-y-2 sm:space-y-3 animate-slideDown">
+                    <div className={`w-full h-px ${theme.border.primary} mb-4 rounded-full`}></div>
+                    <h3 className={`text-center text-sm sm:text-base md:text-lg font-bold ${theme.text.other_accent} mb-3`}>
+                        Uncategorized Notes
+                    </h3>
+
+                    {/* Include Uncategorized Notes */}
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-center relative">
+                            <h4 className={`text-xs sm:text-sm font-semibold ${theme.text.primary}`}>Include</h4>
+                            <div className="absolute right-0">
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setActiveDropdown(activeDropdown === 'uncategorized-include' ? null : 'uncategorized-include');
+                                    }}
+                                    type="button"
+                                    className={`cursor-pointer ${theme.button.primary} p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                >
+                                    <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                    </svg>
+                                </button>
+                                {activeDropdown === 'uncategorized-include' && availableNotes.length > 0 &&
+                                    renderDropdown(availableNotes, (note) => addNote('uncategorized', note), 'notes', selectedNotes.uncategorized, excludedNotes.uncategorized)}
+                            </div>
+                        </div>
+                        <div className={`min-h-[2rem] p-2 border border-green-600/30 rounded-lg bg-green-900/10`}>
+                            <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
+                                {selectedNotes.uncategorized.map((note, index) => (
                                     <span
                                         key={index}
-                                        className={`px-2 sm:px-3 py-1 sm:py-1.5 ${theme.card.primary} rounded-lg text-xs sm:text-sm border border-gray-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn`}
+                                        className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-900/30 rounded-lg text-xs sm:text-sm border border-green-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn text-green-300`}
                                         style={{animationDelay: `${index * 50}ms`}}
                                     >
                                         <span>{note}</span>
                                         <button
-                                            onClick={() => removeNote(layer, note)}
+                                            onClick={() => removeNote('uncategorized', note)}
                                             type="button"
                                             className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-full w-5 h-5 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
                                         >
@@ -356,51 +568,48 @@ export default function SearchBar({
                                 ))}
                             </div>
                         </div>
-                    ))}
-                </div>
-            )}
-
-            {searchMode === 'uncategorized' && (
-                <div className="space-y-2 sm:space-y-3 animate-slideDown">
-                    {/* Separator */}
-                    <div className={`w-full h-px ${theme.border.primary} mb-4 rounded-full`}></div>
-                    <div className="flex items-center justify-center relative">
-                        <h3 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>Uncategorized Notes</h3>
-                        <div className="absolute right-0">
-                            <button
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    setActiveDropdown(activeDropdown === 'uncategorized' ? null : 'uncategorized');
-                                }}
-                                type="button"
-                                className={`cursor-pointer ${theme.button.primary} p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
-                            >
-                                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                </svg>
-                            </button>
-                            {activeDropdown === 'uncategorized' && availableNotes.length > 0 && renderDropdown(availableNotes, (note) => addNote('uncategorized', note), 'notes')}
-                        </div>
                     </div>
-                    <div className={`min-h-[2rem] p-2 border border-gray-600/30 rounded-lg ${theme.bg.input}/20`}>
-                        <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
-                            {selectedNotes.uncategorized.map((note, index) => (
-                                <span
-                                    key={index}
-                                    className={`px-2 sm:px-3 py-1 sm:py-1.5 ${theme.card.primary} rounded-lg text-xs sm:text-sm border border-gray-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn`}
-                                    style={{animationDelay: `${index * 50}ms`}}
+                    {/* Exclude Uncategorized Notes */}
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-center relative">
+                            <h4 className={`text-xs sm:text-sm font-semibold ${theme.text.primary}`}>Exclude</h4>
+                            <div className="absolute right-0">
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setActiveDropdown(activeDropdown === 'uncategorized-exclude' ? null : 'uncategorized-exclude');
+                                    }}
+                                    type="button"
+                                    className={`cursor-pointer bg-red-600 hover:bg-red-700 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
                                 >
-                                    <span>{note}</span>
-                                    <button
-                                        onClick={() => removeNote('uncategorized', note)}
-                                        type="button"
-                                        className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-full w-5 h-5 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                    <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                                    </svg>
+                                </button>
+                                {activeDropdown === 'uncategorized-exclude' && availableNotes.length > 0 &&
+                                    renderDropdown(availableNotes, (note) => excludeNote('uncategorized', note), 'notes', selectedNotes.uncategorized, excludedNotes.uncategorized)}
+                            </div>
+                        </div>
+                        <div className={`min-h-[2rem] p-2 border border-red-600/30 rounded-lg bg-red-900/10`}>
+                            <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
+                                {excludedNotes.uncategorized.map((note, index) => (
+                                    <span
+                                        key={index}
+                                        className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-900/30 rounded-lg text-xs sm:text-sm border border-red-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn text-red-300`}
+                                        style={{animationDelay: `${index * 50}ms`}}
                                     >
-                                        ×
-                                    </button>
-                                </span>
-                            ))}
+                                        <span>{note}</span>
+                                        <button
+                                            onClick={() => removeExcludedNote('uncategorized', note)}
+                                            type="button"
+                                            className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-full w-5 h-5 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                        >
+                                            ×
+                                        </button>
+                                    </span>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

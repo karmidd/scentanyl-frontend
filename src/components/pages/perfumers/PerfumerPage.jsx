@@ -166,7 +166,7 @@ const PerfumerPage = () => {
                     />
 
                     <BlurText
-                        text={`${genderCounts.total} ${genderCounts.total === 1 ? 'Fragrance' : 'Fragrances'} Created`}
+                        text={`${genderCounts.all} ${genderCounts.all === 1 ? 'Fragrance' : 'Fragrances'} Created`}
                         delay={150}
                         animateBy="words"
                         direction="bottom"
@@ -176,7 +176,7 @@ const PerfumerPage = () => {
                     {/* Gender Statistics */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 max-w-4xl mx-auto mb-4 sm:mb-6 md:mb-8 px-2">
                         <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
-                            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-500">{genderCounts.total}</div>
+                            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-500">{genderCounts.all}</div>
                             <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Total Fragrances</div>
                         </div>
                         <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
@@ -216,15 +216,6 @@ const PerfumerPage = () => {
                     enableAdvancedSearch={true}
                     onAdvancedSearchChange={handleAdvancedSearchChange}
                 />
-
-                {/* Search Mode Indicator */}
-                {advancedSearchData.mode !== 'regular' && (
-                    <div className="text-center">
-                        <p className="text-sm text-gray-400">
-                            {searchModeText}
-                        </p>
-                    </div>
-                )}
 
                 <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender}/>
 
