@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import BrandCard from "../../cards/BrandCard.jsx";
 import LoadingPage from "../primary/LoadingPage.jsx";
@@ -8,28 +8,50 @@ import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
+import {useBrandFilter} from "../../../hooks/useBrandHook.jsx";
+import {usePagination} from "../../../hooks/usePagination.jsx";
+
+
+// Memoized BrandCard
+const MemoizedBrandCard = memo(BrandCard, (prevProps, nextProps) => {
+    return prevProps.brand.id === nextProps.brand.id;
+});
 
 const AllBrandsPage = () => {
-    const [brands, setBrands] = useState([]);
-    const [displayedBrands, setDisplayedBrands] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [loadingMore, setLoadingMore] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [selectedCountry, setSelectedCountry] = useState('');
-    const [selectedParent, setSelectedParent] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
     const { theme } = useTheme();
 
-    const BRANDS_PER_PAGE = 20;
+    // Use custom hooks
+    const {
+        setBrands,
+        filteredBrands,
+        searchQuery,
+        setSearchQuery,
+        selectedCountry,
+        setSelectedCountry,
+        selectedParent,
+        setSelectedParent,
+        uniqueCountries,
+        uniqueParents,
+        clearFilters
+    } = useBrandFilter();
+
+    const {
+        displayedItems: displayedBrands,
+        hasMore,
+        isLoadingMore,
+        loadMore,
+        reset: resetPagination
+    } = usePagination(filteredBrands, 20);
 
     useEffect(() => {
         fetchBrands();
     }, []);
 
+    // Reset pagination when filters change
     useEffect(() => {
-        filterBrands();
-    }, [searchQuery, selectedCountry, selectedParent, brands]);
+        resetPagination();
+    }, [searchQuery, selectedCountry, selectedParent, resetPagination]);
 
     const fetchBrands = async () => {
         try {
@@ -37,8 +59,6 @@ const AllBrandsPage = () => {
             const response = await fetch('/api/brands');
             const data = await response.json();
             setBrands(data);
-            setDisplayedBrands(data.slice(0, BRANDS_PER_PAGE));
-            setHasMore(data.length > BRANDS_PER_PAGE);
             setLoading(false);
         } catch (error) {
             console.error('Error fetching brands:', error);
@@ -46,123 +66,22 @@ const AllBrandsPage = () => {
         }
     };
 
-    const getUniqueCountries = () => {
-        const countries = brands
-            .map(brand => brand.country)
-            .filter(country => country !== null && country !== undefined && country !== '')
-            .filter((country, index, self) => self.indexOf(country) === index)
-            .sort();
-        return countries;
-    };
-
-    const getUniqueParents = () => {
-        const parents = brands
-            .map(brand => brand.parent)
-            .filter(parent => parent !== null && parent !== undefined && parent !== '')
-            .filter((parent, index, self) => self.indexOf(parent) === index)
-            .sort();
-        return parents;
-    };
-
-    const filterBrands = () => {
-        let filtered = brands;
-
-        if (searchQuery.trim()) {
-            filtered = filtered.filter(brand =>
-                brand.name?.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
-
-        if (selectedCountry) {
-            filtered = filtered.filter(brand => brand.country === selectedCountry);
-        }
-
-        if (selectedParent) {
-            filtered = filtered.filter(brand => brand.parent === selectedParent);
-        }
-
-        setDisplayedBrands(filtered.slice(0, BRANDS_PER_PAGE * currentPage));
-        setHasMore(filtered.length > BRANDS_PER_PAGE * currentPage);
-    };
-
-    const loadMoreBrands = async () => {
-        if (loadingMore || !hasMore) return;
-
-        setLoadingMore(true);
-        const nextPage = currentPage + 1;
-
-        setTimeout(() => {
-            let filtered = brands;
-
-            if (searchQuery.trim()) {
-                filtered = filtered.filter(brand =>
-                    brand.name?.toLowerCase().includes(searchQuery.toLowerCase())
-                );
-            }
-
-            if (selectedCountry) {
-                filtered = filtered.filter(brand => brand.country === selectedCountry);
-            }
-
-            if (selectedParent) {
-                filtered = filtered.filter(brand => brand.parent === selectedParent);
-            }
-
-            const newBrands = filtered.slice(0, BRANDS_PER_PAGE * nextPage);
-            setDisplayedBrands(newBrands);
-            setCurrentPage(nextPage);
-            setHasMore(filtered.length > BRANDS_PER_PAGE * nextPage);
-            setLoadingMore(false);
-        }, 800);
-    };
-
-    const handleSearch = (e) => {
+    // Memoized callbacks
+    const handleSearch = useCallback((e) => {
         e.preventDefault();
-        setCurrentPage(1);
-        filterBrands();
-    };
+    }, []);
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = useCallback((e) => {
         setSearchQuery(e.target.value);
-        setCurrentPage(1);
-    };
+    }, [setSearchQuery]);
 
-    const handleCountryChange = (e) => {
+    const handleCountryChange = useCallback((e) => {
         setSelectedCountry(e.target.value);
-        setCurrentPage(1);
-    };
+    }, [setSelectedCountry]);
 
-    const handleParentChange = (e) => {
+    const handleParentChange = useCallback((e) => {
         setSelectedParent(e.target.value);
-        setCurrentPage(1);
-    };
-
-    const clearFilters = () => {
-        setSearchQuery('');
-        setSelectedCountry('');
-        setSelectedParent('');
-        setCurrentPage(1);
-    };
-
-    const getFilteredBrandsCount = () => {
-        let filtered = brands;
-
-        if (searchQuery.trim()) {
-            filtered = filtered.filter(brand =>
-                brand.name?.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
-
-        if (selectedCountry) {
-            filtered = filtered.filter(brand => brand.country === selectedCountry);
-        }
-
-        if (selectedParent) {
-            filtered = filtered.filter(brand => brand.parent === selectedParent);
-        }
-
-        return filtered.length;
-    };
+    }, [setSelectedParent]);
 
     if (loading) {
         return <LoadingPage/>;
@@ -170,21 +89,21 @@ const AllBrandsPage = () => {
 
     return (
         <PageLayout headerNum={2} style={<style jsx>{`
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
                 }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
 
-                .animate-fadeIn {
-                    animation: fadeIn 0.6s ease-out;
-                }
-            `}</style>}
+            .animate-fadeIn {
+                animation: fadeIn 0.6s ease-out;
+            }
+        `}</style>}
         >
             {/* Hero Section */}
             <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
@@ -206,7 +125,7 @@ const AllBrandsPage = () => {
                                     className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 ${theme.bg.card} border border-gray-600 rounded-lg sm:rounded-xl focus:outline-none ${theme.border.focus} transition-all duration-300 ${theme.text.primary} text-sm sm:text-base w-full`}
                                 >
                                     <option value="">All Countries</option>
-                                    {getUniqueCountries().map(country => (
+                                    {uniqueCountries.map(country => (
                                         <option key={country} value={country}>
                                             {country}
                                         </option>
@@ -223,7 +142,7 @@ const AllBrandsPage = () => {
                                     className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 ${theme.bg.card} border border-gray-600 rounded-lg sm:rounded-xl focus:outline-none ${theme.border.focus} transition-all duration-300 ${theme.text.primary} text-sm sm:text-base w-full`}
                                 >
                                     <option value="">All Parents</option>
-                                    {getUniqueParents().map(parent => (
+                                    {uniqueParents.map(parent => (
                                         <option key={parent} value={parent}>
                                             {parent}
                                         </option>
@@ -248,7 +167,7 @@ const AllBrandsPage = () => {
                 </div>
 
                 {/* Results Counter */}
-                <ResultsCounter displayedCount={displayedBrands.length} filteredCount={getFilteredBrandsCount()} type={"brands"} />
+                <ResultsCounter displayedCount={displayedBrands.length} filteredCount={filteredBrands.length} type={"brands"} />
             </div>
 
             {/* Brands Grid */}
@@ -261,20 +180,18 @@ const AllBrandsPage = () => {
                                     key={brand.id || brand.name || index}
                                     className="animate-fadeIn"
                                     style={{
-                                        animationDelay: `${(index % BRANDS_PER_PAGE) * 50}ms`,
+                                        animationDelay: `${(index % 20) * 50}ms`,
                                         animationFillMode: 'both'
                                     }}
                                 >
-                                    <BrandCard
-                                        brand={brand}
-                                    />
+                                    <MemoizedBrandCard brand={brand} />
                                 </div>
                             ))}
                         </div>
 
                         {/* Load More Button */}
                         {hasMore && (
-                            <LoadMoreButton onClick={loadMoreBrands} disabled={loadingMore} message={"Load More Brands"} />
+                            <LoadMoreButton onClick={loadMore} disabled={isLoadingMore} message={"Load More Brands"} />
                         )}
                     </>
                 ) : (

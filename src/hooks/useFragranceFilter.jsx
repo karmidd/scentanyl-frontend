@@ -1,22 +1,6 @@
 // src/hooks/useFragranceFilter.js
-import { useState, useMemo, useCallback, useEffect } from 'react';
-
-// Debounce hook
-export const useDebouncedValue = (value, delay = 300) => {
-    const [debouncedValue, setDebouncedValue] = useState(value);
-
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedValue(value);
-        }, delay);
-
-        return () => {
-            clearTimeout(handler);
-        };
-    }, [value, delay]);
-
-    return debouncedValue;
-};
+import { useState, useMemo, useCallback } from 'react';
+import {useDebouncedValue} from "./useDebouncedValue.jsx";
 
 // Main fragrance filter hook
 export const useFragranceFilter = () => {

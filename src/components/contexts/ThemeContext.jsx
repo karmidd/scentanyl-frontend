@@ -48,7 +48,7 @@ export const ThemeProvider = ({ children }) => {
         text: {
             primary: isDarkMode ? 'text-white' : 'text-gray-800',
             secondary: isDarkMode ? 'text-gray-400' : 'text-gray-700',
-            accent: isDarkMode ? 'text-blue-500' : 'text-[#c8d1ff]',
+            accent: isDarkMode ? 'text-blue-500' : 'text-[#d6dfff]',
             muted: isDarkMode ? 'text-gray-500' : 'text-gray-500',
             groupHover: isDarkMode ? 'group-hover:text-blue-500' : 'group-hover:text-[#676adc]',
             hover: isDarkMode ? 'hover:text-blue-500' : 'hover:text-[#676adc]',
@@ -61,6 +61,7 @@ export const ThemeProvider = ({ children }) => {
             secondary: isDarkMode ? 'border-gray-600' : 'border-gray-400',
             accent: isDarkMode ? 'border-blue-400' : 'border-indigo-400',
             hover: isDarkMode ? 'hover:border-blue-600' : 'hover:border-indigo-500',
+            groupHover: isDarkMode ? 'group-hover:border-blue-600' : 'group-hover:border-indigo-500',
             focus: isDarkMode ? 'focus:border-blue-400' : 'focus:border-indigo-400',
         },
 

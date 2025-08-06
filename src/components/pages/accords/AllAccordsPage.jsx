@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import LoadingPage from "../primary/LoadingPage.jsx";
@@ -9,29 +9,44 @@ import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import SortButtons from "../../utils/buttons/SortButtons.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
+import {useItemFilter} from "../../../hooks/useItemFilter.jsx";
+import {usePagination} from "../../../hooks/usePagination.jsx";
+
+// Memoized GeneralCard
+const MemoizedGeneralCard = memo(GeneralCard, (prevProps, nextProps) => {
+    return prevProps.name === nextProps.name && prevProps.total === nextProps.total;
+});
 
 const AllAccordsPage = () => {
     const navigate = useNavigate();
-    const [accords, setAccords] = useState([]);
-    const [displayedAccords, setDisplayedAccords] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [loadingMore, setLoadingMore] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
-    const [sortBy, setSortBy] = useState('alphabetical');
 
-    const ACCORDS_PER_PAGE = 20;
+    // Use custom hooks
+    const {
+        setItems: setAccords,
+        filteredItems: filteredAccords,
+        searchQuery,
+        setSearchQuery,
+        sortBy,
+        setSortBy
+    } = useItemFilter(['alphabetical', 'popularity']);
+
+    const {
+        displayedItems: displayedAccords,
+        hasMore,
+        isLoadingMore,
+        loadMore,
+        reset: resetPagination
+    } = usePagination(filteredAccords, 20);
 
     useEffect(() => {
         fetchAccords();
     }, []);
 
+    // Reset pagination when filters change
     useEffect(() => {
-        if (!loading) {
-            filterAndSortAccords();
-        }
-    }, [searchQuery, sortBy, accords]);
+        resetPagination();
+    }, [searchQuery, sortBy, resetPagination]);
 
     const fetchAccords = async () => {
         try {
@@ -46,80 +61,22 @@ const AllAccordsPage = () => {
         }
     };
 
-    const filterAndSortAccords = () => {
-        let filtered = accords;
-
-        if (searchQuery.trim()) {
-            filtered = filtered.filter(accord =>
-                accord.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
-
-        if (sortBy === 'alphabetical') {
-            filtered.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (sortBy === 'popularity') {
-            filtered.sort((a, b) => b.totalAppearances - a.totalAppearances);
-        }
-
-        setDisplayedAccords(filtered.slice(0, ACCORDS_PER_PAGE * currentPage));
-        setHasMore(filtered.length > ACCORDS_PER_PAGE * currentPage);
-    };
-
-    const loadMoreAccords = async () => {
-        if (loadingMore || !hasMore) return;
-
-        setLoadingMore(true);
-        const nextPage = currentPage + 1;
-
-        setTimeout(() => {
-            let filtered = accords;
-
-            if (searchQuery.trim()) {
-                filtered = filtered.filter(accord =>
-                    accord.name.toLowerCase().includes(searchQuery.toLowerCase())
-                );
-            }
-
-            if (sortBy === 'alphabetical') {
-                filtered.sort((a, b) => a.name.localeCompare(b.name));
-            } else if (sortBy === 'popularity') {
-                filtered.sort((a, b) => b.totalAppearances - a.totalAppearances);
-            }
-
-            const newAccords = filtered.slice(0, ACCORDS_PER_PAGE * nextPage);
-            setDisplayedAccords(newAccords);
-            setCurrentPage(nextPage);
-            setHasMore(filtered.length > ACCORDS_PER_PAGE * nextPage);
-            setLoadingMore(false);
-        }, 800);
-    };
-
-    const handleSearch = (e) => {
+    // Memoized callbacks
+    const handleSearch = useCallback((e) => {
         e.preventDefault();
-        setCurrentPage(1);
-        filterAndSortAccords();
-    };
+    }, []);
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = useCallback((e) => {
         setSearchQuery(e.target.value);
-        setCurrentPage(1);
-    };
+    }, [setSearchQuery]);
 
-    const handleSortChange = (newSortBy) => {
+    const handleSortChange = useCallback((newSortBy) => {
         setSortBy(newSortBy);
-        setCurrentPage(1);
-    };
+    }, [setSortBy]);
 
-    const handleAccordClick = (accord) => {
+    const handleAccordClick = useCallback((accord) => {
         navigate(`/accords/${encodeURIComponent(accord.name)}`);
-    };
-
-    const getFilteredCount = () => {
-        if (!searchQuery.trim()) return accords.length;
-        return accords.filter(accord =>
-            accord.name.toLowerCase().includes(searchQuery.toLowerCase())
-        ).length;
-    };
+    }, [navigate]);
 
     if (loading) {
         return <LoadingPage/>;
@@ -127,31 +84,41 @@ const AllAccordsPage = () => {
 
     return (
         <PageLayout headerNum={4} style={<style jsx>{`
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
                 }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
 
-                .animate-fadeIn {
-                    animation: fadeIn 0.6s ease-out;
-                }
-            `}</style>}
+            .animate-fadeIn {
+                animation: fadeIn 0.6s ease-out;
+            }
+        `}</style>}
         >
             {/* Hero Section */}
             <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
                 <HeroSection primaryText={"Explore Accords"} secondaryText={"Discover the harmonic structures that define fragrance families"}/>
 
-                <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search for accords..."} />
+                <SearchBar
+                    size={2}
+                    onSubmit={handleSearch}
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    message={"Search for accords..."}
+                />
 
                 <SortButtons handleSortChange={handleSortChange} sortBy={sortBy} />
 
-                <ResultsCounter displayedCount={displayedAccords.length} filteredCount={getFilteredCount()} type={"accords"}/>
+                <ResultsCounter
+                    displayedCount={displayedAccords.length}
+                    filteredCount={filteredAccords.length}
+                    type={"accords"}
+                />
             </div>
 
             {/* Accords Grid */}
@@ -164,11 +131,11 @@ const AllAccordsPage = () => {
                                     key={accord.id}
                                     className="animate-fadeIn"
                                     style={{
-                                        animationDelay: `${(index % ACCORDS_PER_PAGE) * 50}ms`,
+                                        animationDelay: `${(index % 20) * 50}ms`,
                                         animationFillMode: 'both'
                                     }}
                                 >
-                                    <GeneralCard
+                                    <MemoizedGeneralCard
                                         name={accord.name}
                                         total={accord.totalAppearances}
                                         message={"Click to explore fragrances with this accord"}
@@ -179,7 +146,7 @@ const AllAccordsPage = () => {
                         </div>
 
                         {hasMore && (
-                            <LoadMoreButton onClick={loadMoreAccords} disabled={loadingMore} message={"Load More Accords"} />
+                            <LoadMoreButton onClick={loadMore} disabled={isLoadingMore} message={"Load More Accords"} />
                         )}
                     </>
                 ) : (

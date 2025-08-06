@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import NoteCard from "../../cards/NoteCard.jsx";
@@ -8,29 +8,46 @@ import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import SortButtons from "../../utils/buttons/SortButtons.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
+import {useItemFilter} from "../../../hooks/useItemFilter.jsx";
+import {usePagination} from "../../../hooks/usePagination.jsx";
+
+
+// Memoized NoteCard
+const MemoizedNoteCard = memo(NoteCard, (prevProps, nextProps) => {
+    return prevProps.note === nextProps.note &&
+        prevProps.noteData.total === nextProps.noteData.total;
+});
 
 const AllNotesPage = () => {
     const navigate = useNavigate();
-    const [notes, setNotes] = useState([]);
-    const [displayedNotes, setDisplayedNotes] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [loadingMore, setLoadingMore] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
-    const [sortBy, setSortBy] = useState('alphabetical');
 
-    const NOTES_PER_PAGE = 20;
+    // Use custom hooks
+    const {
+        setItems: setNotes,
+        filteredItems: filteredNotes,
+        searchQuery,
+        setSearchQuery,
+        sortBy,
+        setSortBy
+    } = useItemFilter(['alphabetical', 'popularity']);
+
+    const {
+        displayedItems: displayedNotes,
+        hasMore,
+        isLoadingMore,
+        loadMore,
+        reset: resetPagination
+    } = usePagination(filteredNotes, 20);
 
     useEffect(() => {
         fetchNotes();
     }, []);
 
+    // Reset pagination when filters change
     useEffect(() => {
-        if (!loading) {
-            filterAndSortNotes();
-        }
-    }, [searchQuery, sortBy, notes]);
+        resetPagination();
+    }, [searchQuery, sortBy, resetPagination]);
 
     const fetchNotes = async () => {
         try {
@@ -45,80 +62,22 @@ const AllNotesPage = () => {
         }
     };
 
-    const filterAndSortNotes = () => {
-        let filtered = notes;
-
-        if (searchQuery.trim()) {
-            filtered = filtered.filter(note =>
-                note.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
-
-        if (sortBy === 'alphabetical') {
-            filtered.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (sortBy === 'popularity') {
-            filtered.sort((a, b) => b.totalAppearances - a.totalAppearances);
-        }
-
-        setDisplayedNotes(filtered.slice(0, NOTES_PER_PAGE * currentPage));
-        setHasMore(filtered.length > NOTES_PER_PAGE * currentPage);
-    };
-
-    const loadMoreNotes = async () => {
-        if (loadingMore || !hasMore) return;
-
-        setLoadingMore(true);
-        const nextPage = currentPage + 1;
-
-        setTimeout(() => {
-            let filtered = notes;
-
-            if (searchQuery.trim()) {
-                filtered = filtered.filter(note =>
-                    note.name.toLowerCase().includes(searchQuery.toLowerCase())
-                );
-            }
-
-            if (sortBy === 'alphabetical') {
-                filtered.sort((a, b) => a.name.localeCompare(b.name));
-            } else if (sortBy === 'popularity') {
-                filtered.sort((a, b) => b.totalAppearances - a.totalAppearances);
-            }
-
-            const newNotes = filtered.slice(0, NOTES_PER_PAGE * nextPage);
-            setDisplayedNotes(newNotes);
-            setCurrentPage(nextPage);
-            setHasMore(filtered.length > NOTES_PER_PAGE * nextPage);
-            setLoadingMore(false);
-        }, 800);
-    };
-
-    const handleSearch = (e) => {
+    // Memoized callbacks
+    const handleSearch = useCallback((e) => {
         e.preventDefault();
-        setCurrentPage(1);
-        filterAndSortNotes();
-    };
+    }, []);
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = useCallback((e) => {
         setSearchQuery(e.target.value);
-        setCurrentPage(1);
-    };
+    }, [setSearchQuery]);
 
-    const handleSortChange = (newSortBy) => {
+    const handleSortChange = useCallback((newSortBy) => {
         setSortBy(newSortBy);
-        setCurrentPage(1);
-    };
+    }, [setSortBy]);
 
-    const handleNoteClick = (note) => {
+    const handleNoteClick = useCallback((note) => {
         navigate(`/notes/${encodeURIComponent(note.name)}`);
-    };
-
-    const getFilteredCount = () => {
-        if (!searchQuery.trim()) return notes.length;
-        return notes.filter(note =>
-            note.name.toLowerCase().includes(searchQuery.toLowerCase())
-        ).length;
-    };
+    }, [navigate]);
 
     if (loading) {
         return <LoadingPage/>;
@@ -126,33 +85,39 @@ const AllNotesPage = () => {
 
     return (
         <PageLayout headerNum={3} style={<style jsx>{`
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
                 }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
 
-                .animate-fadeIn {
-                    animation: fadeIn 0.6s ease-out;
-                }
-            `}</style>}
+            .animate-fadeIn {
+                animation: fadeIn 0.6s ease-out;
+            }
+        `}</style>}
         >
             {/* Hero Section */}
             <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
                 <HeroSection primaryText={"Explore Notes"} secondaryText={"Discover the building blocks of your favorite fragrances"}/>
 
-                <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search for notes..."} />
+                <SearchBar
+                    size={2}
+                    onSubmit={handleSearch}
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    message={"Search for notes..."}
+                />
 
                 <SortButtons handleSortChange={handleSortChange} sortBy={sortBy} />
 
                 <div className="text-center">
                     <BlurText
-                        text={`Showing ${displayedNotes.length} of ${getFilteredCount()} notes`}
+                        text={`Showing ${displayedNotes.length} of ${filteredNotes.length} notes`}
                         delay={150}
                         animateBy="words"
                         direction="bottom"
@@ -171,11 +136,11 @@ const AllNotesPage = () => {
                                     key={note.id}
                                     className="animate-fadeIn"
                                     style={{
-                                        animationDelay: `${(index % NOTES_PER_PAGE) * 50}ms`,
+                                        animationDelay: `${(index % 20) * 50}ms`,
                                         animationFillMode: 'both'
                                     }}
                                 >
-                                    <NoteCard
+                                    <MemoizedNoteCard
                                         note={note.name}
                                         noteData={{
                                             total: note.totalAppearances,
@@ -191,7 +156,7 @@ const AllNotesPage = () => {
                         </div>
 
                         {hasMore && (
-                            <LoadMoreButton onClick={loadMoreNotes} disabled={loadingMore} message={"Load More Notes"} />
+                            <LoadMoreButton onClick={loadMore} disabled={isLoadingMore} message={"Load More Notes"} />
                         )}
                     </>
                 ) : (

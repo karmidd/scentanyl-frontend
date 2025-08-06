@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Background from "../../primary/Background.jsx";
 import Header from "../../primary/Header.jsx";
@@ -12,28 +12,44 @@ import GenderFilterButtons from "../../utils/buttons/GenderFilterButtons.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
+import {usePagination} from "../../../hooks/usePagination.jsx";
+import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
+import {useSearchMode} from "../../../hooks/useSearchMode.jsx";
+
+// Memoized FragranceCard
+const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
+    return prevProps.fragrance.id === nextProps.fragrance.id;
+});
 
 const BrandPage = () => {
     const navigate = useNavigate();
     const { brand } = useParams();
     const [brandInfo, setBrandInfo] = useState(null);
-    const [fragrances, setFragrances] = useState([]);
-    const [displayedFragrances, setDisplayedFragrances] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [loadingMore, setLoadingMore] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
-    const [selectedGender, setSelectedGender] = useState('all');
-    const [advancedSearchData, setAdvancedSearchData] = useState({
-        mode: 'regular',
-        accords: [],
-        notes: { top: [], middle: [], base: [], uncategorized: [] }
-    });
     const [error, setError] = useState(null);
     const { theme } = useTheme();
 
-    const FRAGRANCES_PER_PAGE = 20;
+    // Use custom hooks
+    const {
+        setFragrances,
+        filteredFragrances,
+        searchQuery,
+        setSearchQuery,
+        selectedGender,
+        setSelectedGender,
+        advancedSearchData,
+        setAdvancedSearchData
+    } = useFragranceFilter();
+
+    const {
+        displayedItems: displayedFragrances,
+        hasMore,
+        isLoadingMore,
+        loadMore,
+        reset: resetPagination
+    } = usePagination(filteredFragrances, 20);
+
+    const searchModeText = useSearchMode(advancedSearchData);
 
     useEffect(() => {
         if (brand) {
@@ -41,9 +57,10 @@ const BrandPage = () => {
         }
     }, [brand]);
 
+    // Reset pagination when filters change
     useEffect(() => {
-        filterFragrances();
-    }, [searchQuery, selectedGender, fragrances, advancedSearchData.mode, JSON.stringify(advancedSearchData.accords), JSON.stringify(advancedSearchData.notes)]);
+        resetPagination();
+    }, [searchQuery, selectedGender, advancedSearchData, resetPagination]);
 
     const fetchBrandData = async () => {
         try {
@@ -64,8 +81,6 @@ const BrandPage = () => {
 
             setBrandInfo(brandData);
             setFragrances(fragrancesData);
-            setDisplayedFragrances(fragrancesData.slice(0, FRAGRANCES_PER_PAGE));
-            setHasMore(fragrancesData.length > FRAGRANCES_PER_PAGE);
             setLoading(false);
         } catch (error) {
             console.error('Error fetching brand data:', error);
@@ -74,173 +89,22 @@ const BrandPage = () => {
         }
     };
 
-    const matchesAdvancedSearch = (fragrance) => {
-        if (advancedSearchData.mode === 'regular') {
-            return true;
-        }
-
-        // Check accords
-        if (advancedSearchData.accords.length > 0) {
-            const fragranceAccords = fragrance.accords?.toLowerCase().split(',').map(a => a.trim()) || [];
-            const hasAllAccords = advancedSearchData.accords.every(accord =>
-                fragranceAccords.some(fa => fa.includes(accord.toLowerCase()))
-            );
-            if (!hasAllAccords) return false;
-        }
-
-        // Check notes based on mode
-        if (advancedSearchData.mode === 'layered') {
-            // Check top notes
-            if (advancedSearchData.notes.top.length > 0) {
-                const fragranceTopNotes = fragrance.topNotes?.toLowerCase().split(',').map(n => n.trim()) || [];
-                const hasAllTopNotes = advancedSearchData.notes.top.every(note =>
-                    fragranceTopNotes.some(fn => fn.includes(note.toLowerCase()))
-                );
-                if (!hasAllTopNotes) return false;
-            }
-
-            // Check middle notes
-            if (advancedSearchData.notes.middle.length > 0) {
-                const fragranceMiddleNotes = fragrance.middleNotes?.toLowerCase().split(',').map(n => n.trim()) || [];
-                const hasAllMiddleNotes = advancedSearchData.notes.middle.every(note =>
-                    fragranceMiddleNotes.some(fn => fn.includes(note.toLowerCase()))
-                );
-                if (!hasAllMiddleNotes) return false;
-            }
-
-            // Check base notes
-            if (advancedSearchData.notes.base.length > 0) {
-                const fragranceBaseNotes = fragrance.baseNotes?.toLowerCase().split(',').map(n => n.trim()) || [];
-                const hasAllBaseNotes = advancedSearchData.notes.base.every(note =>
-                    fragranceBaseNotes.some(fn => fn.includes(note.toLowerCase()))
-                );
-                if (!hasAllBaseNotes) return false;
-            }
-        } else if (advancedSearchData.mode === 'uncategorized') {
-            // Check uncategorized notes
-            if (advancedSearchData.notes.uncategorized.length > 0) {
-                const fragranceUncategorizedNotes = fragrance.uncategorizedNotes?.toLowerCase().split(',').map(n => n.trim()) || [];
-                const hasAllUncategorizedNotes = advancedSearchData.notes.uncategorized.every(note =>
-                    fragranceUncategorizedNotes.some(fn => fn.includes(note.toLowerCase()))
-                );
-                if (!hasAllUncategorizedNotes) return false;
-            }
-        }
-
-        return true;
-    };
-
-    const filterFragrances = () => {
-        let filtered = fragrances;
-
-        // Apply advanced search filter first
-        if (advancedSearchData.mode !== 'regular') {
-            filtered = filtered.filter(matchesAdvancedSearch);
-        } else if (searchQuery.trim()) {
-            // Apply regular search filter
-            filtered = filtered.filter(fragrance =>
-                fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                fragrance.accords?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                fragrance.uncategorizedNotes?.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
-
-        if (selectedGender !== 'all') {
-            filtered = filtered.filter(fragrance =>
-                fragrance.gender?.toLowerCase() === selectedGender.toLowerCase()
-            );
-        }
-
-        setDisplayedFragrances(filtered.slice(0, FRAGRANCES_PER_PAGE * currentPage));
-        setHasMore(filtered.length > FRAGRANCES_PER_PAGE * currentPage);
-    };
-
-    const loadMoreFragrances = async () => {
-        if (loadingMore || !hasMore) return;
-
-        setLoadingMore(true);
-        const nextPage = currentPage + 1;
-
-        setTimeout(() => {
-            let filtered = fragrances;
-
-            // Apply the same filtering logic
-            if (advancedSearchData.mode !== 'regular') {
-                filtered = filtered.filter(matchesAdvancedSearch);
-            } else if (searchQuery.trim()) {
-                filtered = filtered.filter(fragrance =>
-                    fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    fragrance.accords?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    fragrance.uncategorizedNotes?.toLowerCase().includes(searchQuery.toLowerCase())
-                );
-            }
-
-            if (selectedGender !== 'all') {
-                filtered = filtered.filter(fragrance =>
-                    fragrance.gender?.toLowerCase() === selectedGender.toLowerCase()
-                );
-            }
-
-            const newFragrances = filtered.slice(0, FRAGRANCES_PER_PAGE * nextPage);
-            setDisplayedFragrances(newFragrances);
-            setCurrentPage(nextPage);
-            setHasMore(filtered.length > FRAGRANCES_PER_PAGE * nextPage);
-            setLoadingMore(false);
-        }, 800);
-    };
-
-    const handleSearch = (e) => {
+    // Memoized callbacks
+    const handleSearch = useCallback((e) => {
         e.preventDefault();
-        setCurrentPage(1);
-        filterFragrances();
-    };
+    }, []);
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = useCallback((e) => {
         setSearchQuery(e.target.value);
-        setCurrentPage(1);
-    };
+    }, [setSearchQuery]);
 
-    const handleGenderChange = (gender) => {
+    const handleGenderChange = useCallback((gender) => {
         setSelectedGender(gender);
-        setCurrentPage(1);
-    };
+    }, [setSelectedGender]);
 
     const handleAdvancedSearchChange = useCallback((newAdvancedSearchData) => {
         setAdvancedSearchData(newAdvancedSearchData);
-        setCurrentPage(1);
-    }, []);
-
-    const getFilteredCount = () => {
-        let filtered = fragrances;
-
-        if (advancedSearchData.mode !== 'regular') {
-            filtered = filtered.filter(matchesAdvancedSearch);
-        } else if (searchQuery.trim()) {
-            filtered = filtered.filter(fragrance =>
-                fragrance.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                fragrance.accords?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                fragrance.uncategorizedNotes?.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
-
-        if (selectedGender !== 'all') {
-            filtered = filtered.filter(fragrance =>
-                fragrance.gender?.toLowerCase() === selectedGender.toLowerCase()
-            );
-        }
-
-        return filtered.length;
-    };
-
-    const getSearchModeText = () => {
-        if (advancedSearchData.mode === 'regular') {
-            return 'Standard search mode';
-        } else if (advancedSearchData.mode === 'layered') {
-            return 'Advanced layered search mode';
-        } else {
-            return 'Advanced uncategorized search mode';
-        }
-    };
+    }, [setAdvancedSearchData]);
 
     if (loading) {
         return <LoadingPage/>;
@@ -361,14 +225,14 @@ const BrandPage = () => {
                 {advancedSearchData.mode !== 'regular' && (
                     <div className="text-center">
                         <p className="text-sm text-gray-400">
-                            {getSearchModeText()}
+                            {searchModeText}
                         </p>
                     </div>
                 )}
 
                 <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender} />
 
-                <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={getFilteredCount()} type={"fragrances"}/>
+                <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={filteredFragrances.length} type={"fragrances"}/>
             </div>
 
             {/* Fragrances Grid */}
@@ -381,18 +245,18 @@ const BrandPage = () => {
                                     key={fragrance.id}
                                     className="animate-fadeIn"
                                     style={{
-                                        animationDelay: `${(index % FRAGRANCES_PER_PAGE) * 50}ms`,
+                                        animationDelay: `${(index % 20) * 50}ms`,
                                         animationFillMode: 'both'
                                     }}
                                 >
-                                    <FragranceCard fragrance={fragrance} />
+                                    <MemoizedFragranceCard fragrance={fragrance} />
                                 </div>
                             ))}
                         </div>
 
                         {/* Load More Button */}
                         {hasMore && (
-                            <LoadMoreButton onClick={loadMoreFragrances} disabled={loadingMore} message={"Load More Fragrances"}/>
+                            <LoadMoreButton onClick={loadMore} disabled={isLoadingMore} message={"Load More Fragrances"}/>
                         )}
                     </>
                 ) : (

@@ -27,11 +27,11 @@ export default function BrandCard({brand}){
                 {/* Count Section - Between name and country */}
                 {brand.fragranceCount !== undefined && brand.fragranceCount !== null && (
                     <div className="text-center mb-2 sm:mb-3">
-                        <div className={`inline-flex items-center justify-center px-3 py-1 sm:px-4 sm:py-2 rounded-full ${theme.card.primary} border border-gray-600/30 ${theme.border.hover}`}>
-                            <span className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.primary} transition-colors duration-300`}>
+                        <div className={`inline-flex items-center justify-center px-3 py-1 sm:px-4 sm:py-2 rounded-full ${theme.card.primary} border border-gray-600/30 ${theme.border.groupHover} duration-300`}>
+                            <span className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.primary} ${theme.text.groupHover} transition-colors duration-300`}>
                                 {brand.fragranceCount}
                             </span>
-                            <span className={`ml-2 text-xs sm:text-sm ${theme.text.secondary} transition-colors duration-300`}>
+                            <span className={`ml-2 text-xs sm:text-sm ${theme.text.secondary} ${theme.text.groupHover} transition-colors duration-300`}>
                                 {brand.fragranceCount === 1 ? 'fragrance' : 'fragrances'}
                             </span>
                         </div>

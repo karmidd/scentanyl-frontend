@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import LoadingPage from "../primary/LoadingPage.jsx";
@@ -9,28 +9,44 @@ import SortButtons from "../../utils/buttons/SortButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
+import {useItemFilter} from "../../../hooks/useItemFilter.jsx";
+import {usePagination} from "../../../hooks/usePagination.jsx";
+
+// Memoized GeneralCard
+const MemoizedGeneralCard = memo(GeneralCard, (prevProps, nextProps) => {
+    return prevProps.name === nextProps.name && prevProps.total === nextProps.total;
+});
 
 const AllPerfumersPage = () => {
     const navigate = useNavigate();
-    const [perfumers, setPerfumers] = useState([]);
-    const [displayedPerfumers, setDisplayedPerfumers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [loadingMore, setLoadingMore] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
-    const [sortBy, setSortBy] = useState('alphabetical');
 
-    const PERFUMERS_PER_PAGE = 20;
+    // Use custom hooks
+    const {
+        setItems: setPerfumers,
+        filteredItems: filteredPerfumers,
+        searchQuery,
+        setSearchQuery,
+        sortBy,
+        setSortBy
+    } = useItemFilter(['alphabetical', 'popularity']);
+
+    const {
+        displayedItems: displayedPerfumers,
+        hasMore,
+        isLoadingMore,
+        loadMore,
+        reset: resetPagination
+    } = usePagination(filteredPerfumers, 20);
 
     useEffect(() => {
         fetchPerfumers();
     }, []);
 
+    // Reset pagination when filters change
     useEffect(() => {
-        if(!loading)
-            filterAndSortPerfumers();
-    }, [searchQuery, sortBy, perfumers]);
+        resetPagination();
+    }, [searchQuery, sortBy, resetPagination]);
 
     const fetchPerfumers = async () => {
         try {
@@ -45,80 +61,22 @@ const AllPerfumersPage = () => {
         }
     };
 
-    const filterAndSortPerfumers = () => {
-        let filtered = perfumers;
-
-        if (searchQuery.trim()) {
-            filtered = filtered.filter(perfumer =>
-                perfumer.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
-
-        if (sortBy === 'alphabetical') {
-            filtered.sort((a, b) => a.name.localeCompare(b.name));
-        } else if (sortBy === 'popularity') {
-            filtered.sort((a, b) => b.totalContributions - a.totalContributions);
-        }
-
-        setDisplayedPerfumers(filtered.slice(0, PERFUMERS_PER_PAGE * currentPage));
-        setHasMore(filtered.length > PERFUMERS_PER_PAGE * currentPage);
-    };
-
-    const loadMorePerfumers = async () => {
-        if (loadingMore || !hasMore) return;
-
-        setLoadingMore(true);
-        const nextPage = currentPage + 1;
-
-        setTimeout(() => {
-            let filtered = perfumers;
-
-            if (searchQuery.trim()) {
-                filtered = filtered.filter(perfumer =>
-                    perfumer.name.toLowerCase().includes(searchQuery.toLowerCase())
-                );
-            }
-
-            if (sortBy === 'alphabetical') {
-                filtered.sort((a, b) => a.name.localeCompare(b.name));
-            } else if (sortBy === 'popularity') {
-                filtered.sort((a, b) => b.totalContributions - a.totalContributions);
-            }
-
-            const newPerfumers = filtered.slice(0, PERFUMERS_PER_PAGE * nextPage);
-            setDisplayedPerfumers(newPerfumers);
-            setCurrentPage(nextPage);
-            setHasMore(filtered.length > PERFUMERS_PER_PAGE * nextPage);
-            setLoadingMore(false);
-        }, 800);
-    };
-
-    const handleSearch = (e) => {
+    // Memoized callbacks
+    const handleSearch = useCallback((e) => {
         e.preventDefault();
-        setCurrentPage(1);
-        filterAndSortPerfumers();
-    };
+    }, []);
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = useCallback((e) => {
         setSearchQuery(e.target.value);
-        setCurrentPage(1);
-    };
+    }, [setSearchQuery]);
 
-    const handleSortChange = (newSortBy) => {
+    const handleSortChange = useCallback((newSortBy) => {
         setSortBy(newSortBy);
-        setCurrentPage(1);
-    };
+    }, [setSortBy]);
 
-    const handlePerfumerClick = (perfumer) => {
+    const handlePerfumerClick = useCallback((perfumer) => {
         navigate(`/perfumers/${encodeURIComponent(perfumer.name)}`);
-    };
-
-    const getFilteredCount = () => {
-        if (!searchQuery.trim()) return perfumers.length;
-        return perfumers.filter(perfumer =>
-            perfumer.name.toLowerCase().includes(searchQuery.toLowerCase())
-        ).length;
-    };
+    }, [navigate]);
 
     if (loading) {
         return <LoadingPage/>;
@@ -126,31 +84,41 @@ const AllPerfumersPage = () => {
 
     return (
         <PageLayout headerNum={5} style={<style jsx>{`
-                @keyframes fadeIn {
-                    from {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
                 }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
 
-                .animate-fadeIn {
-                    animation: fadeIn 0.6s ease-out;
-                }
-            `}</style>}
+            .animate-fadeIn {
+                animation: fadeIn 0.6s ease-out;
+            }
+        `}</style>}
         >
             {/* Hero Section */}
             <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
                 <HeroSection primaryText={"Explore Perfumers"} secondaryText={"Discover the noses behind your favorite fragrances"}/>
 
-                <SearchBar size={2} message={"Search for perfumers..."} value={searchQuery} onChange={handleSearchChange} onSubmit={handleSearch}/>
+                <SearchBar
+                    size={2}
+                    message={"Search for perfumers..."}
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    onSubmit={handleSearch}
+                />
 
                 <SortButtons handleSortChange={handleSortChange} sortBy={sortBy}/>
 
-                <ResultsCounter type={"perfumers"} filteredCount={getFilteredCount()} displayedCount={displayedPerfumers.length} />
+                <ResultsCounter
+                    type={"perfumers"}
+                    filteredCount={filteredPerfumers.length}
+                    displayedCount={displayedPerfumers.length}
+                />
             </div>
 
             {/* Perfumers Grid */}
@@ -160,14 +128,14 @@ const AllPerfumersPage = () => {
                         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
                             {displayedPerfumers.map((perfumer, index) => (
                                 <div
-                                    key={perfumer}
+                                    key={perfumer.id || perfumer.name}
                                     className="animate-fadeIn"
                                     style={{
-                                        animationDelay: `${(index % PERFUMERS_PER_PAGE) * 50}ms`,
+                                        animationDelay: `${(index % 20) * 50}ms`,
                                         animationFillMode: 'both'
                                     }}
                                 >
-                                    <GeneralCard
+                                    <MemoizedGeneralCard
                                         name={perfumer.name}
                                         total={perfumer.totalContributions}
                                         onClick={() => handlePerfumerClick(perfumer)}
@@ -178,7 +146,7 @@ const AllPerfumersPage = () => {
                         </div>
 
                         {hasMore && (
-                            <LoadMoreButton onClick={loadMorePerfumers} disabled={loadingMore} message={"Load More Perfumers"}/>
+                            <LoadMoreButton onClick={loadMore} disabled={isLoadingMore} message={"Load More Perfumers"}/>
                         )}
                     </>
                 ) : (

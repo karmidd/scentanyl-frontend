@@ -12,7 +12,9 @@ export default function BrowseAllButton() {
         >
             <div className={`absolute inset-0 ${theme.button.browseAll} rounded-lg sm:rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300`}></div>
             <div className="relative flex items-center space-x-2 sm:space-x-3">
-                <span className="text-xl sm:text-2xl">🌺</span>
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
                 <span>Browse All</span>
             </div>
         </button>
