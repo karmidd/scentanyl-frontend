@@ -347,7 +347,7 @@ export default function SearchBar({
             </div>
 
             {/* Accords Section */}
-            <div className="space-y-2 sm:space-y-3">
+            <div className="space-y-2 sm:space-y-3 mt-7">
                 {/* Include Accords */}
                 <div className="space-y-2">
                     <div className="flex items-center justify-center relative">
@@ -436,40 +436,48 @@ export default function SearchBar({
             {/* Notes Sections - LAYERED MODE */}
             {searchMode === 'layered' && (
                 <div className="animate-slideDown">
-                    <div className={`w-full h-px ${theme.border.primary} mb-4 rounded-full`}></div>
+                    {/* Separator line between Accords and Notes */}
+                    <div className="w-full h-px bg-gray-400 mb-8 mt-8 rounded-full opacity-60"></div>
 
-                    {['top', 'middle', 'base'].map((layer) => (
-                        <div key={layer} className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">{/* Include Notes - Updated Structure */}
-                            <div className="space-y-2">
-                                <div className="flex items-center justify-center relative">
-                                    <h4 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>
-                                        Include {layer.charAt(0).toUpperCase() + layer.slice(1)} Notes
-                                    </h4>
-                                    <div className="absolute right-0">
-                                        <button
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                setActiveDropdown(activeDropdown === `${layer}-include` ? null : `${layer}-include`);
-                                            }}
-                                            type="button"
-                                            className={`cursor-pointer bg-green-600 hover:bg-green-500 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
-                                        >
-                                            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                            </svg>
-                                        </button>
-                                        {activeDropdown === `${layer}-include` && availableNotes.length > 0 &&
-                                            renderDropdown(availableNotes, (note) => addNote(layer, note), 'notes', selectedNotes[layer], excludedNotes[layer])}
+                    {['top', 'middle', 'base'].map((layer, layerIndex) => (
+                        <div key={layer}>
+                            {/* Add separator line before each notes section except the first one */}
+                            {layerIndex > 0 && (
+                                <div className="w-full h-px bg-gray-400 mb-8 mt-8 rounded-full opacity-60"></div>
+                            )}
+
+                            <div className="space-y-2 sm:space-y-3 mb-3 sm:mb-6">
+                                {/* Include Notes - Updated Structure */}
+                                <div className="space-y-2">
+                                    <div className="flex items-center justify-center relative">
+                                        <h4 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>
+                                            Include {layer.charAt(0).toUpperCase() + layer.slice(1)} Notes
+                                        </h4>
+                                        <div className="absolute right-0">
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    setActiveDropdown(activeDropdown === `${layer}-include` ? null : `${layer}-include`);
+                                                }}
+                                                type="button"
+                                                className={`cursor-pointer bg-green-600 hover:bg-green-500 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                            >
+                                                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                                </svg>
+                                            </button>
+                                            {activeDropdown === `${layer}-include` && availableNotes.length > 0 &&
+                                                renderDropdown(availableNotes, (note) => addNote(layer, note), 'notes', selectedNotes[layer], excludedNotes[layer])}
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="min-h-[2rem] p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-400/10">
-                                    {selectedNotes[layer].map((note, index) => (
-                                        <span
-                                            key={index}
-                                            className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-300/20 rounded-lg text-sm md:text-base lg:text-xl border border-green-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.include}`}
-                                            style={{animationDelay: `${index * 50}ms`}}
-                                        >
+                                    <div className="min-h-[2rem] p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-400/10">
+                                        {selectedNotes[layer].map((note, index) => (
+                                            <span
+                                                key={index}
+                                                className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-300/20 rounded-lg text-sm md:text-base lg:text-xl border border-green-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.include}`}
+                                                style={{animationDelay: `${index * 50}ms`}}
+                                            >
                                 <span>{note}</span>
                                 <button
                                     onClick={() => removeNote(layer, note)}
@@ -479,41 +487,41 @@ export default function SearchBar({
                                     ×
                                 </button>
                             </span>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Exclude Notes - Updated Structure */}
-                            <div className="space-y-2">
-                                <div className="flex items-center justify-center relative">
-                                    <h4 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>
-                                        Exclude {layer.charAt(0).toUpperCase() + layer.slice(1)} Notes
-                                    </h4>
-                                    <div className="absolute right-0">
-                                        <button
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                setActiveDropdown(activeDropdown === `${layer}-exclude` ? null : `${layer}-exclude`);
-                                            }}
-                                            type="button"
-                                            className={`cursor-pointer bg-red-600 hover:bg-red-700 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
-                                        >
-                                            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                                            </svg>
-                                        </button>
-                                        {activeDropdown === `${layer}-exclude` && availableNotes.length > 0 &&
-                                            renderDropdown(availableNotes, (note) => excludeNote(layer, note), 'notes', selectedNotes[layer], excludedNotes[layer])}
+                                        ))}
                                     </div>
                                 </div>
-                                <div className="min-h-[2rem] p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-400/10">
-                                    {excludedNotes[layer].map((note, index) => (
-                                        <span
-                                            key={index}
-                                            className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-300/20 rounded-lg text-sm lg:text-xl md:text-base border border-red-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.exclude}`}
-                                            style={{animationDelay: `${index * 50}ms`}}
-                                        >
+
+                                {/* Exclude Notes - Updated Structure */}
+                                <div className="space-y-2">
+                                    <div className="flex items-center justify-center relative">
+                                        <h4 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>
+                                            Exclude {layer.charAt(0).toUpperCase() + layer.slice(1)} Notes
+                                        </h4>
+                                        <div className="absolute right-0">
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    setActiveDropdown(activeDropdown === `${layer}-exclude` ? null : `${layer}-exclude`);
+                                                }}
+                                                type="button"
+                                                className={`cursor-pointer bg-red-600 hover:bg-red-700 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                            >
+                                                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                                                </svg>
+                                            </button>
+                                            {activeDropdown === `${layer}-exclude` && availableNotes.length > 0 &&
+                                                renderDropdown(availableNotes, (note) => excludeNote(layer, note), 'notes', selectedNotes[layer], excludedNotes[layer])}
+                                        </div>
+                                    </div>
+                                    <div className="min-h-[2rem] p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-400/10">
+                                        {excludedNotes[layer].map((note, index) => (
+                                            <span
+                                                key={index}
+                                                className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-300/20 rounded-lg text-sm lg:text-xl md:text-base border border-red-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.exclude}`}
+                                                style={{animationDelay: `${index * 50}ms`}}
+                                            >
                                 <span>{note}</span>
                                 <button
                                     onClick={() => removeExcludedNote(layer, note)}
@@ -523,7 +531,8 @@ export default function SearchBar({
                                     ×
                                 </button>
                             </span>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -533,8 +542,9 @@ export default function SearchBar({
 
             {/* Notes Sections - UNCATEGORIZED MODE */}
             {searchMode === 'uncategorized' && (
-                <div className="space-y-2 sm:space-y-3 animate-slideDown">
-                    <div className={`w-full h-px ${theme.border.primary} mb-4 rounded-full`}></div>
+                <div className="space-y-2 sm:space-y-3 animate-slideDown mb-2">
+                    {/* Separator line between Accords and Uncategorized Notes */}
+                    <div className="w-full h-px bg-gray-400 mb-8 mt-8 rounded-full opacity-60"></div>
 
                     {/* Include Uncategorized Notes - Updated Structure */}
                     <div className="space-y-2">
