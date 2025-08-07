@@ -90,6 +90,13 @@ export default function SearchBar({
         }
     };
 
+    const smoothScrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
+
     const fetchAccords = async () => {
         try {
             const response = await fetch('/api/accords');
@@ -109,6 +116,8 @@ export default function SearchBar({
     const handleModeSwitch = (newMode) => {
         if (newMode === 'regular' && searchMode !== 'regular') {
             setIsAnimating(true);
+            // Smooth scroll to top when switching to regular mode
+            smoothScrollToTop();
             setTimeout(() => {
                 setSelectedAccords([]);
                 setExcludedAccords([]);
@@ -120,6 +129,10 @@ export default function SearchBar({
                 setIsAnimating(false);
             }, 150);
         } else {
+            // Also scroll to top when switching to advanced modes
+            if (newMode !== 'regular') {
+                smoothScrollToTop();
+            }
             setSelectedAccords([]);
             setExcludedAccords([]);
             setSelectedNotes({ top: [], middle: [], base: [], uncategorized: [] });
@@ -347,7 +360,7 @@ export default function SearchBar({
                                     setActiveDropdown(activeDropdown === 'accords-include' ? null : 'accords-include');
                                 }}
                                 type="button"
-                                className={`cursor-pointer ${theme.button.primary} p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                className={`cursor-pointer bg-green-600 hover:bg-green-500 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
                             >
                                 <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -389,7 +402,7 @@ export default function SearchBar({
                                     setActiveDropdown(activeDropdown === 'accords-exclude' ? null : 'accords-exclude');
                                 }}
                                 type="button"
-                                className={`cursor-pointer bg-red-600 hover:bg-red-700 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                className={`cursor-pointer bg-red-600 hover:bg-red-500 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
                             >
                                 <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -443,7 +456,7 @@ export default function SearchBar({
                                                 setActiveDropdown(activeDropdown === `${layer}-include` ? null : `${layer}-include`);
                                             }}
                                             type="button"
-                                            className={`cursor-pointer ${theme.button.primary} p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                            className={`cursor-pointer bg-green-600 hover:bg-green-500 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
                                         >
                                             <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -538,7 +551,7 @@ export default function SearchBar({
                                         setActiveDropdown(activeDropdown === 'uncategorized-include' ? null : 'uncategorized-include');
                                     }}
                                     type="button"
-                                    className={`cursor-pointer ${theme.button.primary} p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                    className={`cursor-pointer bg-green-600 hover:bg-green-500 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
                                 >
                                     <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -697,12 +710,21 @@ export default function SearchBar({
                     }
                 }
 
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                    }
+                    to {
+                        opacity: 1;
+                    }
+                }
+
                 .animate-expandDown {
-                    animation: expandDown 0.15s ease-out;
+                    animation: expandDown 0.3s ease-out;
                 }
 
                 .animate-shrinkUp {
-                    animation: shrinkUp 0.15s ease-out;
+                    animation: shrinkUp 0.3s ease-out;
                     animation-fill-mode: forwards;
                 }
 
@@ -714,40 +736,94 @@ export default function SearchBar({
                 .animate-slideDown {
                     animation: slideDown 0.5s ease-out;
                 }
+
+                .animate-fadeIn {
+                    animation: fadeIn 0.3s ease-out;
+                }
             `}</style>
+
             <div className="space-y-3 sm:space-y-4">
-                {/* Toggle Button Row */}
-                <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
-                    {searchMode === 'regular' ? renderRegularSearch() : (
-                        <div className={`flex-1 p-3 sm:p-4 ${theme.bg.input} border ${theme.border.primary} rounded-lg sm:rounded-xl md:rounded-2xl transition-all duration-300 ${isAnimating ? 'animate-shrinkUp' : 'animate-expandDown'}`}>
-                            {renderAdvancedSearch()}
-                        </div>
-                    )}
+                {searchMode === 'regular' ? (
+                    // Regular search with smooth animation
+                    <div className={`flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 md:gap-4 ${!isAnimating ? 'animate-fadeIn' : ''}`}>
+                        {renderRegularSearch()}
 
-                    {enableAdvancedSearch && (
-                        <button
-                            type="button"
-                            onClick={() => handleModeSwitch(searchMode === 'regular' ? 'layered' : 'regular')}
-                            className={`cursor-pointer ${theme.button.primary} p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 transform`}
-                        >
-                            {searchMode === 'regular' ? (
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
-                                    <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
-                                </svg>
-                            ) : (
-                                <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
+                        {/* Button container */}
+                        <div className="flex gap-2 sm:gap-3 justify-center sm:justify-start">
+                            {enableAdvancedSearch && (
+                                <button
+                                    type="button"
+                                    onClick={() => handleModeSwitch('layered')}
+                                    className={`cursor-pointer ${theme.button.primary} p-2 sm:p-4 md:p-5 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 transform`}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                                        <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
+                                    </svg>
+                                </button>
                             )}
-                        </button>
-                    )}
 
-                    {includeRandomButton && (
-                        <RandomFragranceButton
-                            className={`cursor-pointer group relative inline-flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 text-base sm:text-lg md:text-xl font-bold ${theme.text.primary} bg-gradient-to-r ${theme.randomDiscoveryButton.primary} rounded-full shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30`}
-                        />
-                    )}
-                </div>
+                            {includeRandomButton && (
+                                <RandomFragranceButton
+                                    className={`cursor-pointer group relative inline-flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 text-base sm:text-lg md:text-xl font-bold ${theme.text.primary} bg-gradient-to-r ${theme.randomDiscoveryButton.primary} rounded-full shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30`}
+                                />
+                            )}
+                        </div>
+                    </div>
+                ) : (
+                    // Advanced search mode with proper animations
+                    <div className={`${!isAnimating ? 'animate-fadeIn' : ''}`}>
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-2 sm:gap-3 md:gap-4">
+                            {/* Advanced filter panel with animation */}
+                            <div className={`flex-1 ${isAnimating ? 'animate-shrinkUp' : 'animate-expandDown'}`}>
+                                <div className={`p-3 sm:p-4 ${theme.bg.input} border ${theme.border.primary} rounded-lg sm:rounded-xl md:rounded-2xl transition-all duration-300`}>
+                                    {renderAdvancedSearch()}
+                                </div>
+                            </div>
+
+                            {/* Desktop buttons */}
+                            <div className="hidden sm:flex gap-3">
+                                {enableAdvancedSearch && (
+                                    <button
+                                        type="button"
+                                        onClick={() => handleModeSwitch('regular')}
+                                        className={`cursor-pointer ${theme.button.primary} p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 transform`}
+                                    >
+                                        <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                        </svg>
+                                    </button>
+                                )}
+
+                                {includeRandomButton && (
+                                    <RandomFragranceButton
+                                        className={`cursor-pointer group relative inline-flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 text-base sm:text-lg md:text-xl font-bold ${theme.text.primary} bg-gradient-to-r ${theme.randomDiscoveryButton.primary} rounded-full shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30`}
+                                    />
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Mobile buttons */}
+                        <div className="flex sm:hidden gap-2 justify-center animate-fadeIn mt-2">
+                            {enableAdvancedSearch && (
+                                <button
+                                    type="button"
+                                    onClick={() => handleModeSwitch('regular')}
+                                    className={`cursor-pointers ${theme.button.primary} p-3 rounded-lg transition-all duration-300 hover:scale-105 transform`}
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </button>
+                            )}
+
+                            {includeRandomButton && (
+                                <RandomFragranceButton
+                                    className={`cursor-pointer group relative inline-flex items-center justify-center w-10 h-10 text-base font-bold ${theme.text.primary} bg-gradient-to-r ${theme.randomDiscoveryButton.primary} rounded-full shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30`}
+                                />
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
         </form>
     );
