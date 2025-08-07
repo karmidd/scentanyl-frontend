@@ -164,7 +164,7 @@ const AllBrandsPage = () => {
                                     setActiveDropdown(null);
                                     setSearchTerm('');
                                 }}
-                                className={`w-full text-left px-3 py-2 text-sm ${theme.text.primary} hover:bg-blue-400 hover:${theme.text.secondary} transition-colors duration-200 border-b ${theme.border.primary}`}
+                                className={`cursor-pointer w-full text-left px-3 py-2 text-sm ${theme.text.primary} hover:bg-blue-400 hover:${theme.text.secondary} transition-colors duration-200 border-b ${theme.border.primary}`}
                             >
                                 All {type}
                             </button>
@@ -179,7 +179,7 @@ const AllBrandsPage = () => {
                                         setActiveDropdown(null);
                                         setSearchTerm('');
                                     }}
-                                    className={`w-full text-left px-3 py-2 text-sm ${theme.text.primary} hover:bg-blue-400 hover:${theme.text.secondary} transition-colors duration-200`}
+                                    className={`cursor-pointer w-full text-left px-3 py-2 text-sm ${theme.text.primary} hover:bg-blue-400 hover:${theme.text.secondary} transition-colors duration-200`}
                                 >
                                     {typeof item === 'string' ? item : (item?.name || 'Unknown')}
                                 </button>

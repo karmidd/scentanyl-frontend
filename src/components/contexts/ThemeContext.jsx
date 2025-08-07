@@ -53,6 +53,8 @@ export const ThemeProvider = ({ children }) => {
             groupHover: isDarkMode ? 'group-hover:text-blue-500' : 'group-hover:text-[#676adc]',
             hover: isDarkMode ? 'hover:text-blue-500' : 'hover:text-[#676adc]',
             other_accent: isDarkMode ? 'text-blue-500' : 'text-[#676adc]',
+            include: isDarkMode ? 'text-green-400' : 'text-green-700',
+            exclude: isDarkMode ? 'text-red-400' : 'text-red-600',
         },
 
         // Border colors

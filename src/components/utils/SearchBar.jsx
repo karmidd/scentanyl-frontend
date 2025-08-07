@@ -357,18 +357,18 @@ export default function SearchBar({
                                 renderDropdown(availableAccords, addAccord, 'accords', selectedAccords, excludedAccords)}
                         </div>
                     </div>
-                    <div className="min-h-[2rem] p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-900/10">
+                    <div className="min-h-[2rem] p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-400/10">
                         {selectedAccords.map((accord, index) => (
                             <span
                                 key={index}
-                                className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-900/30 rounded-lg text-xs sm:text-sm border border-green-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn text-green-300`}
+                                className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-300/20 rounded-lg text-sm md:text-base lg:text-xl border border-green-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.include}`}
                                 style={{animationDelay: `${index * 50}ms`}}
                             >
                                 <span>{accord}</span>
                                 <button
                                     onClick={() => removeAccord(accord)}
                                     type="button"
-                                    className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-5 h-5 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                    className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
                                 >
                                     ×
                                 </button>
@@ -399,18 +399,18 @@ export default function SearchBar({
                                 renderDropdown(availableAccords, excludeAccord, 'accords', selectedAccords, excludedAccords)}
                         </div>
                     </div>
-                    <div className="min-h-[2rem] p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-900/10">
+                    <div className="min-h-[2rem] p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-400/10">
                         {excludedAccords.map((accord, index) => (
                             <span
                                 key={index}
-                                className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-900/30 rounded-lg text-xs sm:text-sm border border-red-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn text-red-300`}
+                                className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-300/20 rounded-lg text-sm lg:text-xl md:text-base border border-red-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.exclude}`}
                                 style={{animationDelay: `${index * 50}ms`}}
                             >
                                 <span>{accord}</span>
                                 <button
                                     onClick={() => removeExcludedAccord(accord)}
                                     type="button"
-                                    className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-full w-5 h-5 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                    className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
                                 >
                                     ×
                                 </button>
@@ -453,18 +453,18 @@ export default function SearchBar({
                                             renderDropdown(availableNotes, (note) => addNote(layer, note), 'notes', selectedNotes[layer], excludedNotes[layer])}
                                     </div>
                                 </div>
-                                <div className={`min-h-[2rem] p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-900/10`}>
+                                <div className="min-h-[2rem] p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-400/10">
                                     {selectedNotes[layer].map((note, index) => (
                                         <span
                                             key={index}
-                                            className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-900/30 rounded-lg text-xs sm:text-sm border border-green-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn text-green-300`}
+                                            className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-300/20 rounded-lg text-sm md:text-base lg:text-xl border border-green-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.include}`}
                                             style={{animationDelay: `${index * 50}ms`}}
                                         >
                                             <span>{note}</span>
                                             <button
                                                 onClick={() => removeNote(layer, note)}
                                                 type="button"
-                                                className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-full w-5 h-5 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                                className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
                                             >
                                                 ×
                                             </button>
@@ -495,18 +495,18 @@ export default function SearchBar({
                                             renderDropdown(availableNotes, (note) => excludeNote(layer, note), 'notes', selectedNotes[layer], excludedNotes[layer])}
                                     </div>
                                 </div>
-                                <div className={`min-h-[2rem] p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-900/10`}>
+                                <div className="min-h-[2rem] p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-400/10">
                                     {excludedNotes[layer].map((note, index) => (
                                         <span
                                             key={index}
-                                            className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-900/30 rounded-lg text-xs sm:text-sm border border-red-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn text-red-300`}
+                                            className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-300/20 rounded-lg text-sm lg:text-xl md:text-base border border-red-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.exclude}`}
                                             style={{animationDelay: `${index * 50}ms`}}
                                         >
                                             <span>{note}</span>
                                             <button
                                                 onClick={() => removeExcludedNote(layer, note)}
                                                 type="button"
-                                                className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-full w-5 h-5 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                                className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
                                             >
                                                 ×
                                             </button>
@@ -548,19 +548,19 @@ export default function SearchBar({
                                     renderDropdown(availableNotes, (note) => addNote('uncategorized', note), 'notes', selectedNotes.uncategorized, excludedNotes.uncategorized)}
                             </div>
                         </div>
-                        <div className={`min-h-[2rem] p-2 border border-green-600/30 rounded-lg bg-green-900/10`}>
+                        <div className="min-h-[2rem] p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-400/10">
                             <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
                                 {selectedNotes.uncategorized.map((note, index) => (
                                     <span
                                         key={index}
-                                        className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-900/30 rounded-lg text-xs sm:text-sm border border-green-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn text-green-300`}
+                                        className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-300/20 rounded-lg text-sm md:text-base lg:text-xl border border-green-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.include}`}
                                         style={{animationDelay: `${index * 50}ms`}}
                                     >
                                         <span>{note}</span>
                                         <button
                                             onClick={() => removeNote('uncategorized', note)}
                                             type="button"
-                                            className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-full w-5 h-5 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                            className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
                                         >
                                             ×
                                         </button>
@@ -591,19 +591,19 @@ export default function SearchBar({
                                     renderDropdown(availableNotes, (note) => excludeNote('uncategorized', note), 'notes', selectedNotes.uncategorized, excludedNotes.uncategorized)}
                             </div>
                         </div>
-                        <div className={`min-h-[2rem] p-2 border border-red-600/30 rounded-lg bg-red-900/10`}>
+                        <div className="min-h-[2rem] p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-400/10">
                             <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
                                 {excludedNotes.uncategorized.map((note, index) => (
                                     <span
                                         key={index}
-                                        className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-900/30 rounded-lg text-xs sm:text-sm border border-red-700 flex items-center space-x-1 sm:space-x-2 animate-slideIn text-red-300`}
+                                        className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-300/20 rounded-lg text-sm lg:text-xl md:text-base border border-red-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.exclude}`}
                                         style={{animationDelay: `${index * 50}ms`}}
                                     >
                                         <span>{note}</span>
                                         <button
                                             onClick={() => removeExcludedNote('uncategorized', note)}
                                             type="button"
-                                            className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-full w-5 h-5 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                            className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
                                         >
                                             ×
                                         </button>
@@ -626,7 +626,7 @@ export default function SearchBar({
                 placeholder={message}
                 className={`
                     w-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 md:py-5 lg:py-6 
-                    text-xs sm:text-base md:text-lg lg:text-xl xl:text-2xl 
+                    text-[10px] sm:text-base md:text-lg lg:text-xl xl:text-2xl 
                     ${theme.bg.input} ${theme.border.primary} ${theme.text.primary}
                     border rounded-lg sm:rounded-xl md:rounded-2xl focus:outline-none
                     transition-all duration-300 ${theme.border.hover} 
@@ -731,13 +731,8 @@ export default function SearchBar({
                             className={`cursor-pointer ${theme.button.primary} p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 transform`}
                         >
                             {searchMode === 'regular' ? (
-                                <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <line x1="4" y1="6" x2="20" y2="6" strokeWidth="2" strokeLinecap="round"/>
-                                    <line x1="4" y1="12" x2="20" y2="12" strokeWidth="2" strokeLinecap="round"/>
-                                    <line x1="4" y1="18" x2="20" y2="18" strokeWidth="2" strokeLinecap="round"/>
-                                    <circle cx="7" cy="6" r="2" fill="currentColor"/>
-                                    <circle cx="12" cy="12" r="2" fill="currentColor"/>
-                                    <circle cx="17" cy="18" r="2" fill="currentColor"/>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                                    <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
                                 </svg>
                             ) : (
                                 <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -749,7 +744,7 @@ export default function SearchBar({
 
                     {includeRandomButton && (
                         <RandomFragranceButton
-                            className={`cursor-pointer group relative inline-flex items-center justify-center w-12 h-12 sm:w-20 sm:h-20 md:w-24 md:h-24 text-base sm:text-lg md:text-xl font-bold ${theme.text.primary} bg-gradient-to-r ${theme.randomDiscoveryButton.primary} rounded-full shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30`}
+                            className={`cursor-pointer group relative inline-flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 text-base sm:text-lg md:text-xl font-bold ${theme.text.primary} bg-gradient-to-r ${theme.randomDiscoveryButton.primary} rounded-full shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30`}
                         />
                     )}
                 </div>
