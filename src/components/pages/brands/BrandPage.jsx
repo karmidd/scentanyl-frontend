@@ -14,7 +14,6 @@ import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
 import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
-import {useSearchMode} from "../../../hooks/useSearchMode.jsx";
 
 // Memoized FragranceCard
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -48,8 +47,6 @@ const BrandPage = () => {
         loadMore,
         reset: resetPagination
     } = usePagination(filteredFragrances, 20);
-
-    const searchModeText = useSearchMode(advancedSearchData);
 
     useEffect(() => {
         if (brand) {

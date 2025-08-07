@@ -29,7 +29,7 @@ const AllAccordsPage = () => {
         setSearchQuery,
         sortBy,
         setSortBy
-    } = useItemFilter(['alphabetical', 'popularity']);
+    } = useItemFilter(['alphabetical', 'fragranceCount']);
 
     const {
         displayedItems: displayedAccords,

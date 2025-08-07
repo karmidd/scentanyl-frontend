@@ -5,6 +5,7 @@ import LoadingPage from "../primary/LoadingPage.jsx";
 import {useTheme} from "../../contexts/ThemeContext.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
 import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
+import SortButtons from "../../utils/buttons/SortButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
@@ -19,6 +20,7 @@ const MemoizedBrandCard = memo(BrandCard, (prevProps, nextProps) => {
 
 const AllBrandsPage = () => {
     const [loading, setLoading] = useState(true);
+    const [sortBy, setSortBy] = useState('alphabetical'); // Add sort state
     const { theme } = useTheme();
 
     // Use custom hooks
@@ -36,22 +38,36 @@ const AllBrandsPage = () => {
         clearFilters
     } = useBrandFilter();
 
+    // Sort the filtered brands based on current sort option
+    const sortedBrands = React.useMemo(() => {
+        const brandsToSort = [...filteredBrands];
+
+        switch (sortBy) {
+            case 'alphabetical':
+                return brandsToSort.sort((a, b) => a.name.localeCompare(b.name));
+            case 'fragranceCount':
+                return brandsToSort.sort((a, b) => (b.fragranceCount || 0) - (a.fragranceCount || 0));
+            default:
+                return brandsToSort;
+        }
+    }, [filteredBrands, sortBy]);
+
     const {
         displayedItems: displayedBrands,
         hasMore,
         isLoadingMore,
         loadMore,
         reset: resetPagination
-    } = usePagination(filteredBrands, 20);
+    } = usePagination(sortedBrands, 20); // Use sortedBrands instead of filteredBrands
 
     useEffect(() => {
         fetchBrands();
     }, []);
 
-    // Reset pagination when filters change
+    // Reset pagination when filters or sorting changes
     useEffect(() => {
         resetPagination();
-    }, [searchQuery, selectedCountry, selectedParent, resetPagination]);
+    }, [searchQuery, selectedCountry, selectedParent, sortBy, resetPagination]);
 
     const fetchBrands = async () => {
         try {
@@ -82,6 +98,10 @@ const AllBrandsPage = () => {
     const handleParentChange = useCallback((e) => {
         setSelectedParent(e.target.value);
     }, [setSelectedParent]);
+
+    const handleSortChange = useCallback((newSortBy) => {
+        setSortBy(newSortBy);
+    }, []);
 
     if (loading) {
         return <LoadingPage/>;
@@ -166,8 +186,14 @@ const AllBrandsPage = () => {
                     </div>
                 </div>
 
+                {/* Sort Buttons */}
+                <SortButtons
+                    handleSortChange={handleSortChange}
+                    sortBy={sortBy}
+                />
+
                 {/* Results Counter */}
-                <ResultsCounter displayedCount={displayedBrands.length} filteredCount={filteredBrands.length} type={"brands"} />
+                <ResultsCounter displayedCount={displayedBrands.length} filteredCount={sortedBrands.length} type={"brands"} />
             </div>
 
             {/* Brands Grid */}

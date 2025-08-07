@@ -29,7 +29,7 @@ const AllPerfumersPage = () => {
         setSearchQuery,
         sortBy,
         setSortBy
-    } = useItemFilter(['alphabetical', 'popularity']);
+    } = useItemFilter(['alphabetical', 'fragranceCount']);
 
     const {
         displayedItems: displayedPerfumers,

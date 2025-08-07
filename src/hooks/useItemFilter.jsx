@@ -1,7 +1,7 @@
 import {useMemo, useState} from "react";
 import {useDebouncedValue} from "./useDebouncedValue.jsx";
 
-export const useItemFilter = (sortOptions = ['alphabetical', 'popularity']) => {
+export const useItemFilter = (sortOptions = ['alphabetical', 'fragranceCount']) => {
     const [items, setItems] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState(sortOptions[0]);
@@ -24,7 +24,7 @@ export const useItemFilter = (sortOptions = ['alphabetical', 'popularity']) => {
         // Sort
         if (sortBy === 'alphabetical') {
             filtered = [...filtered].sort((a, b) => a.name.localeCompare(b.name));
-        } else if (sortBy === 'popularity') {
+        } else if (sortBy === 'fragranceCount') {
             // Use totalAppearances or totalContributions based on item type
             filtered = [...filtered].sort((a, b) =>
                 (b.totalAppearances || b.totalContributions || 0) -

@@ -16,14 +16,14 @@ export default function SortButtons({ handleSortChange, sortBy }) {
                 Alphabetical
             </button>
             <button
-                onClick={() => handleSortChange('popularity')}
+                onClick={() => handleSortChange('fragranceCount')}
                 className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-600 hover:scale-105 text-sm sm:text-base md:text-lg ${
-                    sortBy === 'popularity'
+                    sortBy === 'fragranceCount'
                         ? theme.card.selected
                         : theme.card.primary
                 }`}
             >
-                Most Popular
+                Most Fragrances
             </button>
         </div>
     );
