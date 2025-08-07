@@ -67,12 +67,13 @@ const AllBrandsPage = () => {
     // Handle clicks outside dropdown
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setTimeout(() => {
-                    setActiveDropdown(null);
-                    setCountrySearchTerm('');
-                    setParentSearchTerm('');
-                }, 0);
+            // Check if the click is on a dropdown button
+            const isDropdownButton = event.target.closest('[data-dropdown-button]');
+
+            if (!isDropdownButton && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setActiveDropdown(null);
+                setCountrySearchTerm('');
+                setParentSearchTerm('');
             }
         };
 
@@ -117,7 +118,8 @@ const AllBrandsPage = () => {
             return (
                 <div
                     ref={dropdownRef}
-                    className={`absolute top-full left-0 mt-1 w-full ${theme.bg.input} border ${theme.border.primary} rounded-lg shadow-lg z-50`}
+                    className={`absolute top-full left-0 mt-1 w-full ${theme.bg.input} border ${theme.border.primary} rounded-lg shadow-lg max-h-60 overflow-y-auto`}
+                    style={{ zIndex: 9999 }}
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className="p-3 text-center text-sm text-gray-500">
@@ -132,7 +134,8 @@ const AllBrandsPage = () => {
         return (
             <div
                 ref={dropdownRef}
-                className={`absolute top-full left-0 mt-1 w-full ${theme.bg.input} border ${theme.border.primary} rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto`}
+                className={`absolute top-full left-0 mt-1 w-full ${theme.bg.input} border ${theme.border.primary} rounded-lg shadow-lg max-h-60 overflow-y-auto`}
+                style={{ zIndex: 9999 }}
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="p-2">
@@ -205,6 +208,31 @@ const AllBrandsPage = () => {
         setSortBy(newSortBy);
     }, []);
 
+    // FIX 1: Proper toggle handlers
+    const handleCountryDropdown = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (activeDropdown === 'country') {
+            setActiveDropdown(null);
+            setCountrySearchTerm('');
+        } else {
+            setActiveDropdown('country');
+            setParentSearchTerm('');
+        }
+    };
+
+    const handleParentDropdown = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (activeDropdown === 'parent') {
+            setActiveDropdown(null);
+            setParentSearchTerm('');
+        } else {
+            setActiveDropdown('parent');
+            setCountrySearchTerm('');
+        }
+    };
+
     if (loading) {
         return <LoadingPage/>;
     }
@@ -234,8 +262,8 @@ const AllBrandsPage = () => {
                 {/* Search Bar */}
                 <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search for brands..."} />
 
-                {/* Filters Section */}
-                <div className="max-w-2xl mx-auto px-2">
+                {/* Filters Section - FIX 2: Add relative positioning and z-index */}
+                <div className="max-w-2xl mx-auto px-2 relative" style={{ zIndex: 100 }}>
                     <div className={`${theme.card.blur} border border-gray-700 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6`}>
                         <div className="flex flex-row flex-wrap gap-3 sm:gap-4 items-end justify-center">
                             {/* Country Filter */}
@@ -243,11 +271,8 @@ const AllBrandsPage = () => {
                                 <label className="text-xs sm:text-sm text-gray-300 font-medium">Country</label>
                                 <button
                                     type="button"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        setActiveDropdown(activeDropdown === 'country' ? null : 'country');
-                                    }}
+                                    data-dropdown-button="country"
+                                    onClick={handleCountryDropdown}
                                     className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 ${theme.bg.card} border border-gray-600 rounded-lg sm:rounded-xl focus:outline-none ${theme.border.focus} transition-all duration-300 ${theme.text.primary} text-sm sm:text-base w-full text-left flex justify-between items-center`}
                                 >
                                     <span>{selectedCountry || 'All Countries'}</span>
@@ -269,11 +294,8 @@ const AllBrandsPage = () => {
                                 <label className="text-xs sm:text-sm text-gray-300 font-medium">Parent Company</label>
                                 <button
                                     type="button"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        setActiveDropdown(activeDropdown === 'parent' ? null : 'parent');
-                                    }}
+                                    data-dropdown-button="parent"
+                                    onClick={handleParentDropdown}
                                     className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 ${theme.bg.card} border border-gray-600 rounded-lg sm:rounded-xl focus:outline-none ${theme.border.focus} transition-all duration-300 ${theme.text.primary} text-sm sm:text-base w-full text-left flex justify-between items-center`}
                                 >
                                     <span>{selectedParent || 'All Parents'}</span>
@@ -306,14 +328,18 @@ const AllBrandsPage = () => {
                     </div>
                 </div>
 
-                {/* Sort Buttons */}
-                <SortButtons
-                    handleSortChange={handleSortChange}
-                    sortBy={sortBy}
-                />
+                {/* Sort Buttons - FIX 2: Add relative positioning with lower z-index */}
+                <div className="relative" style={{ zIndex: 10 }}>
+                    <SortButtons
+                        handleSortChange={handleSortChange}
+                        sortBy={sortBy}
+                    />
+                </div>
 
-                {/* Results Counter */}
-                <ResultsCounter displayedCount={displayedBrands.length} filteredCount={sortedBrands.length} type={"brands"} />
+                {/* Results Counter - FIX 2: Add relative positioning with lower z-index */}
+                <div className="relative" style={{ zIndex: 10 }}>
+                    <ResultsCounter displayedCount={displayedBrands.length} filteredCount={sortedBrands.length} type={"brands"} />
+                </div>
             </div>
 
             {/* Brands Grid */}
