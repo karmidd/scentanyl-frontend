@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, memo } from 'react';
+import React, { useState, useEffect, useCallback, memo, useRef } from 'react';
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import BrandCard from "../../cards/BrandCard.jsx";
 import LoadingPage from "../primary/LoadingPage.jsx";
@@ -21,6 +21,10 @@ const MemoizedBrandCard = memo(BrandCard, (prevProps, nextProps) => {
 const AllBrandsPage = () => {
     const [loading, setLoading] = useState(true);
     const [sortBy, setSortBy] = useState('alphabetical'); // Add sort state
+    const [activeDropdown, setActiveDropdown] = useState(null);
+    const [countrySearchTerm, setCountrySearchTerm] = useState('');
+    const [parentSearchTerm, setParentSearchTerm] = useState('');
+    const dropdownRef = useRef(null);
     const { theme } = useTheme();
 
     // Use custom hooks
@@ -60,9 +64,23 @@ const AllBrandsPage = () => {
         reset: resetPagination
     } = usePagination(sortedBrands, 20); // Use sortedBrands instead of filteredBrands
 
+    // Handle clicks outside dropdown
     useEffect(() => {
-        fetchBrands();
-    }, []);
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setTimeout(() => {
+                    setActiveDropdown(null);
+                    setCountrySearchTerm('');
+                    setParentSearchTerm('');
+                }, 0);
+            }
+        };
+
+        if (activeDropdown) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [activeDropdown]);
 
     // Reset pagination when filters or sorting changes
     useEffect(() => {
@@ -82,6 +100,98 @@ const AllBrandsPage = () => {
         }
     };
 
+    useEffect(() => {
+        fetchBrands();
+    }, []);
+
+    const getFilteredItems = (items, searchTerm) => {
+        if (!Array.isArray(items)) return [];
+        if (!searchTerm) return items.slice(0, 30);
+        return items.filter(item =>
+            item && typeof item === 'string' && item.toLowerCase().includes(searchTerm.toLowerCase())
+        ).slice(0, 30);
+    };
+
+    const renderDropdown = (items, onSelect, type, searchTerm, setSearchTerm) => {
+        if (!Array.isArray(items) || items.length === 0) {
+            return (
+                <div
+                    ref={dropdownRef}
+                    className={`absolute top-full left-0 mt-1 w-full ${theme.bg.input} border ${theme.border.primary} rounded-lg shadow-lg z-50`}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <div className="p-3 text-center text-sm text-gray-500">
+                        No {type} available
+                    </div>
+                </div>
+            );
+        }
+
+        const filteredItems = getFilteredItems(items, searchTerm);
+
+        return (
+            <div
+                ref={dropdownRef}
+                className={`absolute top-full left-0 mt-1 w-full ${theme.bg.input} border ${theme.border.primary} rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto`}
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="p-2">
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => {
+                            e.stopPropagation();
+                            setSearchTerm(e.target.value);
+                        }}
+                        placeholder={`Search ${type}...`}
+                        className={`w-full px-3 py-2 text-sm ${theme.bg.input} ${theme.text.primary} border ${theme.border.primary} rounded focus:outline-none`}
+                        onClick={(e) => e.stopPropagation()}
+                        autoFocus
+                    />
+                </div>
+                <div className="max-h-40 overflow-y-auto">
+                    {filteredItems.length > 0 ? (
+                        <>
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    onSelect('');
+                                    setActiveDropdown(null);
+                                    setSearchTerm('');
+                                }}
+                                className={`w-full text-left px-3 py-2 text-sm ${theme.text.primary} hover:bg-blue-400 hover:${theme.text.secondary} transition-colors duration-200 border-b ${theme.border.primary}`}
+                            >
+                                All {type}
+                            </button>
+                            {filteredItems.map((item, index) => (
+                                <button
+                                    key={`${type}-${index}-${item}`}
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        onSelect(item);
+                                        setActiveDropdown(null);
+                                        setSearchTerm('');
+                                    }}
+                                    className={`w-full text-left px-3 py-2 text-sm ${theme.text.primary} hover:bg-blue-400 hover:${theme.text.secondary} transition-colors duration-200`}
+                                >
+                                    {typeof item === 'string' ? item : (item?.name || 'Unknown')}
+                                </button>
+                            ))}
+                        </>
+                    ) : (
+                        <div className="px-3 py-2 text-sm text-gray-500">
+                            No available {type} to select
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    };
+
     // Memoized callbacks
     const handleSearch = useCallback((e) => {
         e.preventDefault();
@@ -90,14 +200,6 @@ const AllBrandsPage = () => {
     const handleSearchChange = useCallback((e) => {
         setSearchQuery(e.target.value);
     }, [setSearchQuery]);
-
-    const handleCountryChange = useCallback((e) => {
-        setSelectedCountry(e.target.value);
-    }, [setSelectedCountry]);
-
-    const handleParentChange = useCallback((e) => {
-        setSelectedParent(e.target.value);
-    }, [setSelectedParent]);
 
     const handleSortChange = useCallback((newSortBy) => {
         setSortBy(newSortBy);
@@ -126,7 +228,7 @@ const AllBrandsPage = () => {
         `}</style>}
         >
             {/* Hero Section */}
-            <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
+            <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16 overflow-visible">
                 <HeroSection primaryText={"Explore Brands"} secondaryText={"Discover fragrances from the world's most prestigious and emerging brands"}/>
 
                 {/* Search Bar */}
@@ -137,37 +239,55 @@ const AllBrandsPage = () => {
                     <div className={`${theme.card.blur} border border-gray-700 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6`}>
                         <div className="flex flex-row flex-wrap gap-3 sm:gap-4 items-end justify-center">
                             {/* Country Filter */}
-                            <div className="flex flex-col space-y-1 sm:space-y-2 flex-1 min-w-[120px]">
+                            <div className="flex flex-col space-y-1 sm:space-y-2 flex-1 min-w-[120px] relative">
                                 <label className="text-xs sm:text-sm text-gray-300 font-medium">Country</label>
-                                <select
-                                    value={selectedCountry}
-                                    onChange={handleCountryChange}
-                                    className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 ${theme.bg.card} border border-gray-600 rounded-lg sm:rounded-xl focus:outline-none ${theme.border.focus} transition-all duration-300 ${theme.text.primary} text-sm sm:text-base w-full`}
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setActiveDropdown(activeDropdown === 'country' ? null : 'country');
+                                    }}
+                                    className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 ${theme.bg.card} border border-gray-600 rounded-lg sm:rounded-xl focus:outline-none ${theme.border.focus} transition-all duration-300 ${theme.text.primary} text-sm sm:text-base w-full text-left flex justify-between items-center`}
                                 >
-                                    <option value="">All Countries</option>
-                                    {uniqueCountries.map(country => (
-                                        <option key={country} value={country}>
-                                            {country}
-                                        </option>
-                                    ))}
-                                </select>
+                                    <span>{selectedCountry || 'All Countries'}</span>
+                                    <svg
+                                        className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === 'country' ? 'rotate-180' : ''}`}
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                                {activeDropdown === 'country' && uniqueCountries.length > 0 &&
+                                    renderDropdown(uniqueCountries, setSelectedCountry, 'countries', countrySearchTerm, setCountrySearchTerm)}
                             </div>
 
                             {/* Parent Company Filter */}
-                            <div className="flex flex-col space-y-1 sm:space-y-2 flex-1 min-w-[120px]">
+                            <div className="flex flex-col space-y-1 sm:space-y-2 flex-1 min-w-[120px] relative">
                                 <label className="text-xs sm:text-sm text-gray-300 font-medium">Parent Company</label>
-                                <select
-                                    value={selectedParent}
-                                    onChange={handleParentChange}
-                                    className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 ${theme.bg.card} border border-gray-600 rounded-lg sm:rounded-xl focus:outline-none ${theme.border.focus} transition-all duration-300 ${theme.text.primary} text-sm sm:text-base w-full`}
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setActiveDropdown(activeDropdown === 'parent' ? null : 'parent');
+                                    }}
+                                    className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 ${theme.bg.card} border border-gray-600 rounded-lg sm:rounded-xl focus:outline-none ${theme.border.focus} transition-all duration-300 ${theme.text.primary} text-sm sm:text-base w-full text-left flex justify-between items-center`}
                                 >
-                                    <option value="">All Parents</option>
-                                    {uniqueParents.map(parent => (
-                                        <option key={parent} value={parent}>
-                                            {parent}
-                                        </option>
-                                    ))}
-                                </select>
+                                    <span>{selectedParent || 'All Parents'}</span>
+                                    <svg
+                                        className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === 'parent' ? 'rotate-180' : ''}`}
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                                {activeDropdown === 'parent' && uniqueParents.length > 0 &&
+                                    renderDropdown(uniqueParents, setSelectedParent, 'parents', parentSearchTerm, setParentSearchTerm)}
                             </div>
 
                             {/* Clear Filters Button */}
