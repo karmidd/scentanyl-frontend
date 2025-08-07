@@ -433,21 +433,18 @@ export default function SearchBar({
                 </div>
             </div>
 
-            {/* Notes Sections */}
+            {/* Notes Sections - LAYERED MODE */}
             {searchMode === 'layered' && (
                 <div className="animate-slideDown">
                     <div className={`w-full h-px ${theme.border.primary} mb-4 rounded-full`}></div>
 
                     {['top', 'middle', 'base'].map((layer) => (
-                        <div key={layer} className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
-                            <h3 className={`text-center text-sm sm:text-base md:text-lg font-bold ${theme.text.other_accent} mb-3`}>
-                                {layer.charAt(0).toUpperCase() + layer.slice(1)} Notes
-                            </h3>
-
-                            {/* Include Notes */}
+                        <div key={layer} className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">{/* Include Notes - Updated Structure */}
                             <div className="space-y-2">
                                 <div className="flex items-center justify-center relative">
-                                    <h4 className={`text-xs sm:text-sm font-semibold ${theme.text.primary}`}>Include</h4>
+                                    <h4 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>
+                                        Include {layer.charAt(0).toUpperCase() + layer.slice(1)} Notes
+                                    </h4>
                                     <div className="absolute right-0">
                                         <button
                                             onClick={(e) => {
@@ -473,23 +470,25 @@ export default function SearchBar({
                                             className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-300/20 rounded-lg text-sm md:text-base lg:text-xl border border-green-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.include}`}
                                             style={{animationDelay: `${index * 50}ms`}}
                                         >
-                                            <span>{note}</span>
-                                            <button
-                                                onClick={() => removeNote(layer, note)}
-                                                type="button"
-                                                className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
-                                            >
-                                                ×
-                                            </button>
-                                        </span>
+                                <span>{note}</span>
+                                <button
+                                    onClick={() => removeNote(layer, note)}
+                                    type="button"
+                                    className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                >
+                                    ×
+                                </button>
+                            </span>
                                     ))}
                                 </div>
                             </div>
 
-                            {/* Exclude Notes */}
+                            {/* Exclude Notes - Updated Structure */}
                             <div className="space-y-2">
                                 <div className="flex items-center justify-center relative">
-                                    <h4 className={`text-xs sm:text-sm font-semibold ${theme.text.primary}`}>Exclude</h4>
+                                    <h4 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>
+                                        Exclude {layer.charAt(0).toUpperCase() + layer.slice(1)} Notes
+                                    </h4>
                                     <div className="absolute right-0">
                                         <button
                                             onClick={(e) => {
@@ -515,15 +514,15 @@ export default function SearchBar({
                                             className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-300/20 rounded-lg text-sm lg:text-xl md:text-base border border-red-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.exclude}`}
                                             style={{animationDelay: `${index * 50}ms`}}
                                         >
-                                            <span>{note}</span>
-                                            <button
-                                                onClick={() => removeExcludedNote(layer, note)}
-                                                type="button"
-                                                className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
-                                            >
-                                                ×
-                                            </button>
-                                        </span>
+                                <span>{note}</span>
+                                <button
+                                    onClick={() => removeExcludedNote(layer, note)}
+                                    type="button"
+                                    className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                >
+                                    ×
+                                </button>
+                            </span>
                                     ))}
                                 </div>
                             </div>
@@ -532,17 +531,15 @@ export default function SearchBar({
                 </div>
             )}
 
+            {/* Notes Sections - UNCATEGORIZED MODE */}
             {searchMode === 'uncategorized' && (
                 <div className="space-y-2 sm:space-y-3 animate-slideDown">
                     <div className={`w-full h-px ${theme.border.primary} mb-4 rounded-full`}></div>
-                    <h3 className={`text-center text-sm sm:text-base md:text-lg font-bold ${theme.text.other_accent} mb-3`}>
-                        Uncategorized Notes
-                    </h3>
 
-                    {/* Include Uncategorized Notes */}
+                    {/* Include Uncategorized Notes - Updated Structure */}
                     <div className="space-y-2">
                         <div className="flex items-center justify-center relative">
-                            <h4 className={`text-xs sm:text-sm font-semibold ${theme.text.primary}`}>Include</h4>
+                            <h3 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>Include Uncategorized Notes</h3>
                             <div className="absolute right-0">
                                 <button
                                     onClick={(e) => {
@@ -562,30 +559,29 @@ export default function SearchBar({
                             </div>
                         </div>
                         <div className="min-h-[2rem] p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-400/10">
-                            <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
-                                {selectedNotes.uncategorized.map((note, index) => (
-                                    <span
-                                        key={index}
-                                        className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-300/20 rounded-lg text-sm md:text-base lg:text-xl border border-green-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.include}`}
-                                        style={{animationDelay: `${index * 50}ms`}}
-                                    >
-                                        <span>{note}</span>
-                                        <button
-                                            onClick={() => removeNote('uncategorized', note)}
-                                            type="button"
-                                            className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
-                                        >
-                                            ×
-                                        </button>
-                                    </span>
-                                ))}
-                            </div>
+                            {selectedNotes.uncategorized.map((note, index) => (
+                                <span
+                                    key={index}
+                                    className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-300/20 rounded-lg text-sm md:text-base lg:text-xl border border-green-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.include}`}
+                                    style={{animationDelay: `${index * 50}ms`}}
+                                >
+                        <span>{note}</span>
+                        <button
+                            onClick={() => removeNote('uncategorized', note)}
+                            type="button"
+                            className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                        >
+                            ×
+                        </button>
+                    </span>
+                            ))}
                         </div>
                     </div>
-                    {/* Exclude Uncategorized Notes */}
+
+                    {/* Exclude Uncategorized Notes - Updated Structure */}
                     <div className="space-y-2">
                         <div className="flex items-center justify-center relative">
-                            <h4 className={`text-xs sm:text-sm font-semibold ${theme.text.primary}`}>Exclude</h4>
+                            <h3 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>Exclude Uncategorized Notes</h3>
                             <div className="absolute right-0">
                                 <button
                                     onClick={(e) => {
@@ -605,24 +601,22 @@ export default function SearchBar({
                             </div>
                         </div>
                         <div className="min-h-[2rem] p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-400/10">
-                            <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
-                                {excludedNotes.uncategorized.map((note, index) => (
-                                    <span
-                                        key={index}
-                                        className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-300/20 rounded-lg text-sm lg:text-xl md:text-base border border-red-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.exclude}`}
-                                        style={{animationDelay: `${index * 50}ms`}}
-                                    >
-                                        <span>{note}</span>
-                                        <button
-                                            onClick={() => removeExcludedNote('uncategorized', note)}
-                                            type="button"
-                                            className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
-                                        >
-                                            ×
-                                        </button>
-                                    </span>
-                                ))}
-                            </div>
+                            {excludedNotes.uncategorized.map((note, index) => (
+                                <span
+                                    key={index}
+                                    className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-300/20 rounded-lg text-sm lg:text-xl md:text-base border border-red-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.exclude}`}
+                                    style={{animationDelay: `${index * 50}ms`}}
+                                >
+                        <span>{note}</span>
+                        <button
+                            onClick={() => removeExcludedNote('uncategorized', note)}
+                            type="button"
+                            className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                        >
+                            ×
+                        </button>
+                    </span>
+                            ))}
                         </div>
                     </div>
                 </div>
