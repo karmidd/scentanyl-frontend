@@ -10,7 +10,7 @@ import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
 import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
-import {useSearchMode} from "../../../hooks/useSearchMode.jsx";
+import YearFilterButton from "../../utils/buttons/YearFilterButton.jsx";
 
 // Memoized FragranceCard for better performance
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -20,7 +20,7 @@ const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
 const AllFragrancesPage = () => {
     const [loading, setLoading] = useState(true);
 
-    // Use custom hook for all filtering logic
+    // Use custom hook for all filtering logic (now includes year filtering)
     const {
         setFragrances,
         filteredFragrances,
@@ -29,7 +29,12 @@ const AllFragrancesPage = () => {
         selectedGender,
         setSelectedGender,
         advancedSearchData,
-        setAdvancedSearchData,    } = useFragranceFilter();
+        setAdvancedSearchData,
+        yearRange,
+        setYearRange,
+        yearSort,
+        setYearSort
+    } = useFragranceFilter();
 
     // Use custom hook for pagination
     const {
@@ -39,9 +44,6 @@ const AllFragrancesPage = () => {
         loadMore,
         reset: resetPagination
     } = usePagination(filteredFragrances, 20);
-
-    // Use custom hook for search mode text
-    const searchModeText = useSearchMode(advancedSearchData);
 
     // Fetch fragrances on mount
     useEffect(() => {
@@ -64,7 +66,7 @@ const AllFragrancesPage = () => {
     // Reset pagination when filters change
     useEffect(() => {
         resetPagination();
-    }, [searchQuery, selectedGender, advancedSearchData, resetPagination]);
+    }, [searchQuery, selectedGender, advancedSearchData, yearRange, yearSort, resetPagination]);
 
     // Memoized callbacks
     const handleSearch = useCallback((e) => {
@@ -83,6 +85,15 @@ const AllFragrancesPage = () => {
     const handleAdvancedSearchChange = useCallback((newAdvancedSearchData) => {
         setAdvancedSearchData(newAdvancedSearchData);
     }, [setAdvancedSearchData]);
+
+    // New callbacks for year filtering
+    const handleYearRangeChange = useCallback((range) => {
+        setYearRange(range);
+    }, [setYearRange]);
+
+    const handleYearSortChange = useCallback((sort) => {
+        setYearSort(sort);
+    }, [setYearSort]);
 
     if (loading) {
         return <LoadingPage />;
@@ -125,11 +136,21 @@ const AllFragrancesPage = () => {
                     onAdvancedSearchChange={handleAdvancedSearchChange}
                 />
 
-                {/* Gender Filter */}
-                <GenderFilterButtons
-                    onClick={handleGenderChange}
-                    selectedGender={selectedGender}
-                />
+                {/* Filter Buttons Row */}
+                <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4">
+                    {/* Gender Filter */}
+                    <GenderFilterButtons
+                        onClick={handleGenderChange}
+                        selectedGender={selectedGender}
+                    />
+
+                    {/* Year Filter - New Component */}
+                    <YearFilterButton
+                        onYearRangeChange={handleYearRangeChange}
+                        onSortChange={handleYearSortChange}
+                        initialRange={yearRange}
+                    />
+                </div>
 
                 {/* Results Counter */}
                 <ResultsCounter
@@ -179,7 +200,9 @@ const AllFragrancesPage = () => {
                         <p className="text-gray-500 text-base sm:text-lg md:text-xl">
                             {advancedSearchData.mode !== 'regular'
                                 ? 'Try adjusting your selected notes, accords, or filters'
-                                : 'Try adjusting your search terms or filters'
+                                : yearRange
+                                    ? 'Try adjusting your year range or other filters'
+                                    : 'Try adjusting your search terms or filters'
                             }
                         </p>
                     </div>

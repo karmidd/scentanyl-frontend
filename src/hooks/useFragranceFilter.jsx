@@ -2,7 +2,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import {useDebouncedValue} from "./useDebouncedValue.jsx";
 
-// Main fragrance filter hook with exclusion support
+// Main fragrance filter hook with exclusion support and year filtering
 export const useFragranceFilter = () => {
     const [fragrances, setFragrances] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -14,6 +14,8 @@ export const useFragranceFilter = () => {
         notes: { top: [], middle: [], base: [], uncategorized: [] },
         excludedNotes: { top: [], middle: [], base: [], uncategorized: [] }
     });
+    const [yearRange, setYearRange] = useState(null); // null means no filter
+    const [yearSort, setYearSort] = useState('none'); // 'none', 'newest', 'oldest'
 
     // Debounced search query
     const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
@@ -94,7 +96,7 @@ export const useFragranceFilter = () => {
         return true;
     }, [advancedSearchData]);
 
-    // Memoized filtered fragrances
+    // Memoized filtered fragrances with year filtering and sorting
     const filteredFragrances = useMemo(() => {
         let filtered = fragrances;
 
@@ -122,8 +124,33 @@ export const useFragranceFilter = () => {
             );
         }
 
+        // Apply year range filter
+        if (yearRange && yearRange.length === 2) {
+            filtered = filtered.filter(fragrance => {
+                const year = fragrance.year;
+                if (!year) return false; // Exclude fragrances without year data
+                return year >= yearRange[0] && year <= yearRange[1];
+            });
+        }
+
+        // Apply year sorting
+        if (yearSort !== 'none') {
+            // Create a copy to avoid mutating the original array
+            filtered = [...filtered].sort((a, b) => {
+                const yearA = a.year || 0;
+                const yearB = b.year || 0;
+
+                if (yearSort === 'newest') {
+                    return yearB - yearA; // Descending order (newest first)
+                } else if (yearSort === 'oldest') {
+                    return yearA - yearB; // Ascending order (oldest first)
+                }
+                return 0;
+            });
+        }
+
         return filtered;
-    }, [fragrances, debouncedSearchQuery, selectedGender, advancedSearchData, matchesAdvancedSearch]);
+    }, [fragrances, debouncedSearchQuery, selectedGender, advancedSearchData, matchesAdvancedSearch, yearRange, yearSort]);
 
     // Memoized gender counts
     const genderCounts = useMemo(() => {
@@ -146,6 +173,9 @@ export const useFragranceFilter = () => {
 
     // Helper function to check if any filters are active
     const hasActiveFilters = useMemo(() => {
+        // Check year filter
+        const hasYearFilter = yearRange !== null || yearSort !== 'none';
+
         if (advancedSearchData.mode !== 'regular') {
             const hasIncludedItems =
                 (advancedSearchData.accords && advancedSearchData.accords.length > 0) ||
@@ -155,10 +185,10 @@ export const useFragranceFilter = () => {
                 (advancedSearchData.excludedAccords && advancedSearchData.excludedAccords.length > 0) ||
                 Object.values(advancedSearchData.excludedNotes || {}).some(notes => notes && notes.length > 0);
 
-            return hasIncludedItems || hasExcludedItems;
+            return hasIncludedItems || hasExcludedItems || hasYearFilter;
         }
-        return debouncedSearchQuery.trim() !== '' || selectedGender !== 'all';
-    }, [advancedSearchData, debouncedSearchQuery, selectedGender]);
+        return debouncedSearchQuery.trim() !== '' || selectedGender !== 'all' || hasYearFilter;
+    }, [advancedSearchData, debouncedSearchQuery, selectedGender, yearRange, yearSort]);
 
     // Clear all filters
     const clearAllFilters = useCallback(() => {
@@ -171,6 +201,8 @@ export const useFragranceFilter = () => {
             notes: { top: [], middle: [], base: [], uncategorized: [] },
             excludedNotes: { top: [], middle: [], base: [], uncategorized: [] }
         });
+        setYearRange(null);
+        setYearSort('none');
     }, []);
 
     return {
@@ -183,6 +215,10 @@ export const useFragranceFilter = () => {
         setSelectedGender,
         advancedSearchData,
         setAdvancedSearchData,
+        yearRange,
+        setYearRange,
+        yearSort,
+        setYearSort,
         genderCounts,
         matchesAdvancedSearch,
         debouncedSearchQuery,

@@ -98,7 +98,8 @@ export const ThemeProvider = ({ children }) => {
 
         card: {
             primary: isDarkMode ? "bg-gradient-to-br from-gray-900 to-gray-800" : "bg-gradient-to-br from-indigo-300 to-indigo-100",
-            hover: isDarkMode ? "hover:from-gray-800 hover:to-gray-700" : "hover:from-blue-100 hover:to-blue-50",
+            secondary: isDarkMode ? "bg-gradient-to-br from-gray-700 to-gray-600" : "bg-gradient-to-br from-indigo-100 to-indigo-50",
+            hover: isDarkMode ? "hover:from-gray-800 hover:to-gray-700" : "hover:from-indigo-200 hover:to-indigo-100",
             blur: isDarkMode ? "bg-gray-900/50 backdrop-blur-sm" : "bg-gray-900/50 backdrop-blur-sm",
             selected: isDarkMode ? 'bg-blue-800 text-white shadow-lg transition-all duration-300' : 'bg-indigo-400 text-white shadow-lg transition-all duration-300',
             indicator: isDarkMode ? "bg-gradient-to-r from-blue-600 to-blue-400" : "bg-gradient-to-r from-indigo-500 to-indigo-300"

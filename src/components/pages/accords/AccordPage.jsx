@@ -12,7 +12,6 @@ import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
 import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
-import {useSearchMode} from "../../../hooks/useSearchMode.jsx";
 
 // Memoized FragranceCard
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -45,8 +44,6 @@ const AccordPage = () => {
         loadMore,
         reset: resetPagination
     } = usePagination(filteredFragrances, 20);
-
-    const searchModeText = useSearchMode(advancedSearchData);
 
     useEffect(() => {
         if (accord) {
