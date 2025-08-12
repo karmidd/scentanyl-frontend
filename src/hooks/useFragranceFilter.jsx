@@ -124,29 +124,36 @@ export const useFragranceFilter = () => {
             );
         }
 
-        // Apply year range filter
-        if (yearRange && yearRange.length === 2) {
-            filtered = filtered.filter(fragrance => {
-                const year = fragrance.year;
-                if (!year) return false; // Exclude fragrances without year data
-                return year >= yearRange[0] && year <= yearRange[1];
-            });
-        }
+        // Apply year range filter and/or sorting
+        if (yearSort !== 'none' || (yearRange && yearRange.length === 2)) {
+            // If sorting is active, always exclude null years
+            if (yearSort !== 'none') {
+                filtered = filtered.filter(fragrance => fragrance.year != null);
+            }
 
-        // Apply year sorting
-        if (yearSort !== 'none') {
-            // Create a copy to avoid mutating the original array
-            filtered = [...filtered].sort((a, b) => {
-                const yearA = a.year || 0;
-                const yearB = b.year || 0;
+            // Apply year range filter if it's set
+            if (yearRange && yearRange.length === 2) {
+                filtered = filtered.filter(fragrance => {
+                    const year = fragrance.year;
+                    if (!year) return false; // Exclude fragrances without year data
+                    return year >= yearRange[0] && year <= yearRange[1];
+                });
+            }
 
-                if (yearSort === 'newest') {
-                    return yearB - yearA; // Descending order (newest first)
-                } else if (yearSort === 'oldest') {
-                    return yearA - yearB; // Ascending order (oldest first)
-                }
-                return 0;
-            });
+            // Apply sorting
+            if (yearSort !== 'none') {
+                filtered = [...filtered].sort((a, b) => {
+                    const yearA = a.year || 0;
+                    const yearB = b.year || 0;
+
+                    if (yearSort === 'newest') {
+                        return yearB - yearA; // Descending order (newest first)
+                    } else if (yearSort === 'oldest') {
+                        return yearA - yearB; // Ascending order (oldest first)
+                    }
+                    return 0;
+                });
+            }
         }
 
         return filtered;

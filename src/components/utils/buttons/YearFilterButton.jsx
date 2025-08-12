@@ -17,6 +17,7 @@ const YearFilterButton = ({
     const [isDragging, setIsDragging] = useState(null); // null, 'min', 'max'
     const [tempMinYear, setTempMinYear] = useState('');
     const [tempMaxYear, setTempMaxYear] = useState('');
+    const isDefaultState = yearRange[0] === minYear && yearRange[1] === maxYear && sortOrder === 'none';
 
     // Calculate position percentage for slider handles
     const getPositionPercent = (year) => {
@@ -46,20 +47,22 @@ const YearFilterButton = ({
 
     const handleMinYearSubmit = () => {
         const year = parseInt(tempMinYear);
-        if (!isNaN(year) && year >= minYear && year < yearRange[1]) {
+        if (!isNaN(year) && year >= minYear && year <= yearRange[1]) {
             const newRange = [year, yearRange[1]];
             setYearRange(newRange);
-            onYearRangeChange(newRange);
+            const isDefault = year === minYear && yearRange[1] === maxYear && sortOrder === 'none';
+            onYearRangeChange(isDefault ? null : newRange);
         }
         setIsEditingMin(false);
     };
 
     const handleMaxYearSubmit = () => {
         const year = parseInt(tempMaxYear);
-        if (!isNaN(year) && year <= maxYear && year > yearRange[0]) {
+        if (!isNaN(year) && year <= maxYear && year >= yearRange[0]) {
             const newRange = [yearRange[0], year];
             setYearRange(newRange);
-            onYearRangeChange(newRange);
+            const isDefault = yearRange[0] === minYear && year === maxYear && sortOrder === 'none';
+            onYearRangeChange(isDefault ? null : newRange);
         }
         setIsEditingMax(false);
     };
@@ -85,9 +88,9 @@ const YearFilterButton = ({
 
         setYearRange(prev => {
             if (isDragging === 'min') {
-                return [Math.min(year, prev[1] - 1), prev[1]];
+                return [Math.min(year, prev[1]), prev[1]];
             } else if (isDragging === 'max') {
-                return [prev[0], Math.max(year, prev[0] + 1)];
+                return [prev[0], Math.max(year, prev[0])];
             }
             return prev;
         });
@@ -96,9 +99,11 @@ const YearFilterButton = ({
     const handleMouseUp = useCallback(() => {
         if (isDragging) {
             setIsDragging(null);
-            onYearRangeChange(yearRange);
+            // Check if we're back to default state
+            const isDefault = yearRange[0] === minYear && yearRange[1] === maxYear && sortOrder === 'none';
+            onYearRangeChange(isDefault ? null : yearRange);
         }
-    }, [isDragging, yearRange, onYearRangeChange]);
+    }, [isDragging, yearRange, onYearRangeChange, minYear, maxYear, sortOrder]);
 
     // Handle touch events for mobile
     const handleTouchStart = (handle) => (e) => {
@@ -119,9 +124,9 @@ const YearFilterButton = ({
 
         setYearRange(prev => {
             if (isDragging === 'min') {
-                return [Math.min(year, prev[1] - 1), prev[1]];
+                return [Math.min(year, prev[1]), prev[1]];
             } else if (isDragging === 'max') {
-                return [prev[0], Math.max(year, prev[0] + 1)];
+                return [prev[0], Math.max(year, prev[0])];
             }
             return prev;
         });
@@ -149,13 +154,20 @@ const YearFilterButton = ({
         const newOrder = sortOrder === order ? 'none' : order;
         setSortOrder(newOrder);
         onSortChange(newOrder);
+
+        // If we have a sort but no custom range, set the range to indicate filtering is active
+        if (newOrder !== 'none' && yearRange[0] === minYear && yearRange[1] === maxYear) {
+            onYearRangeChange(yearRange); // Pass the current range to activate filtering
+        } else if (newOrder === 'none' && yearRange[0] === minYear && yearRange[1] === maxYear) {
+            onYearRangeChange(null); // Back to default state
+        }
     };
 
     // Reset filter
     const handleReset = () => {
         setYearRange([minYear, maxYear]);
         setSortOrder('none');
-        onYearRangeChange([minYear, maxYear]);
+        onYearRangeChange(null);
         onSortChange('none');
     };
 
@@ -168,7 +180,7 @@ const YearFilterButton = ({
                 onClick={() => setIsOpen(!isOpen)}
                 className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 hover:scale-105 text-xs sm:text-sm md:text-base lg:text-lg cursor-pointer ${
                     isFiltered
-                        ? 'bg-orange-400 text-white shadow-lg'
+                        ? 'bg-yellow-500 text-white shadow-lg'
                         : theme.card.primary
                 }`}
             >
@@ -211,7 +223,7 @@ const YearFilterButton = ({
                                     onKeyDown={(e) => handleKeyPress(e, handleMinYearSubmit)}
                                     className={`w-20 px-2 py-1 ${theme.card.primary} rounded text-center text-sm sm:text-base`}
                                     min={minYear}
-                                    max={yearRange[1] - 1}
+                                    max={yearRange[1]}
                                     autoFocus
                                 />
                             ) : (
@@ -241,7 +253,7 @@ const YearFilterButton = ({
                                     onBlur={handleMaxYearSubmit}
                                     onKeyDown={(e) => handleKeyPress(e, handleMaxYearSubmit)}
                                     className={`w-20 px-2 py-1 ${theme.card.primary} rounded text-center text-sm sm:text-base`}
-                                    min={yearRange[0] + 1}
+                                    min={yearRange[0]}
                                     max={maxYear}
                                     autoFocus
                                 />
@@ -324,7 +336,7 @@ const YearFilterButton = ({
                     {/* Close button */}
                     <button
                         onClick={() => setIsOpen(false)}
-                        className={`cursor-pointer ${theme.card.secondary} transition-all duration-300 hover:scale-105 rounded-lg mt-4 w-full py-2 text-xs sm:text-sm`}
+                        className={`cursor-pointer ${theme.card.secondary} shadow-lg transition-all duration-300 hover:scale-105 rounded-lg mt-4 w-full py-2 text-xs sm:text-sm`}
                     >
                         Close
                     </button>

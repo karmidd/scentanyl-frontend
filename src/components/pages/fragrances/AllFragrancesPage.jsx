@@ -148,7 +148,6 @@ const AllFragrancesPage = () => {
                     <YearFilterButton
                         onYearRangeChange={handleYearRangeChange}
                         onSortChange={handleYearSortChange}
-                        initialRange={yearRange}
                     />
                 </div>
 
