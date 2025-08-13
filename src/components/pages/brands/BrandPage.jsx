@@ -167,7 +167,7 @@ const BrandPage = () => {
                             delay={100}
                             animateBy="words"
                             direction="top"
-                            className="flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-bold leading-tight px-2"
+                            className="text-shadow-lg flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-bold leading-tight px-2"
                         />
                         <div className="space-y-2 sm:space-y-3">
                             {brandInfo.country && (
@@ -177,14 +177,14 @@ const BrandPage = () => {
                                         delay={150}
                                         animateBy="words"
                                         direction="bottom"
-                                        className={`text-xl sm:text-2xl md:text-3xl text-gray-200`}
+                                        className={`text-shadow-md text-xl sm:text-2xl md:text-3xl text-gray-200`}
                                     />
                                     <BlurText
                                         text={`${brandInfo.country}`}
                                         delay={150}
                                         animateBy="words"
                                         direction="bottom"
-                                        className={`text-xl sm:text-2xl md:text-3xl font-semibold ${theme.text.accent}`}
+                                        className={`text-shadow-md text-xl sm:text-2xl md:text-3xl font-semibold ${theme.text.accent}`}
                                     />
                                 </div>
                             )}

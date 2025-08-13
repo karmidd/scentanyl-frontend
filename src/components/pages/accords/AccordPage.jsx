@@ -114,21 +114,21 @@ const AccordPage = () => {
 
                 {/* Accord Statistics */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 max-w-4xl mx-auto mb-4 sm:mb-6 md:mb-8 px-2">
-                    <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
-                        <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-500">{genderCounts.all}</div>
-                        <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Total Fragrances</div>
+                    <div className={`${theme.card.primary} shadow-lg rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                        <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-blue-500">{genderCounts.all}</div>
+                        <div className={`text-shadow-xs text-xs sm:text-sm ${theme.text.secondary}`}>Total Fragrances</div>
                     </div>
-                    <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
-                        <div className="text-xl sm:text-2xl md:text-3xl font-bold text-green-500">{genderCounts.men}</div>
-                        <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Men's</div>
+                    <div className={`${theme.card.primary} shadow-lg rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                        <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-green-500">{genderCounts.men}</div>
+                        <div className={`text-shadow-xs text-xs sm:text-sm ${theme.text.secondary}`}>Men's</div>
                     </div>
-                    <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
-                        <div className="text-xl sm:text-2xl md:text-3xl font-bold text-pink-500">{genderCounts.women}</div>
-                        <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Women's</div>
+                    <div className={`${theme.card.primary} shadow-lg rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                        <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-pink-500">{genderCounts.women}</div>
+                        <div className={`text-shadow-xs text-xs sm:text-sm ${theme.text.secondary}`}>Women's</div>
                     </div>
-                    <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
-                        <div className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-500">{genderCounts.unisex}</div>
-                        <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Unisex</div>
+                    <div className={`${theme.card.primary} shadow-lg rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
+                        <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-purple-500">{genderCounts.unisex}</div>
+                        <div className={`text-shadow-xs text-xs sm:text-sm ${theme.text.secondary}`}>Unisex</div>
                     </div>
                 </div>
 
