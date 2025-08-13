@@ -5,7 +5,6 @@ import FragranceCard from "../../cards/FragranceCard.jsx";
 import LoadingPage from "../primary/LoadingPage.jsx";
 import {useTheme} from "../../contexts/ThemeContext.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
-import GenderFilterButtons from "../../utils/buttons/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
@@ -13,6 +12,8 @@ import PageLayout from "../../primary/PageLayout.jsx";
 import {useFragranceFilterWithPosition} from "../../../hooks/useFragranceFilterWithPosition.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
 import {useNoteStatistics} from "../../../hooks/useNoteStatistics.jsx";
+import FilterSection from "../../utils/FilterSection.jsx";
+import {useYearRange} from "../../../hooks/useYearRange.jsx";
 
 // Memoized FragranceCard
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -38,8 +39,15 @@ const NotePage = () => {
         setAdvancedSearchData,
         selectedPosition,
         setSelectedPosition,
-        setNoteParam
+        setNoteParam,
+        yearRange,
+        setYearRange,
+        yearSort,
+        setYearSort
     } = useFragranceFilterWithPosition();
+
+    // Calculate year range from fragrances
+    const [minYear, maxYear] = useYearRange(fragrances);
 
     const {
         displayedItems: displayedFragrances,
@@ -61,7 +69,7 @@ const NotePage = () => {
     // Reset pagination when filters change
     useEffect(() => {
         resetPagination();
-    }, [searchQuery, selectedGender, selectedPosition, advancedSearchData, resetPagination]);
+    }, [searchQuery, selectedGender, selectedPosition, advancedSearchData, yearRange, yearSort, resetPagination]);
 
     const fetchNoteFragrances = async () => {
         try {
@@ -96,6 +104,14 @@ const NotePage = () => {
     const handleAdvancedSearchChange = useCallback((newAdvancedSearchData) => {
         setAdvancedSearchData(newAdvancedSearchData);
     }, [setAdvancedSearchData]);
+
+    const handleYearRangeChange = useCallback((range) => {
+        setYearRange(range);
+    }, [setYearRange]);
+
+    const handleYearSortChange = useCallback((sort) => {
+        setYearSort(sort);
+    }, [setYearSort]);
 
     if (loading) {
         return <LoadingPage/>;
@@ -157,7 +173,18 @@ const NotePage = () => {
                     onAdvancedSearchChange={handleAdvancedSearchChange}
                 />
 
-                <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender} />
+                <FilterSection
+                    genderFilterData={{
+                        onClick: handleGenderChange,
+                        selectedGender: selectedGender
+                    }}
+                    yearFilterData={{
+                        onYearRangeChange: handleYearRangeChange,
+                        onSortChange: handleYearSortChange,
+                        minYear: minYear,
+                        maxYear: maxYear
+                    }}
+                />
 
                 {/* Position Filter */}
                 <div className="flex justify-center space-x-2 sm:space-x-3 md:space-x-4 flex-wrap gap-y-2 px-2">

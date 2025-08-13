@@ -74,22 +74,6 @@ const FragrancePage = () => {
         );
     }
 
-    const handleNoteClick = (note) => {
-        navigate(`/notes/${encodeURIComponent(note)}`);
-    };
-
-    const handleAccordClick = (accord) => {
-        navigate(`/accords/${encodeURIComponent(accord)}`);
-    };
-
-    const handleBrandClick = (brand) => {
-        navigate(`/brands/${encodeURIComponent(brand)}`);
-    };
-
-    const handlePerfumerClick = (perfumer) => {
-        navigate(`/perfumers/${encodeURIComponent(perfumer)}`);
-    };
-
     const parseNotes = (notes) => {
         if (!notes) return [];
         return notes.split(',').map(note => note.trim()).filter(note => note);

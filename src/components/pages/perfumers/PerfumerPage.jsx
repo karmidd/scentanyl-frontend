@@ -7,12 +7,13 @@ import FragranceCard from "../../cards/FragranceCard.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
 import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import {useTheme} from "../../contexts/ThemeContext.jsx";
-import GenderFilterButtons from "../../utils/buttons/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import LoadingPage from "../primary/LoadingPage.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
 import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
+import FilterSection from "../../utils/FilterSection.jsx";
+import {useYearRange} from "../../../hooks/useYearRange.jsx";
 
 // Memoized FragranceCard
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -28,6 +29,7 @@ const PerfumerPage = () => {
 
     // Use custom hooks
     const {
+        fragrances,
         setFragrances,
         filteredFragrances,
         searchQuery,
@@ -36,8 +38,15 @@ const PerfumerPage = () => {
         setSelectedGender,
         advancedSearchData,
         setAdvancedSearchData,
-        genderCounts
+        genderCounts,
+        yearRange,
+        setYearRange,
+        yearSort,
+        setYearSort
     } = useFragranceFilter();
+
+    // Calculate year range from fragrances
+    const [minYear, maxYear] = useYearRange(fragrances);
 
     const {
         displayedItems: displayedFragrances,
@@ -56,7 +65,7 @@ const PerfumerPage = () => {
     // Reset pagination when filters change
     useEffect(() => {
         resetPagination();
-    }, [searchQuery, selectedGender, advancedSearchData, resetPagination]);
+    }, [searchQuery, selectedGender, advancedSearchData, yearRange, yearSort, resetPagination]);
 
     const fetchPerfumerData = async () => {
         try {
@@ -95,6 +104,14 @@ const PerfumerPage = () => {
     const handleAdvancedSearchChange = useCallback((newAdvancedSearchData) => {
         setAdvancedSearchData(newAdvancedSearchData);
     }, [setAdvancedSearchData]);
+
+    const handleYearRangeChange = useCallback((range) => {
+        setYearRange(range);
+    }, [setYearRange]);
+
+    const handleYearSortChange = useCallback((sort) => {
+        setYearSort(sort);
+    }, [setYearSort]);
 
     if (loading) {
         return <LoadingPage/>;
@@ -214,7 +231,18 @@ const PerfumerPage = () => {
                     onAdvancedSearchChange={handleAdvancedSearchChange}
                 />
 
-                <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender}/>
+                <FilterSection
+                    genderFilterData={{
+                        onClick: handleGenderChange,
+                        selectedGender: selectedGender
+                    }}
+                    yearFilterData={{
+                        onYearRangeChange: handleYearRangeChange,
+                        onSortChange: handleYearSortChange,
+                        minYear: minYear,
+                        maxYear: maxYear
+                    }}
+                />
 
                 <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={filteredFragrances.length} type={"fragrances"}/>
             </div>

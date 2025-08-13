@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useCallback, memo, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import FragranceCard from "../../cards/FragranceCard.jsx";
 import LoadingPage from "../primary/LoadingPage.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
 import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
-import GenderFilterButtons from "../../utils/buttons/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
 import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
-import YearFilterButton from "../../utils/buttons/YearFilterButton.jsx";
+import FilterSection from "../../utils/FilterSection.jsx";
+import {useYearRange} from "../../../hooks/useYearRange.jsx";
 
 // Memoized FragranceCard for better performance
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -38,19 +38,7 @@ const AllFragrancesPage = () => {
     } = useFragranceFilter();
 
     // Calculate year range from fragrances
-    const [minYear, maxYear] = useMemo(() => {
-        const MIN_YEAR_IN_DB = 1533;
-        const MAX_YEAR = new Date().getFullYear();
-        if (!fragrances || fragrances.length === 0) return [MIN_YEAR_IN_DB, MAX_YEAR];
-
-        const years = fragrances
-            .map(f => f.year)
-            .filter(year => year != null && year > 0);
-
-        if (years.length === 0) return [MIN_YEAR_IN_DB, MAX_YEAR];
-
-        return [Math.min(...years), Math.max(...years)];
-    }, [fragrances]);
+    const [minYear, maxYear] = useYearRange(fragrances);
 
     // Use custom hook for pagination
     const {
@@ -153,25 +141,18 @@ const AllFragrancesPage = () => {
                 />
 
                 {/* Filter Buttons Row */}
-                <div className="space-y-3 sm:space-y-4">
-                    {/* Gender Filter */}
-                    <div className="flex justify-center">
-                        <GenderFilterButtons
-                            onClick={handleGenderChange}
-                            selectedGender={selectedGender}
-                        />
-                    </div>
-
-                    {/* Year Filter - Below Gender */}
-                    <div className="flex justify-center">
-                        <YearFilterButton
-                            onYearRangeChange={handleYearRangeChange}
-                            onSortChange={handleYearSortChange}
-                            minYear={minYear}
-                            maxYear={maxYear}
-                        />
-                    </div>
-                </div>
+                <FilterSection
+                    genderFilterData={{
+                        onClick: handleGenderChange,
+                        selectedGender: selectedGender
+                    }}
+                    yearFilterData={{
+                        onYearRangeChange: handleYearRangeChange,
+                        onSortChange: handleYearSortChange,
+                        minYear: minYear,
+                        maxYear: maxYear
+                    }}
+                />
 
                 {/* Results Counter */}
                 <ResultsCounter

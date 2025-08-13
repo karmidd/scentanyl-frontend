@@ -12,6 +12,8 @@ import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
 import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
+import {useYearRange} from "../../../hooks/useYearRange.jsx";
+import FilterSection from "../../utils/FilterSection.jsx";
 
 // Memoized FragranceCard
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -26,6 +28,7 @@ const AccordPage = () => {
 
     // Use custom hooks
     const {
+        fragrances,
         setFragrances,
         filteredFragrances,
         searchQuery,
@@ -34,8 +37,15 @@ const AccordPage = () => {
         setSelectedGender,
         advancedSearchData,
         setAdvancedSearchData,
-        genderCounts
+        genderCounts,
+        yearRange,
+        setYearRange,
+        yearSort,
+        setYearSort
     } = useFragranceFilter();
+
+    // Calculate year range from fragrances
+    const [minYear, maxYear] = useYearRange(fragrances);
 
     const {
         displayedItems: displayedFragrances,
@@ -54,7 +64,7 @@ const AccordPage = () => {
     // Reset pagination when filters change
     useEffect(() => {
         resetPagination();
-    }, [searchQuery, selectedGender, advancedSearchData, resetPagination]);
+    }, [searchQuery, selectedGender, advancedSearchData, yearRange, yearSort, resetPagination]);
 
     const fetchAccordFragrances = async () => {
         try {
@@ -85,6 +95,14 @@ const AccordPage = () => {
     const handleAdvancedSearchChange = useCallback((newAdvancedSearchData) => {
         setAdvancedSearchData(newAdvancedSearchData);
     }, [setAdvancedSearchData]);
+
+    const handleYearRangeChange = useCallback((range) => {
+        setYearRange(range);
+    }, [setYearRange]);
+
+    const handleYearSortChange = useCallback((sort) => {
+        setYearSort(sort);
+    }, [setYearSort]);
 
     if (loading) {
         return <LoadingPage/>;
@@ -142,7 +160,18 @@ const AccordPage = () => {
                     onAdvancedSearchChange={handleAdvancedSearchChange}
                 />
 
-                <GenderFilterButtons onClick={handleGenderChange} selectedGender={selectedGender}/>
+                <FilterSection
+                    genderFilterData={{
+                        onClick: handleGenderChange,
+                        selectedGender: selectedGender
+                    }}
+                    yearFilterData={{
+                        onYearRangeChange: handleYearRangeChange,
+                        onSortChange: handleYearSortChange,
+                        minYear: minYear,
+                        maxYear: maxYear
+                    }}
+                />
 
                 <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={filteredFragrances.length} type={"fragrances"} />
             </div>
