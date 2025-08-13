@@ -4,8 +4,8 @@ import { useTheme } from '../../contexts/ThemeContext.jsx';
 const YearFilterButton = ({
                               onYearRangeChange,
                               onSortChange,
-                              minYear = 1533,
-                              maxYear = new Date().getFullYear(),
+                              minYear,
+                              maxYear,
                               initialRange = null
                           }) => {
     const { theme } = useTheme();
@@ -17,7 +17,6 @@ const YearFilterButton = ({
     const [isDragging, setIsDragging] = useState(null); // null, 'min', 'max'
     const [tempMinYear, setTempMinYear] = useState('');
     const [tempMaxYear, setTempMaxYear] = useState('');
-    const isDefaultState = yearRange[0] === minYear && yearRange[1] === maxYear && sortOrder === 'none';
 
     // Calculate position percentage for slider handles
     const getPositionPercent = (year) => {

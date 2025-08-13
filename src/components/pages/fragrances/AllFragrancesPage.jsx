@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, memo } from 'react';
+import React, { useState, useEffect, useCallback, memo, useMemo } from 'react';
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import FragranceCard from "../../cards/FragranceCard.jsx";
 import LoadingPage from "../primary/LoadingPage.jsx";
@@ -23,6 +23,7 @@ const AllFragrancesPage = () => {
     // Use custom hook for all filtering logic (now includes year filtering)
     const {
         setFragrances,
+        fragrances,
         filteredFragrances,
         searchQuery,
         setSearchQuery,
@@ -35,6 +36,21 @@ const AllFragrancesPage = () => {
         yearSort,
         setYearSort
     } = useFragranceFilter();
+
+    // Calculate year range from fragrances
+    const [minYear, maxYear] = useMemo(() => {
+        const MIN_YEAR_IN_DB = 1533;
+        const MAX_YEAR = new Date().getFullYear();
+        if (!fragrances || fragrances.length === 0) return [MIN_YEAR_IN_DB, MAX_YEAR];
+
+        const years = fragrances
+            .map(f => f.year)
+            .filter(year => year != null && year > 0);
+
+        if (years.length === 0) return [MIN_YEAR_IN_DB, MAX_YEAR];
+
+        return [Math.min(...years), Math.max(...years)];
+    }, [fragrances]);
 
     // Use custom hook for pagination
     const {
@@ -137,18 +153,24 @@ const AllFragrancesPage = () => {
                 />
 
                 {/* Filter Buttons Row */}
-                <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4">
+                <div className="space-y-3 sm:space-y-4">
                     {/* Gender Filter */}
-                    <GenderFilterButtons
-                        onClick={handleGenderChange}
-                        selectedGender={selectedGender}
-                    />
+                    <div className="flex justify-center">
+                        <GenderFilterButtons
+                            onClick={handleGenderChange}
+                            selectedGender={selectedGender}
+                        />
+                    </div>
 
-                    {/* Year Filter - New Component */}
-                    <YearFilterButton
-                        onYearRangeChange={handleYearRangeChange}
-                        onSortChange={handleYearSortChange}
-                    />
+                    {/* Year Filter - Below Gender */}
+                    <div className="flex justify-center">
+                        <YearFilterButton
+                            onYearRangeChange={handleYearRangeChange}
+                            onSortChange={handleYearSortChange}
+                            minYear={minYear}
+                            maxYear={maxYear}
+                        />
+                    </div>
                 </div>
 
                 {/* Results Counter */}
