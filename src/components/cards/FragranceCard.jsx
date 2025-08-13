@@ -5,15 +5,31 @@ import {useTheme} from "../contexts/ThemeContext.jsx";
 export default function FragranceCard({fragrance}) {
     const navigate = useNavigate();
     const { theme } = useTheme();
-    const handleFragranceClick = (fragrance) => {
-        navigate(`/fragrances/${fragrance.brand}/${fragrance.name}/${fragrance.id}`);
+    const handleFragranceClick = (fragrance, e) => {
+        const url = `/fragrances/${fragrance.brand}/${fragrance.name}/${fragrance.id}`;
+
+        // Ctrl/Cmd + Click
+        if (e.button === 0 && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault();
+            window.open(url, '_blank');
+        }
+
+        // Normal left click
+        else if (e.button === 0) {
+            e.preventDefault();
+            navigate(url);
+        }
     };
     return (
         <div
             key={fragrance.id}
-            onClick={() => handleFragranceClick(fragrance)}
             className={`${theme.card.primary} shadow-lg p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 rounded-lg sm:rounded-xl border ${theme.border.primary} ${theme.border.hover} transition-all duration-300 hover:scale-105 cursor-pointer group h-full`}
         >
+            <a
+                href={`/fragrances/${fragrance.brand}/${fragrance.name}/${fragrance.id}`}
+                onMouseDown={(e) => handleFragranceClick(fragrance, e)}
+                className="block h-full no-underline text-inherit"
+            >
             <div className="space-y-1.5 sm:space-y-2 md:space-y-3 lg:space-y-4 flex flex-col h-full">
                 <div className="flex items-center justify-between">
                     <span className={`shadow-md text-shadow-md px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 ${fragrance.gender === "men" ? "bg-blue-800" : fragrance.gender === "women" ? "bg-pink-600" : "bg-gradient-to-r from-pink-600 via-purple-500 to-blue-800"} rounded-full text-[10px] sm:text-xs md:text-sm font-medium text-white`}>
@@ -36,6 +52,7 @@ export default function FragranceCard({fragrance}) {
                     </svg>
                 </div>
             </div>
+            </a>
         </div>
     );
 }

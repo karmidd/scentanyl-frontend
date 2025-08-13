@@ -140,6 +140,7 @@ const AllAccordsPage = () => {
                                         total={accord.totalFragrances}
                                         message={"Click to explore fragrances with this accord"}
                                         onClick={() => handleAccordClick(accord)}
+                                        href={`/accords/${encodeURIComponent(accord.name)}`}  // Add this line
                                     />
                                 </div>
                             ))}

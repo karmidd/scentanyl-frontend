@@ -5,14 +5,28 @@ import {useTheme} from "../contexts/ThemeContext.jsx";
 export default function BrandCard({brand}){
     const navigate = useNavigate();
     const { theme } = useTheme();
-    const handleBrandClick = (brand) => {
-        navigate(`/brands/${brand}`);
+    const handleBrandClick = (e, brand) => {
+        const url = `/brands/${brand}`;
+
+        if (e.button === 1) return;
+
+        if (e.button === 0 && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault();
+            window.open(url, '_blank');
+        } else if (e.button === 0) {
+            e.preventDefault();
+            navigate(url);
+        }
     };
     return (
         <div
-            onClick={() => handleBrandClick(brand.name)}
             className={`shadow-lg cursor-pointer ${theme.card.primary} ${theme.text.primary} border border-gray-700 rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-5 lg:p-6 xl:p-7 ${theme.border.hover} transition-all duration-300 hover:shadow-lg ${theme.shadow.button} hover:scale-105 transform group relative overflow-hidden`}
         >
+            <a
+                href={`/brands/${brand.name}`}
+                onMouseDown={(e) => handleBrandClick(e, brand.name)}
+                className="block h-full no-underline text-inherit"
+            >
             {/* Background gradient effect on hover */}
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
@@ -75,6 +89,7 @@ export default function BrandCard({brand}){
                     </div>
                 </div>
             </div>
+            </a>
         </div>
     );
 }

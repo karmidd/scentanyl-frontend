@@ -1,14 +1,30 @@
 import React from "react";
 import {useTheme} from "../contexts/ThemeContext.jsx";
 
-const NoteCard = ({ note, noteData, onClick }) => {
+const NoteCard = ({ note, noteData, onClick, href  }) => {
     const { totalFragrances, topNotes, middleNotes, baseNotes, uncategorizedNotes } = noteData;
     const { theme } = useTheme();
+    const handleClick = (e) => {
+        if (e.button === 1) return;
+
+        if (e.button === 0 && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault();
+            if (href) window.open(href, '_blank');
+        } else if (e.button === 0) {
+            e.preventDefault();
+            if (onClick) onClick();
+        }
+    };
     return (
         <div
-            onClick={onClick}
             className={`shadow-lg group relative ${theme.text.primary} ${theme.card.primary} border border-gray-700 rounded-lg sm:rounded-xl p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 ${theme.border.hover} transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20 h-full`}
         >
+            <a
+                href={href || '#'}
+                onMouseDown={handleClick}
+                className="block h-full no-underline text-inherit"
+                onClick={(e) => e.preventDefault()}
+            >
             <div className="space-y-1.5 sm:space-y-2 md:space-y-3 lg:space-y-4 flex flex-col h-full">
                 <div className="flex items-center justify-between">
                     <h3 className={`text-shadow-sm text-sm sm:text-base md:text-lg lg:text-xl font-bold ${theme.text.groupHover} transition-colors duration-300 capitalize line-clamp-1`}>
@@ -44,6 +60,7 @@ const NoteCard = ({ note, noteData, onClick }) => {
                     </div>
                 </div>
             </div>
+            </a>
         </div>
     );
 };

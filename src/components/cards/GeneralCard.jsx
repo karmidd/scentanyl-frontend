@@ -1,13 +1,29 @@
 import React from 'react';
 import {useTheme} from "../contexts/ThemeContext.jsx";
 
-const GeneralCard = ({ name, total, message, onClick }) => {
+const GeneralCard = ({ name, total, message, onClick, href }) => {
     const { theme } = useTheme();
+    const handleClick = (e) => {
+        if (e.button === 1) return;
+
+        if (e.button === 0 && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault();
+            if (href) window.open(href, '_blank');
+        } else if (e.button === 0) {
+            e.preventDefault();
+            if (onClick) onClick();
+        }
+    };
     return (
         <div
-            onClick={onClick}
             className={`shadow-lg text-shadow-sm cursor-pointer ${theme.card.primary} ${theme.text.primary} border border-gray-700 rounded-lg sm:rounded-xl md:rounded-2xl p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 ${theme.border.hover} transition-all duration-300 hover:shadow-lg ${theme.shadow.button} hover:scale-105 transform group h-full`}
         >
+            <a
+                href={href || '#'}
+                onMouseDown={handleClick}
+                className="block h-full no-underline text-inherit"
+                onClick={(e) => e.preventDefault()}
+            >
             <div className="space-y-1.5 sm:space-y-2 md:space-y-3 lg:space-y-4 flex flex-col h-full">
                 {/* Item Name */}
                 <h3 className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold ${theme.text.groupHover} transition-colors duration-300 capitalize line-clamp-2`}>
@@ -37,6 +53,7 @@ const GeneralCard = ({ name, total, message, onClick }) => {
                     {message}
                 </div>
             </div>
+            </a>
         </div>
     );
 };

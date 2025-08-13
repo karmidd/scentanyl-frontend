@@ -150,6 +150,7 @@ const AllNotesPage = () => {
                                             uncategorizedNotes: note.uncategorizedCount
                                         }}
                                         onClick={() => handleNoteClick(note)}
+                                        href={`/notes/${encodeURIComponent(note.name)}`}
                                     />
                                 </div>
                             ))}

@@ -249,10 +249,10 @@ export default function SearchBar({
             filtered = items.filter(item => !allUsed.includes(item));
         }
 
-        if (!searchTerm) return filtered.slice(0, 30);
+        if (!searchTerm) return filtered.slice(0, 50);
         return filtered.filter(item =>
             item && typeof item === 'string' && item.toLowerCase().includes(searchTerm.toLowerCase())
-        ).slice(0, 30);
+        ).slice(0, 200);
     };
 
     const renderDropdown = (items, onSelect, type, excludeSelected = [], excludeExcluded = []) => {
@@ -549,7 +549,7 @@ export default function SearchBar({
                     {/* Include Uncategorized Notes - Updated Structure */}
                     <div className="space-y-2">
                         <div className="flex items-center justify-center relative">
-                            <h3 className={`text-sm sm:text-base md:text-lg font-semibold text-shadow-2xs ${theme.text.other_accent}`}>Include Uncategorized Notes</h3>
+                            <h3 className={`text-sm sm:text-base md:text-lg font-semibold text-shadow-2xs ${theme.text.other_accent}`}>Include Notes</h3>
                             <div className="absolute right-0">
                                 <button
                                     onClick={(e) => {
@@ -591,7 +591,7 @@ export default function SearchBar({
                     {/* Exclude Uncategorized Notes - Updated Structure */}
                     <div className="space-y-2">
                         <div className="flex items-center justify-center relative">
-                            <h3 className={`text-sm sm:text-base md:text-lg font-semibold text-shadow-2xs ${theme.text.other_accent}`}>Exclude Uncategorized Notes</h3>
+                            <h3 className={`text-sm sm:text-base md:text-lg font-semibold text-shadow-2xs ${theme.text.other_accent}`}>Exclude Notes</h3>
                             <div className="absolute right-0">
                                 <button
                                     onClick={(e) => {

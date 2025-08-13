@@ -73,21 +73,27 @@ export const useFragranceFilter = () => {
                 }
             }
         } else if (advancedSearchData.mode === 'uncategorized') {
-            const fragranceNotes = fragrance.uncategorizedNotes?.toLowerCase().split(',').map(n => n.trim()) || [];
+            // Collect ALL notes from all layers
+            const allFragranceNotes = [
+                ...(fragrance.topNotes?.toLowerCase().split(',').map(n => n.trim()) || []),
+                ...(fragrance.middleNotes?.toLowerCase().split(',').map(n => n.trim()) || []),
+                ...(fragrance.baseNotes?.toLowerCase().split(',').map(n => n.trim()) || []),
+                ...(fragrance.uncategorizedNotes?.toLowerCase().split(',').map(n => n.trim()) || [])
+            ];
 
-            // Check included uncategorized notes
+            // Check included notes (must have ALL included notes anywhere in the fragrance)
             if (advancedSearchData.notes.uncategorized && advancedSearchData.notes.uncategorized.length > 0) {
                 const hasAllNotes = advancedSearchData.notes.uncategorized.every(note =>
-                    fragranceNotes.some(fn => fn.includes(note.toLowerCase()))
+                    allFragranceNotes.some(fn => fn.includes(note.toLowerCase()))
                 );
                 if (!hasAllNotes) return false;
             }
 
-            // Check excluded uncategorized notes
+            // Check excluded notes (must NOT have ANY excluded notes anywhere in the fragrance)
             if (advancedSearchData.excludedNotes && advancedSearchData.excludedNotes.uncategorized &&
                 advancedSearchData.excludedNotes.uncategorized.length > 0) {
                 const hasExcludedNote = advancedSearchData.excludedNotes.uncategorized.some(note =>
-                    fragranceNotes.some(fn => fn.includes(note.toLowerCase()))
+                    allFragranceNotes.some(fn => fn.includes(note.toLowerCase()))
                 );
                 if (hasExcludedNote) return false;
             }

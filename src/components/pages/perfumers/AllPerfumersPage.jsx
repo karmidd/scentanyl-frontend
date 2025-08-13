@@ -140,6 +140,7 @@ const AllPerfumersPage = () => {
                                         total={perfumer.totalFragrances}
                                         onClick={() => handlePerfumerClick(perfumer)}
                                         message={"Click to explore fragrances made by this perfumer"}
+                                        href={`/perfumers/${encodeURIComponent(perfumer.name)}`}  // Add this line
                                     />
                                 </div>
                             ))}
