@@ -325,9 +325,9 @@ export default function SearchBar({
                 <button
                     onClick={() => handleModeSwitch('layered')}
                     type="button"
-                    className={`cursor-pointer px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
+                    className={`shadow-md cursor-pointer px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
                         searchMode === 'layered'
-                            ? `${theme.button.primary} text-white transform scale-105`
+                            ? `${theme.button.primary} text-white border border-none transform scale-105`
                             : `${theme.bg.input} ${theme.text.primary} border ${theme.border.primary} hover:scale-105`
                     }`}
                 >
@@ -336,9 +336,9 @@ export default function SearchBar({
                 <button
                     onClick={() => handleModeSwitch('uncategorized')}
                     type="button"
-                    className={`cursor-pointer px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
+                    className={`shadow-md cursor-pointer px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
                         searchMode === 'uncategorized'
-                            ? `${theme.button.primary} text-white transform scale-105`
+                            ? `${theme.button.primary} text-white border border-none transform scale-105`
                             : `${theme.bg.input} ${theme.text.primary} border ${theme.border.primary} hover:scale-105`
                     }`}
                 >
@@ -351,7 +351,7 @@ export default function SearchBar({
                 {/* Include Accords */}
                 <div className="space-y-2">
                     <div className="flex items-center justify-center relative">
-                        <h3 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>Include Accords</h3>
+                        <h3 className={`text-sm sm:text-base md:text-lg font-semibold text-shadow-2xs ${theme.text.other_accent}`}>Include Accords</h3>
                         <div className="absolute right-0">
                             <button
                                 onClick={(e) => {
@@ -360,7 +360,7 @@ export default function SearchBar({
                                     setActiveDropdown(activeDropdown === 'accords-include' ? null : 'accords-include');
                                 }}
                                 type="button"
-                                className={`cursor-pointer bg-green-600 hover:bg-green-500 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                className={`shadow-md cursor-pointer bg-green-600 hover:bg-green-500 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
                             >
                                 <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -370,11 +370,11 @@ export default function SearchBar({
                                 renderDropdown(availableAccords, addAccord, 'accords', selectedAccords, excludedAccords)}
                         </div>
                     </div>
-                    <div className="min-h-[2rem] p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-400/10">
+                    <div className="min-h-[2rem] p-2 shadow-sm border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-400/10">
                         {selectedAccords.map((accord, index) => (
                             <span
                                 key={index}
-                                className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-300/20 rounded-lg text-sm md:text-base lg:text-xl border border-green-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.include}`}
+                                className={`text-shadow-sm shadow-md px-2 sm:px-3 py-1 sm:py-1.5 bg-green-300/20 rounded-lg text-sm md:text-base lg:text-xl border border-green-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.include}`}
                                 style={{animationDelay: `${index * 50}ms`}}
                             >
                                 <span>{accord}</span>
@@ -393,7 +393,7 @@ export default function SearchBar({
                 {/* Exclude Accords */}
                 <div className="space-y-2">
                     <div className="flex items-center justify-center relative">
-                        <h3 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>Exclude Accords</h3>
+                        <h3 className={`text-sm sm:text-base md:text-lg font-semibold text-shadow-2xs ${theme.text.other_accent}`}>Exclude Accords</h3>
                         <div className="absolute right-0">
                             <button
                                 onClick={(e) => {
@@ -402,7 +402,7 @@ export default function SearchBar({
                                     setActiveDropdown(activeDropdown === 'accords-exclude' ? null : 'accords-exclude');
                                 }}
                                 type="button"
-                                className={`cursor-pointer bg-red-600 hover:bg-red-500 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                className={`shadow-md cursor-pointer bg-red-600 hover:bg-red-500 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
                             >
                                 <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -412,11 +412,11 @@ export default function SearchBar({
                                 renderDropdown(availableAccords, excludeAccord, 'accords', selectedAccords, excludedAccords)}
                         </div>
                     </div>
-                    <div className="min-h-[2rem] p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-400/10">
+                    <div className="min-h-[2rem] shadow-sm p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-400/10">
                         {excludedAccords.map((accord, index) => (
                             <span
                                 key={index}
-                                className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-300/20 rounded-lg text-sm lg:text-xl md:text-base border border-red-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.exclude}`}
+                                className={`text-shadow-sm shadow-md px-2 sm:px-3 py-1 sm:py-1.5 bg-red-300/20 rounded-lg text-sm lg:text-xl md:text-base border border-red-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.exclude}`}
                                 style={{animationDelay: `${index * 50}ms`}}
                             >
                                 <span>{accord}</span>
@@ -450,7 +450,7 @@ export default function SearchBar({
                                 {/* Include Notes - Updated Structure */}
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-center relative">
-                                        <h4 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>
+                                        <h4 className={`text-sm sm:text-base md:text-lg font-semibold text-shadow-2xs ${theme.text.other_accent}`}>
                                             Include {layer.charAt(0).toUpperCase() + layer.slice(1)} Notes
                                         </h4>
                                         <div className="absolute right-0">
@@ -461,7 +461,7 @@ export default function SearchBar({
                                                     setActiveDropdown(activeDropdown === `${layer}-include` ? null : `${layer}-include`);
                                                 }}
                                                 type="button"
-                                                className={`cursor-pointer bg-green-600 hover:bg-green-500 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                                className={`shadow-md cursor-pointer bg-green-600 hover:bg-green-500 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
                                             >
                                                 <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -471,22 +471,22 @@ export default function SearchBar({
                                                 renderDropdown(availableNotes, (note) => addNote(layer, note), 'notes', selectedNotes[layer], excludedNotes[layer])}
                                         </div>
                                     </div>
-                                    <div className="min-h-[2rem] p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-400/10">
+                                    <div className="shadow-sm min-h-[2rem] p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-400/10">
                                         {selectedNotes[layer].map((note, index) => (
                                             <span
                                                 key={index}
-                                                className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-300/20 rounded-lg text-sm md:text-base lg:text-xl border border-green-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.include}`}
+                                                className={`shadow-md text-shadow-sm px-2 sm:px-3 py-1 sm:py-1.5 bg-green-300/20 rounded-lg text-sm md:text-base lg:text-xl border border-green-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.include}`}
                                                 style={{animationDelay: `${index * 50}ms`}}
                                             >
-                                <span>{note}</span>
-                                <button
-                                    onClick={() => removeNote(layer, note)}
-                                    type="button"
-                                    className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
-                                >
-                                    ×
-                                </button>
-                            </span>
+                                                <span>{note}</span>
+                                                <button
+                                                    onClick={() => removeNote(layer, note)}
+                                                    type="button"
+                                                    className="cursor-pointer text-red-500 hover:text-red-200 hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center text-lg font-bold leading-none transition-all duration-200"
+                                                >
+                                                    ×
+                                                </button>
+                                            </span>
                                         ))}
                                     </div>
                                 </div>
@@ -494,7 +494,7 @@ export default function SearchBar({
                                 {/* Exclude Notes - Updated Structure */}
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-center relative">
-                                        <h4 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>
+                                        <h4 className={`text-sm sm:text-base md:text-lg font-semibold text-shadow-2xs ${theme.text.other_accent}`}>
                                             Exclude {layer.charAt(0).toUpperCase() + layer.slice(1)} Notes
                                         </h4>
                                         <div className="absolute right-0">
@@ -505,7 +505,7 @@ export default function SearchBar({
                                                     setActiveDropdown(activeDropdown === `${layer}-exclude` ? null : `${layer}-exclude`);
                                                 }}
                                                 type="button"
-                                                className={`cursor-pointer bg-red-600 hover:bg-red-700 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                                className={`shadow-md cursor-pointer bg-red-600 hover:bg-red-700 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
                                             >
                                                 <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -515,11 +515,11 @@ export default function SearchBar({
                                                 renderDropdown(availableNotes, (note) => excludeNote(layer, note), 'notes', selectedNotes[layer], excludedNotes[layer])}
                                         </div>
                                     </div>
-                                    <div className="min-h-[2rem] p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-400/10">
+                                    <div className="min-h-[2rem] shadow-sm p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-400/10">
                                         {excludedNotes[layer].map((note, index) => (
                                             <span
                                                 key={index}
-                                                className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-300/20 rounded-lg text-sm lg:text-xl md:text-base border border-red-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.exclude}`}
+                                                className={`shadow-md text-shadow-sm px-2 sm:px-3 py-1 sm:py-1.5 bg-red-300/20 rounded-lg text-sm lg:text-xl md:text-base border border-red-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.exclude}`}
                                                 style={{animationDelay: `${index * 50}ms`}}
                                             >
                                 <span>{note}</span>
@@ -549,7 +549,7 @@ export default function SearchBar({
                     {/* Include Uncategorized Notes - Updated Structure */}
                     <div className="space-y-2">
                         <div className="flex items-center justify-center relative">
-                            <h3 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>Include Uncategorized Notes</h3>
+                            <h3 className={`text-sm sm:text-base md:text-lg font-semibold text-shadow-2xs ${theme.text.other_accent}`}>Include Uncategorized Notes</h3>
                             <div className="absolute right-0">
                                 <button
                                     onClick={(e) => {
@@ -558,7 +558,7 @@ export default function SearchBar({
                                         setActiveDropdown(activeDropdown === 'uncategorized-include' ? null : 'uncategorized-include');
                                     }}
                                     type="button"
-                                    className={`cursor-pointer bg-green-600 hover:bg-green-500 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                    className={`shadow-md cursor-pointer bg-green-600 hover:bg-green-500 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
                                 >
                                     <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -568,11 +568,11 @@ export default function SearchBar({
                                     renderDropdown(availableNotes, (note) => addNote('uncategorized', note), 'notes', selectedNotes.uncategorized, excludedNotes.uncategorized)}
                             </div>
                         </div>
-                        <div className="min-h-[2rem] p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-400/10">
+                        <div className="min-h-[2rem] shadow-sm p-2 border border-green-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-green-400/10">
                             {selectedNotes.uncategorized.map((note, index) => (
                                 <span
                                     key={index}
-                                    className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-green-300/20 rounded-lg text-sm md:text-base lg:text-xl border border-green-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.include}`}
+                                    className={`shadow-md text-shadow-2xs px-2 sm:px-3 py-1 sm:py-1.5 bg-green-300/20 rounded-lg text-sm md:text-base lg:text-xl border border-green-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.include}`}
                                     style={{animationDelay: `${index * 50}ms`}}
                                 >
                         <span>{note}</span>
@@ -591,7 +591,7 @@ export default function SearchBar({
                     {/* Exclude Uncategorized Notes - Updated Structure */}
                     <div className="space-y-2">
                         <div className="flex items-center justify-center relative">
-                            <h3 className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.other_accent}`}>Exclude Uncategorized Notes</h3>
+                            <h3 className={`text-sm sm:text-base md:text-lg font-semibold text-shadow-2xs ${theme.text.other_accent}`}>Exclude Uncategorized Notes</h3>
                             <div className="absolute right-0">
                                 <button
                                     onClick={(e) => {
@@ -600,7 +600,7 @@ export default function SearchBar({
                                         setActiveDropdown(activeDropdown === 'uncategorized-exclude' ? null : 'uncategorized-exclude');
                                     }}
                                     type="button"
-                                    className={`cursor-pointer bg-red-600 hover:bg-red-700 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
+                                    className={`shadow-md cursor-pointer bg-red-600 hover:bg-red-700 text-white p-1.5 sm:p-2 rounded-lg hover:scale-105 transition-all duration-300`}
                                 >
                                     <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -610,11 +610,11 @@ export default function SearchBar({
                                     renderDropdown(availableNotes, (note) => excludeNote('uncategorized', note), 'notes', selectedNotes.uncategorized, excludedNotes.uncategorized)}
                             </div>
                         </div>
-                        <div className="min-h-[2rem] p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-400/10">
+                        <div className="min-h-[2rem] shadow-sm p-2 border border-red-600/30 rounded-lg flex flex-wrap gap-1.5 sm:gap-2 justify-center bg-red-400/10">
                             {excludedNotes.uncategorized.map((note, index) => (
                                 <span
                                     key={index}
-                                    className={`px-2 sm:px-3 py-1 sm:py-1.5 bg-red-300/20 rounded-lg text-sm lg:text-xl md:text-base border border-red-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.exclude}`}
+                                    className={`shadow-md text-shadow-2xs px-2 sm:px-3 py-1 sm:py-1.5 bg-red-300/20 rounded-lg text-sm lg:text-xl md:text-base border border-red-600/30 flex items-center space-x-1 sm:space-x-2 animate-slideIn ${theme.text.exclude}`}
                                     style={{animationDelay: `${index * 50}ms`}}
                                 >
                         <span>{note}</span>
@@ -651,8 +651,7 @@ export default function SearchBar({
                 `}
             />
             <button
-                type="submit"
-                className={`absolute right-2 sm:right-3 md:right-4 top-1/2 transform -translate-y-1/2 ${theme.button.primary} p-2 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105`}
+                className={`shadow-lg absolute right-2 sm:right-3 md:right-4 top-1/2 transform -translate-y-1/2 ${theme.button.primary} p-2 sm:p-3 md:p-4 rounded-lg sm:rounded-xl`}
             >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -758,7 +757,7 @@ export default function SearchBar({
                                 <button
                                     type="button"
                                     onClick={() => handleModeSwitch('layered')}
-                                    className={`cursor-pointer ${theme.button.primary} p-2 sm:p-4 md:p-5 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 transform`}
+                                    className={`cursor-pointer shadow-lg ${theme.button.primary} p-2 sm:p-4 md:p-5 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 transform`}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
                                         <path d="M18.75 12.75h1.5a.75.75 0 0 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM12 6a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 6ZM12 18a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 12 18ZM3.75 6.75h1.5a.75.75 0 1 0 0-1.5h-1.5a.75.75 0 0 0 0 1.5ZM5.25 18.75h-1.5a.75.75 0 0 1 0-1.5h1.5a.75.75 0 0 1 0 1.5ZM3 12a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 3 12ZM9 3.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5ZM12.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0ZM9 15.75a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
@@ -800,7 +799,7 @@ export default function SearchBar({
 
                                 {includeRandomButton && (
                                     <RandomFragranceButton
-                                        className={`cursor-pointer group relative inline-flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 text-base sm:text-lg md:text-xl font-bold ${theme.text.primary} bg-gradient-to-r ${theme.randomDiscoveryButton.primary} rounded-full shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30`}
+                                        className={`shadow-lg cursor-pointer group relative inline-flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 md:w-20 md:h-20 text-base sm:text-lg md:text-xl font-bold ${theme.text.primary} bg-gradient-to-r ${theme.randomDiscoveryButton.primary} rounded-full shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30`}
                                     />
                                 )}
                             </div>

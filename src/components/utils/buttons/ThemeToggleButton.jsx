@@ -9,7 +9,7 @@ const ThemeToggleButton = ({ className = '' }) => {
         <button
             onClick={toggleTheme}
             className={`
-                relative inline-flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12
+                shadow-md relative inline-flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12
                 rounded-full transition-all duration-300
                 ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}
                 border border-gray-300 dark:border-gray-700

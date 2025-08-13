@@ -178,7 +178,7 @@ const YearFilterButton = ({
             {/* Main Filter Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`cursor-pointer px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 hover:scale-105 text-xs sm:text-sm md:text-base lg:text-lg cursor-pointer ${
+                className={`shadow-md text-shadow-xs cursor-pointer px-4 sm:px-5 md:px-6 py-3 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 hover:scale-105 text-sm sm:text-sm md:text-base lg:text-lg cursor-pointer ${
                     isFiltered
                         ? 'bg-yellow-500 text-white shadow-lg'
                         : theme.card.primary
@@ -197,13 +197,13 @@ const YearFilterButton = ({
                 <div className={`absolute top-full mt-2 left-1/2 transform -translate-x-1/2 ${theme.card.primary} rounded-xl p-4 sm:p-5 md:p-6 shadow-2xl border border-gray-700 z-50 w-[280px] sm:w-[320px] md:w-[380px]`}>
                     {/* Header */}
                     <div className="flex justify-between items-center mb-6">
-                        <h3 className={`font-semibold text-sm sm:text-base md:text-lg ${theme.text.primary}`}>
+                        <h3 className={`text-shadow-xs font-semibold text-sm sm:text-base md:text-lg ${theme.text.primary}`}>
                             Filter by Year
                         </h3>
                         {isFiltered && (
                             <button
                                 onClick={handleReset}
-                                className="shadow-lg cursor-pointer px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs sm:text-sm rounded-lg transition-all duration-200 hover:scale-105 font-medium"
+                                className="shadow-lg text-shadow-xs cursor-pointer px-3 py-1 bg-red-600 hover:bg-red-500 text-white text-xs sm:text-sm rounded-lg transition-all duration-200 hover:scale-105 font-medium"
                             >
                                 Reset
                             </button>
@@ -229,7 +229,7 @@ const YearFilterButton = ({
                             ) : (
                                 <button
                                     onClick={handleMinYearEdit}
-                                    className={`cursor-pointer px-3 py-1 rounded ${theme.card.secondary} ${theme.card.hover} transition-colors text-sm sm:text-base ${theme.text.primary}`}
+                                    className={`text-shadow-xs shadow-md cursor-pointer px-3 py-1 rounded ${theme.card.secondary} ${theme.card.hover} transition-colors text-sm sm:text-base ${theme.text.primary}`}
                                 >
                                     {yearRange[0]}
                                 </button>
@@ -237,7 +237,7 @@ const YearFilterButton = ({
                         </div>
 
                         {/* Range Info */}
-                        <div className={`flex-1 text-center font-semibold text-sm sm:text-base ${theme.text.other_accent}`}>
+                        <div className={`text-shadow-2xs flex-1 text-center font-semibold text-sm sm:text-base ${theme.text.other_accent}`}>
                             {yearRange[0] === yearRange[1]
                                 ? `${yearRange[0]}`
                                 : `${yearRange[1] - yearRange[0] + 1} years`}
@@ -260,7 +260,7 @@ const YearFilterButton = ({
                             ) : (
                                 <button
                                     onClick={handleMaxYearEdit}
-                                    className={`cursor-pointer px-3 py-1 rounded ${theme.card.secondary} ${theme.card.hover} transition-colors text-sm sm:text-base ${theme.text.primary}`}
+                                    className={`text-shadow-xs shadow-md cursor-pointer px-3 py-1 rounded ${theme.card.secondary} ${theme.card.hover} transition-colors text-sm sm:text-base ${theme.text.primary}`}
                                 >
                                     {yearRange[1]}
                                 </button>
@@ -276,7 +276,7 @@ const YearFilterButton = ({
                         >
                             {/* Active Range Bar */}
                             <div
-                                className={`absolute h-full ${theme.card.indicator} rounded-full`}
+                                className={`shadow-md absolute h-full ${theme.card.indicator} rounded-full`}
                                 style={{
                                     left: `${getPositionPercent(yearRange[0])}%`,
                                     width: `${getPositionPercent(yearRange[1]) - getPositionPercent(yearRange[0])}%`
@@ -285,7 +285,7 @@ const YearFilterButton = ({
 
                             {/* Min Handle */}
                             <div
-                                className={`absolute transform translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full shadow-lg cursor-grab ${
+                                className={`absolute transform translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full shadow-md cursor-grab ${
                                     isDragging === 'min' ? 'cursor-grabbing scale-110' : 'hover:scale-105'
                                 } transition-transform`}
                                 style={{ left: `${getPositionPercent(yearRange[0])}%`, transform: 'translate(-50%, -50%)' }}
@@ -297,7 +297,7 @@ const YearFilterButton = ({
 
                             {/* Max Handle */}
                             <div
-                                className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full shadow-lg cursor-grab ${
+                                className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full shadow-md cursor-grab ${
                                     isDragging === 'max' ? 'cursor-grabbing scale-110' : 'hover:scale-105'
                                 } transition-transform`}
                                 style={{ left: `${getPositionPercent(yearRange[1])}%`, transform: 'translate(-50%, -50%)' }}

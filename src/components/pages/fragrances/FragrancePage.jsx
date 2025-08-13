@@ -133,7 +133,7 @@ const FragrancePage = () => {
                         delay={100}
                         animateBy="words"
                         direction="top"
-                        className="flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-bold leading-tight px-2"
+                        className="text-shadow-lg flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-bold leading-tight px-2"
                     />
                     <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-1">
                         <div className="flex items-center space-x-1">
@@ -142,7 +142,7 @@ const FragrancePage = () => {
                                 delay={200}
                                 animateBy="words"
                                 direction="top"
-                                className="text-xl sm:text-2xl md:text-3xl text-gray-200"
+                                className="text-shadow-lg text-xl sm:text-2xl md:text-3xl text-gray-200"
                             />
                             <button onClick={() => handleBrandClick(fragrance?.brand)} className="cursor-pointer hover:scale-105 transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-lg px-1 sm:px-2 py-0.5 sm:py-1">
                                 <BlurText
@@ -150,7 +150,7 @@ const FragrancePage = () => {
                                     delay={250}
                                     animateBy="words"
                                     direction="top"
-                                    className={`text-xl sm:text-2xl md:text-3xl ${theme.text.accent} font-semibold`}
+                                    className={`text-shadow-lg text-xl sm:text-2xl md:text-3xl ${theme.text.accent} font-semibold`}
                                 />
                             </button>
                         </div>
@@ -160,7 +160,7 @@ const FragrancePage = () => {
                                             delay={300}
                                             animateBy="words"
                                             direction="top"
-                                            className="text-sm sm:text-base md:text-lg lg:text-xl text-white font-medium"
+                                            className="text-shadow-lg text-sm sm:text-base md:text-lg lg:text-xl text-white font-medium"
                                         />
                                     </span>
                     </div>
@@ -172,7 +172,7 @@ const FragrancePage = () => {
                                     delay={200}
                                     animateBy="words"
                                     direction="top"
-                                    className="inline-flex items-center text-gray-200 text-base sm:text-lg md:text-xl lg:text-2xl"
+                                    className="text-shadow-lg inline-flex items-center text-gray-200 text-base sm:text-lg md:text-xl lg:text-2xl"
                                 />
                                 {parsePerfumers(fragrance.perfumerNames).map((perfumerGroup, groupIndex) => {
                                     // Split each perfumer group by comma to get individual names
@@ -193,7 +193,7 @@ const FragrancePage = () => {
                                                                                 delay={200}
                                                                                 animateBy="words"
                                                                                 direction="top"
-                                                                                className={`text-base sm:text-lg md:text-xl lg:text-2xl font-bold ${theme.text.accent}`}
+                                                                                className={`text-shadow-lg text-base sm:text-lg md:text-xl lg:text-2xl font-bold ${theme.text.accent}`}
                                                                             />
                                                                         </button>
                                                                     ) : (
@@ -202,11 +202,11 @@ const FragrancePage = () => {
                                                                             delay={200}
                                                                             animateBy="words"
                                                                             direction="top"
-                                                                            className="text-white text-base sm:text-lg md:text-xl lg:text-2xl"
+                                                                            className="text-shadow-lg text-white text-base sm:text-lg md:text-xl lg:text-2xl"
                                                                         />
                                                                     )}
                                                                     {perfumerIndex < individualPerfumers.length - 1 && (
-                                                                        <span className="text-gray-200 text-2xl mx-1">,</span>
+                                                                        <span className="text-shadow-lg text-gray-200 text-2xl mx-1">,</span>
                                                                     )}
                                                                 </span>
                                                             );
@@ -243,7 +243,7 @@ const FragrancePage = () => {
                                             delay={50}
                                             animateBy="words"
                                             direction="top"
-                                            className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold flex justify-center"
+                                            className="text-shadow-md text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold flex justify-center"
                                         />
                                         <svg
                                             className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 transform group-hover:translate-x-2 transition-transform duration-300"
@@ -263,7 +263,7 @@ const FragrancePage = () => {
                             </div>
 
                             {/* Random Button */}
-                            <RandomFragranceButton className={`cursor-pointer group relative inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 text-base sm:text-lg md:text-xl font-bold ${theme.text.primary} bg-gradient-to-r ${theme.randomDiscoveryButton.primary} rounded-full shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30`} />
+                            <RandomFragranceButton className={`shadow-lg cursor-pointer group relative inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 text-base sm:text-lg md:text-xl font-bold ${theme.text.primary} bg-gradient-to-r ${theme.randomDiscoveryButton.primary} rounded-full shadow-2xl hover:shadow-gray-500/25 transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border border-gray-500/30`} />
                         </div>
                     </div>
                 )}
@@ -274,7 +274,7 @@ const FragrancePage = () => {
                             delay={200}
                             animateBy="words"
                             direction="top"
-                            className="text-xs sm:text-sm md:text-base lg:text-[1.1rem] text-gray-200 text-center"
+                            className="text-shadow-lg text-xs sm:text-sm md:text-base lg:text-[1.1rem] text-gray-200 text-center"
                         />
                     </div>
                 )}
@@ -287,14 +287,14 @@ const FragrancePage = () => {
                             delay={500}
                             animateBy="words"
                             direction="top"
-                            className={`text-2xl sm:text-3xl font-semibold ${theme.text.accent} flex justify-center`}
+                            className={`text-shadow-lg text-2xl sm:text-3xl font-semibold ${theme.text.accent} flex justify-center`}
                         />
                         <div className="flex flex-wrap gap-2 sm:gap-3 justify-center px-2">
                             {parseAccords(fragrance.accords).map((accord, index) => (
                                 <button
                                     key={index}
                                     onClick={() => handleAccordClick(accord)}
-                                    className={`px-3 sm:px-4 py-1.5 sm:py-2 ${theme.card.primary} rounded-lg text-sm sm:text-base md:text-lg lg:text-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 ${theme.card.hover} cursor-pointer animate-fadeIn`}
+                                    className={`text-shadow-sm px-3 sm:px-4 py-1.5 sm:py-2 ${theme.card.primary} rounded-lg shadow-lg text-sm sm:text-base md:text-lg lg:text-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 ${theme.card.hover} cursor-pointer animate-fadeIn`}
                                     style={{animationDelay: `${550 + index * 100}ms`}}
                                 >
                                     {accord.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
@@ -314,14 +314,14 @@ const FragrancePage = () => {
                                 delay={700}
                                 animateBy="words"
                                 direction="top"
-                                className={`text-2xl sm:text-3xl font-semibold ${theme.text.accent} flex justify-center`}
+                                className={`text-shadow-lg text-2xl sm:text-3xl font-semibold ${theme.text.accent} flex justify-center`}
                             />
                             <div className="gap-2 sm:gap-3 md:gap-4 flex justify-center flex-wrap px-2">
                                 {parseNotes(fragrance.topNotes).map((note, index) => (
                                     <button
                                         key={index}
                                         onClick={() => handleNoteClick(note)}
-                                        className={`${theme.card.primary} p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn`}
+                                        className={`${theme.card.primary} text-shadow-sm shadow-lg p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn`}
                                         style={{animationDelay: `${750 + index * 100}ms`}}
                                     >
                                         <span className="text-sm sm:text-base md:text-lg lg:text-xl font-medium">{note}</span>
@@ -339,14 +339,14 @@ const FragrancePage = () => {
                                 delay={900}
                                 animateBy="words"
                                 direction="top"
-                                className={`text-2xl sm:text-3xl font-semibold ${theme.text.accent} flex justify-center`}
+                                className={`text-shadow-lg text-2xl sm:text-3xl font-semibold ${theme.text.accent} flex justify-center`}
                             />
                             <div className="gap-2 sm:gap-3 md:gap-4 flex justify-center flex-wrap px-2">
                                 {parseNotes(fragrance.middleNotes).map((note, index) => (
                                     <button
                                         key={index}
                                         onClick={() => handleNoteClick(note)}
-                                        className={`${theme.card.primary} p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn`}
+                                        className={`${theme.card.primary} text-shadow-sm shadow-lg p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn`}
                                         style={{animationDelay: `${950 + index * 100}ms`}}
                                     >
                                         <span className="text-sm sm:text-base md:text-lg lg:text-xl font-medium">{note}</span>
@@ -364,14 +364,14 @@ const FragrancePage = () => {
                                 delay={1100}
                                 animateBy="words"
                                 direction="top"
-                                className={`text-2xl sm:text-3xl font-semibold ${theme.text.accent} flex justify-center`}
+                                className={`text-shadow-lg text-2xl sm:text-3xl font-semibold ${theme.text.accent} flex justify-center`}
                             />
                             <div className="gap-2 sm:gap-3 md:gap-4 flex justify-center flex-wrap px-2">
                                 {parseNotes(fragrance.baseNotes).map((note, index) => (
                                     <button
                                         key={index}
                                         onClick={() => handleNoteClick(note)}
-                                        className={`${theme.card.primary} p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn`}
+                                        className={`${theme.card.primary} text-shadow-sm shadow-lg p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn`}
                                         style={{animationDelay: `${1150 + index * 100}ms`}}
                                     >
                                         <span className="text-sm sm:text-base md:text-lg lg:text-xl font-medium">{note}</span>
@@ -389,14 +389,14 @@ const FragrancePage = () => {
                                 delay={1300}
                                 animateBy="words"
                                 direction="top"
-                                className={`text-2xl sm:text-3xl font-semibold ${theme.text.accent} flex justify-center`}
+                                className={`text-shadow-lg text-2xl sm:text-3xl font-semibold ${theme.text.accent} flex justify-center`}
                             />
                             <div className="gap-2 sm:gap-3 md:gap-4 flex justify-center flex-wrap px-2">
                                 {parseNotes(fragrance.uncategorizedNotes).map((note, index) => (
                                     <button
                                         key={index}
                                         onClick={() => handleNoteClick(note)}
-                                        className={`${theme.card.primary} p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn`}
+                                        className={`${theme.card.primary} text-shadow-sm shadow-lg p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn`}
                                         style={{animationDelay: `${1350 + index * 100}ms`}}
                                     >
                                         <span className="text-sm sm:text-base md:text-lg lg:text-xl font-medium">{note}</span>
@@ -413,12 +413,12 @@ const FragrancePage = () => {
                         delay={300}
                         animateBy="words"
                         direction="bottom"
-                        className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
+                        className="text-shadow-lg flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
                     />
                     <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
                         <button
                             onClick={() => navigate('/fragrances')}
-                            className={`cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
+                            className={`shadow-lg text-shadow-md cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
                         >
                             Back to All Fragrances
                         </button>

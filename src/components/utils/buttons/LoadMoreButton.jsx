@@ -8,7 +8,7 @@ export default function LoadMoreButton({onClick, disabled, message}) {
             <button
                 onClick={onClick}
                 disabled={disabled}
-                className={`cursor-pointer group relative inline-flex items-center justify-center px-6 sm:px-8 md:px-10 lg:px-12 py-3 sm:py-3.5 md:py-4 text-base sm:text-lg md:text-xl font-bold text-white ${theme.button.primary} rounded-lg sm:rounded-xl ${theme.shadow.button} transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border ${theme.border.accent} disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0`}
+                className={`shadow-lg cursor-pointer group relative inline-flex items-center justify-center px-6 sm:px-8 md:px-10 lg:px-12 py-3 sm:py-3.5 md:py-4 text-base sm:text-lg md:text-xl font-bold text-white ${theme.button.primary} rounded-lg sm:rounded-xl ${theme.shadow.button} transition-all duration-300 hover:scale-105 transform hover:-translate-y-1 border ${theme.border.accent} disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0`}
             >
                 <div className="absolute inset-0 rounded-lg sm:rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
                 <div className="relative flex items-center space-x-2 sm:space-x-3">

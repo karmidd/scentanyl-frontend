@@ -98,7 +98,7 @@ const HomePage = () => {
                     delay={200}
                     animateBy="words"
                     direction="left"
-                    className={`flex justify-center text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white px-2`}
+                    className={`text-shadow-lg flex justify-center text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white px-2`}
                 />
 
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
@@ -124,7 +124,7 @@ const HomePage = () => {
                     delay={250}
                     animateBy="words"
                     direction="right"
-                    className={`flex justify-center text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white px-2`}
+                    className={`text-shadow-lg flex justify-center text-2xl sm:text-3xl md:text-4xl font-bold text-center text-white px-2`}
                 />
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
                     {featuredBrands.map((brand, index) => (
