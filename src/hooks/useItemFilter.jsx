@@ -27,8 +27,8 @@ export const useItemFilter = (sortOptions = ['alphabetical', 'fragranceCount']) 
         } else if (sortBy === 'fragranceCount') {
             // Use totalAppearances or totalContributions based on item type
             filtered = [...filtered].sort((a, b) =>
-                (b.totalAppearances || b.totalContributions || 0) -
-                (a.totalAppearances || a.totalContributions || 0)
+                (b.totalFragrances || 0) -
+                (a.totalFragrances || 0)
             );
         }
 

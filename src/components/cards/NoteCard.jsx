@@ -2,7 +2,7 @@ import React from "react";
 import {useTheme} from "../contexts/ThemeContext.jsx";
 
 const NoteCard = ({ note, noteData, onClick }) => {
-    const { total, topNotes, middleNotes, baseNotes, uncategorizedNotes } = noteData;
+    const { totalFragrances, topNotes, middleNotes, baseNotes, uncategorizedNotes } = noteData;
     const { theme } = useTheme();
     return (
         <div
@@ -15,7 +15,7 @@ const NoteCard = ({ note, noteData, onClick }) => {
                         {note}
                     </h3>
                     <div className={`${theme.card.selected} text-white px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs md:text-sm font-semibold`}>
-                        {total}
+                        {totalFragrances}
                     </div>
                 </div>
 

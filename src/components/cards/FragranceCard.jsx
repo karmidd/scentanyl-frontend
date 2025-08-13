@@ -30,7 +30,7 @@ export default function FragranceCard({fragrance}) {
                     </p>
                 </div>
                 <div className="flex items-center justify-between pt-1 sm:pt-1.5 md:pt-2 lg:pt-3 xl:pt-4">
-                    <span className={`${theme.text.secondary} ${theme.text.groupHover} text-[10px] sm:text-xs md:text-sm`}>Tap to explore</span>
+                    <span className={`${theme.text.secondary} ${theme.text.groupHover} text-[10px] sm:text-xs md:text-sm`}>Click to explore</span>
                     <svg className={`${theme.text.groupHover} ${theme.text.secondary} w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-blue-400 transform group-hover:translate-x-2 transition-transform duration-300`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>

@@ -137,7 +137,7 @@ const AllPerfumersPage = () => {
                                 >
                                     <MemoizedGeneralCard
                                         name={perfumer.name}
-                                        total={perfumer.totalContributions}
+                                        total={perfumer.totalFragrances}
                                         onClick={() => handlePerfumerClick(perfumer)}
                                         message={"Click to explore fragrances made by this perfumer"}
                                     />

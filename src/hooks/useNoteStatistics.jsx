@@ -3,7 +3,7 @@ import {useMemo} from "react";
 export const useNoteStatistics = (fragrances, note) => {
     return useMemo(() => {
         const stats = {
-            total: fragrances.length,
+            totalFragrances: fragrances.length,
             topNotes: 0,
             middleNotes: 0,
             baseNotes: 0,

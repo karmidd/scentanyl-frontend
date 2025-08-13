@@ -9,7 +9,7 @@ import SortButtons from "../../utils/buttons/SortButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
-import {useBrandFilter} from "../../../hooks/useBrandHook.jsx";
+import {useBrandFilter} from "../../../hooks/useBrandFilter.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
 
 
@@ -50,7 +50,7 @@ const AllBrandsPage = () => {
             case 'alphabetical':
                 return brandsToSort.sort((a, b) => a.name.localeCompare(b.name));
             case 'fragranceCount':
-                return brandsToSort.sort((a, b) => (b.fragranceCount || 0) - (a.fragranceCount || 0));
+                return brandsToSort.sort((a, b) => (b.totalFragrances || 0) - (a.totalFragrances || 0));
             default:
                 return brandsToSort;
         }
@@ -262,8 +262,8 @@ const AllBrandsPage = () => {
                 {/* Search Bar */}
                 <SearchBar size={2} onSubmit={handleSearch} value={searchQuery} onChange={handleSearchChange} message={"Search for brands..."} />
 
-                {/* Filters Section - FIX 2: Add relative positioning and z-index */}
-                <div className="max-w-2xl mx-auto px-2 relative" style={{ zIndex: 100 }}>
+                {/* Filters Section  */}
+                <div className="max-w-2xl mx-auto px-2 relative" style={{ zIndex: 11 }}>
                     <div className={`${theme.card.blur} border border-gray-700 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6`}>
                         <div className="flex flex-row flex-wrap gap-3 sm:gap-4 items-end justify-center">
                             {/* Country Filter */}

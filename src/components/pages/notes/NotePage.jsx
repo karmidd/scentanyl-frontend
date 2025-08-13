@@ -126,7 +126,7 @@ const NotePage = () => {
                 {/* Note Statistics */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 md:gap-4 max-w-5xl mx-auto mb-4 sm:mb-6 md:mb-8 px-2">
                     <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
-                        <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-500">{noteStats.total}</div>
+                        <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-500">{noteStats.totalFragrances}</div>
                         <div className={`text-xs sm:text-sm ${theme.text.secondary}`}>Total</div>
                     </div>
                     <div className={`${theme.card.primary} rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>

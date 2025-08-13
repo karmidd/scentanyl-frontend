@@ -137,7 +137,7 @@ const AllAccordsPage = () => {
                                 >
                                     <MemoizedGeneralCard
                                         name={accord.name}
-                                        total={accord.totalAppearances}
+                                        total={accord.totalFragrances}
                                         message={"Click to explore fragrances with this accord"}
                                         onClick={() => handleAccordClick(accord)}
                                     />

@@ -15,7 +15,7 @@ import {usePagination} from "../../../hooks/usePagination.jsx";
 // Memoized NoteCard
 const MemoizedNoteCard = memo(NoteCard, (prevProps, nextProps) => {
     return prevProps.note === nextProps.note &&
-        prevProps.noteData.total === nextProps.noteData.total;
+        prevProps.noteData.totalFragrances === nextProps.noteData.totalFragrances;
 });
 
 const AllNotesPage = () => {
@@ -143,7 +143,7 @@ const AllNotesPage = () => {
                                     <MemoizedNoteCard
                                         note={note.name}
                                         noteData={{
-                                            total: note.totalAppearances,
+                                            totalFragrances: note.totalFragrances,
                                             topNotes: note.topCount,
                                             middleNotes: note.middleCount,
                                             baseNotes: note.baseCount,

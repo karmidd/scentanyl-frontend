@@ -25,14 +25,14 @@ export default function BrandCard({brand}){
                 </div>
 
                 {/* Count Section - Between name and country */}
-                {brand.fragranceCount !== undefined && brand.fragranceCount !== null && (
+                {brand.totalFragrances !== undefined && brand.totalFragrances !== null && (
                     <div className="text-center mb-2 sm:mb-3">
                         <div className={`inline-flex items-center justify-center px-3 py-1 sm:px-4 sm:py-2 rounded-full ${theme.card.primary} border border-gray-600/30 ${theme.border.groupHover} duration-300`}>
                             <span className={`text-sm sm:text-base md:text-lg font-semibold ${theme.text.primary} ${theme.text.groupHover} transition-colors duration-300`}>
-                                {brand.fragranceCount}
+                                {brand.totalFragrances}
                             </span>
                             <span className={`ml-2 text-xs sm:text-sm ${theme.text.secondary} ${theme.text.groupHover} transition-colors duration-300`}>
-                                {brand.fragranceCount === 1 ? 'fragrance' : 'fragrances'}
+                                {brand.totalFragrances === 1 ? 'fragrance' : 'fragrances'}
                             </span>
                         </div>
                     </div>
