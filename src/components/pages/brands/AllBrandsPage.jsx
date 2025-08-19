@@ -27,6 +27,10 @@ const AllBrandsPage = () => {
     const dropdownRef = useRef(null);
     const { theme } = useTheme();
 
+    useEffect(() => {
+        document.title = `Brands | Scentanyl`;
+    }, []);
+
     // Use custom hooks
     const {
         setBrands,

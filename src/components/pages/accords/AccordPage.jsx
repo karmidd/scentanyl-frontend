@@ -5,7 +5,6 @@ import FragranceCard from "../../cards/FragranceCard.jsx";
 import LoadingPage from "../primary/LoadingPage.jsx";
 import {useTheme} from "../../contexts/ThemeContext.jsx";
 import SearchBar from "../../utils/SearchBar.jsx";
-import GenderFilterButtons from "../../utils/buttons/GenderFilterButtons.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
@@ -25,6 +24,10 @@ const AccordPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const { theme } = useTheme();
+
+    useEffect(() => {
+        document.title = `${accord.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Accord | Scentanyl`;
+    }, [accord]);
 
     // Use custom hooks
     const {

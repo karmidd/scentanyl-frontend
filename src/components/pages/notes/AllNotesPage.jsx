@@ -22,6 +22,10 @@ const AllNotesPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        document.title = `Notes | Scentanyl`;
+    }, []);
+
     // Use custom hooks
     const {
         setItems: setNotes,

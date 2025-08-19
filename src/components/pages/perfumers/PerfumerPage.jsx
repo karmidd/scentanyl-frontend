@@ -27,6 +27,10 @@ const PerfumerPage = () => {
     const [error, setError] = useState(null);
     const { theme } = useTheme();
 
+    useEffect(() => {
+        document.title = `${perfumer} | Scentanyl`;
+    }, [perfumer]);
+
     // Use custom hooks
     const {
         fragrances,
@@ -121,7 +125,7 @@ const PerfumerPage = () => {
         return (
             <div className="relative min-h-screen overflow-hidden">
                 <Background />
-                <div className="relative z-10 font-['Viaoda_Libre',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
+                <div className="relative z-10 font-['Source_Serif_4',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
                     <div className="text-white">
                         <Header page={5} />
                         <main className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">

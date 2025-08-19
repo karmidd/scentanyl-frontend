@@ -10,7 +10,7 @@ export default function PageLayout({ headerNum = 0, children, style }) {
         <>
             <div className="relative min-h-screen overflow-hidden">
                 <Background />
-                <div className="relative z-10 font-['Viaoda_Libre',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
+                <div className="relative z-10 font-['Source_Serif_4',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
                     <div className={theme.text.primary}>
                         {/* Header */}
                         <Header page={headerNum} />

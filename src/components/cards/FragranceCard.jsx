@@ -6,7 +6,7 @@ export default function FragranceCard({fragrance}) {
     const navigate = useNavigate();
     const { theme } = useTheme();
     const handleFragranceClick = (fragrance, e) => {
-        const url = `/fragrances/${fragrance.brand}/${fragrance.name}/${fragrance.id}`;
+        const url = `/fragrances/${encodeURIComponent(fragrance.brand)}/${encodeURIComponent(fragrance.name)}/${fragrance.id}`;
 
         // Ctrl/Cmd + Click
         if (e.button === 0 && (e.ctrlKey || e.metaKey)) {
@@ -26,7 +26,7 @@ export default function FragranceCard({fragrance}) {
             className={`${theme.card.primary} shadow-lg p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 rounded-lg sm:rounded-xl border ${theme.border.primary} ${theme.border.hover} transition-all duration-300 hover:scale-105 cursor-pointer group h-full`}
         >
             <a
-                href={`/fragrances/${fragrance.brand}/${fragrance.name}/${fragrance.id}`}
+                href={`/fragrances/${encodeURIComponent(fragrance.brand)}/${encodeURIComponent(fragrance.name)}/${fragrance.id}`}
                 onMouseDown={(e) => handleFragranceClick(fragrance, e)}
                 className="block h-full no-underline text-inherit"
             >

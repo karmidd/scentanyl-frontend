@@ -29,6 +29,10 @@ const BrandPage = () => {
     const [error, setError] = useState(null);
     const { theme } = useTheme();
 
+    useEffect(() => {
+        document.title = `${brand} | Scentanyl`;
+    }, [brand]);
+
     // Use custom hooks
     const {
         fragrances,
@@ -128,7 +132,7 @@ const BrandPage = () => {
         return (
             <div className="relative min-h-screen overflow-hidden">
                 <Background />
-                <div className="relative z-10 font-['Viaoda_Libre',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
+                <div className="relative z-10 font-['Source_Serif_4',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
                     <div className="text-white">
                         <Header page={2} />
                         <main className="mt-5 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
@@ -208,7 +212,7 @@ const BrandPage = () => {
                             {brandInfo.parent && (
                                 <div className="items-center">
                                     <BlurText
-                                        text={`Part of ${brandInfo.parent}`}
+                                        text={`Part of  ${brandInfo.parent}`}
                                         delay={200}
                                         animateBy="words"
                                         direction="bottom"

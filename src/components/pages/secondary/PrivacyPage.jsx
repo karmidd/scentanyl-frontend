@@ -1,9 +1,12 @@
 import PageLayout from "../../primary/PageLayout.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
-import React from "react";
+import React, {useEffect} from "react";
 
 export default function PrivacyPage() {
+    useEffect(() => {
+        document.title = `Privacy Policy | Scentanyl`;
+    }, []);
     return (
         <PageLayout headerNum={0}>
             <HeroSection primaryText={"Privacy Policy"} secondaryText={"Last updated: July 30, 2025"} />

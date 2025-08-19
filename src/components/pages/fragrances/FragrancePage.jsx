@@ -17,10 +17,14 @@ const FragrancePage = () => {
     const { theme } = useTheme();
 
     useEffect(() => {
+        document.title = `${name} by ${brand} | Scentanyl`;
+    }, [brand, name]);
+
+    useEffect(() => {
         const fetchFragrance = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`/api/fragrances/${brand}/${name}/${id}`);
+                const response = await fetch(`/api/fragrances/${encodeURIComponent(brand)}/${encodeURIComponent(name)}/${id}`);
                 if (!response.ok) {
                     throw new Error(`Fragrance "${name}" from the brand "${brand}" not found`);
                 }
@@ -47,7 +51,7 @@ const FragrancePage = () => {
         return (
             <div className="relative min-h-screen overflow-hidden">
                 <Background />
-                <div className="relative z-10 font-['Viaoda_Libre',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
+                <div className="relative z-10 font-['Source_Serif_4',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
                     <div className="text-white">
                         <Header page={1}/>
                         <main className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">

@@ -135,7 +135,7 @@ const Header = ({ page }) => {
                         <div className="flex-1 flex justify-start items-center h-full">
                             <Link
                                 to="/"
-                                className="text-white hover:scale-102 text-4xl lg:text-5xl font-['Sarina',serif] transition-transform duration-100"
+                                className="text-white hover:scale-102 text-3xl lg:text-4xl font-['Sarina',serif] transition-transform duration-100"
                             >
                                 scentanyl
                             </Link>

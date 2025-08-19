@@ -20,6 +20,10 @@ const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
 const AllFragrancesPage = () => {
     const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        document.title = `Fragrances | Scentanyl`;
+    }, []);
+
     // Use custom hook for all filtering logic (now includes year filtering)
     const {
         setFragrances,

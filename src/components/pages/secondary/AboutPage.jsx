@@ -1,9 +1,12 @@
 import PageLayout from "../../primary/PageLayout.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
-import React from "react";
+import React, {useEffect} from "react";
 
 export default function AboutPage() {
+    useEffect(() => {
+        document.title = `About | Scentanyl`;
+    }, []);
     return (
         <PageLayout headerNum={0}>
             <HeroSection primaryText={"About Scentanyl"} />

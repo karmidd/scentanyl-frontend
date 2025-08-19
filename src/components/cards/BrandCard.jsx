@@ -6,7 +6,7 @@ export default function BrandCard({brand}){
     const navigate = useNavigate();
     const { theme } = useTheme();
     const handleBrandClick = (e, brand) => {
-        const url = `/brands/${brand}`;
+        const url = `/brands/${encodeURIComponent(brand)}`;
 
         if (e.button === 1) return;
 

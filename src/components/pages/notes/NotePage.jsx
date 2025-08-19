@@ -26,6 +26,10 @@ const NotePage = () => {
     const [loading, setLoading] = useState(true);
     const { theme } = useTheme();
 
+    useEffect(() => {
+        document.title = `${note.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Note | Scentanyl`;
+    }, [note]);
+
     // Use custom hooks
     const {
         fragrances,
@@ -192,9 +196,9 @@ const NotePage = () => {
                         <button
                             key={position}
                             onClick={() => handlePositionChange(position)}
-                            className={`px-3 sm:px-4 md:px-5 lg:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 hover:scale-105 text-xs sm:text-sm md:text-base lg:text-lg cursor-pointer mb-2 ${
+                            className={`shadow-md text-shadow-xs px-3 sm:px-4 md:px-5 lg:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-semibold transition-all duration-300 hover:scale-105 text-xs sm:text-sm md:text-base lg:text-lg cursor-pointer mb-2 ${
                                 selectedPosition === position
-                                    ? 'bg-green-700 text-white shadow-lg'
+                                    ? 'bg-green-700 text-white'
                                     : theme.card.primary
                             }`}
                         >

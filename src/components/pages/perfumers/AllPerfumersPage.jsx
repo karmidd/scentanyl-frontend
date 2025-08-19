@@ -21,6 +21,10 @@ const AllPerfumersPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        document.title = `Perfumers | Scentanyl`;
+    }, []);
+
     // Use custom hooks
     const {
         setItems: setPerfumers,

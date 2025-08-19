@@ -21,6 +21,10 @@ const AllAccordsPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        document.title = `Accords | Scentanyl`;
+    }, []);
+
     // Use custom hooks
     const {
         setItems: setAccords,

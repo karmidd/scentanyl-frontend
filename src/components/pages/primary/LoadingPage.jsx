@@ -5,7 +5,7 @@ export default function LoadingPage() {
     const {theme} = useTheme();
     return (<>
         <Background/>
-        <div className="min-h-screen bg-black flex items-center justify-center font-['Viaoda_Libre',serif]">
+        <div className="min-h-screen bg-black flex items-center justify-center font-['Source_Serif_4',serif]">
             <div className="text-center space-y-4 z-20">
                 <div
                     className={`animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 ${theme.border.accent} mx-auto`}></div>
