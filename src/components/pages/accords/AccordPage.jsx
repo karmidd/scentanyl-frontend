@@ -13,6 +13,7 @@ import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
 import {useYearRange} from "../../../hooks/useYearRange.jsx";
 import FilterSection from "../../utils/FilterSection.jsx";
+import NotFoundPage from "../secondary/NotFoundPage.jsx";
 
 // Memoized FragranceCard
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -23,11 +24,12 @@ const AccordPage = () => {
     const { accord } = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const { theme } = useTheme();
 
     useEffect(() => {
-        document.title = `${accord.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Accord | Scentanyl`;
-    }, [accord]);
+        error ? document.title = "Accord Not Found | Scentanyl" : `${accord.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Accord | Scentanyl`;
+    }, [accord, error]);
 
     // Use custom hooks
     const {
@@ -72,12 +74,20 @@ const AccordPage = () => {
     const fetchAccordFragrances = async () => {
         try {
             setLoading(true);
+            setError(null);
             const response = await fetch(`/api/accords/${encodeURIComponent(accord)}`);
+            if (!response.ok) {
+                throw new Error(`Accord "${accord}" not found`);
+            }
             const data = await response.json();
+            if (!data || (Array.isArray(data) && data.length === 0)) {
+                throw new Error(`No fragrances found for accord "${accord}"`);
+            }
             setFragrances(data);
             setLoading(false);
         } catch (error) {
             console.error('Error fetching accord fragrances:', error);
+            setError(error.message);
             setLoading(false);
         }
     };
@@ -109,6 +119,12 @@ const AccordPage = () => {
 
     if (loading) {
         return <LoadingPage/>;
+    }
+
+    if (error) {
+        return (
+            <NotFoundPage headerNum={4} mainMessage={"Accord Not Found"} secondaryMessage={`The accord "${accord}" could not be found or has no fragrances.`} />
+        );
     }
 
     return (

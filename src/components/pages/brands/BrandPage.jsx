@@ -142,7 +142,7 @@ const BrandPage = () => {
 
     if (error) {
         return (
-            <NotFoundPage headerNum={2} mainMessage={"Brand Not Found"} secondaryMessage={"Are you sure the URL is correct? If yes, send us a message and we'll sort this out!"} />
+            <NotFoundPage headerNum={2} mainMessage={"Brand Not Found"} secondaryMessage={`The brand "${brand}" could not be found or has no fragrances.`} />
         );
     }
 

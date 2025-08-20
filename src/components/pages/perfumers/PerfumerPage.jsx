@@ -14,6 +14,7 @@ import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
 import FilterSection from "../../utils/FilterSection.jsx";
 import {useYearRange} from "../../../hooks/useYearRange.jsx";
+import NotFoundPage from "../secondary/NotFoundPage.jsx";
 
 // Memoized FragranceCard
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -28,8 +29,8 @@ const PerfumerPage = () => {
     const { theme } = useTheme();
 
     useEffect(() => {
-        document.title = `${perfumer} | Scentanyl`;
-    }, [perfumer]);
+        error ? document.title = "Perfumer Not Found | Scentanyl" : `${perfumer} | Scentanyl`;
+    }, [perfumer, error]);
 
     // Use custom hooks
     const {
@@ -83,6 +84,9 @@ const PerfumerPage = () => {
             }
 
             const fragrancesData = await response.json();
+            if (!fragrancesData || (Array.isArray(fragrancesData) && fragrancesData.length === 0)) {
+                throw new Error('No fragrances found for this perfumer');
+            }
             setFragrances(fragrancesData);
             setLoading(false);
         } catch (error) {
@@ -123,34 +127,7 @@ const PerfumerPage = () => {
 
     if (error) {
         return (
-            <div className="relative min-h-screen overflow-hidden">
-                <Background />
-                <div className="relative z-10 font-['Source_Serif_4',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
-                    <div className="text-white">
-                        <Header page={5} />
-                        <main className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
-                            <div className="text-center py-8 sm:py-12 md:py-16">
-                                <BlurText
-                                    text="Perfumer Not Found"
-                                    delay={100}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-3xl sm:text-4xl text-red-400 mb-2 sm:mb-3 md:mb-4"
-                                />
-                                <p className="text-gray-500 text-base sm:text-lg md:text-xl mb-4 sm:mb-6 md:mb-8">
-                                    The perfumer "{perfumer.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}" could not be found.
-                                </p>
-                                <button
-                                    onClick={() => navigate('/fragrances')}
-                                    className="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl"
-                                >
-                                    Browse All Fragrances
-                                </button>
-                            </div>
-                        </main>
-                    </div>
-                </div>
-            </div>
+            <NotFoundPage headerNum={5} mainMessage={"Perfumer Not Found"} secondaryMessage={`The perfumer "${perfumer}" could not be found or has no fragrances.`} />
         );
     }
 

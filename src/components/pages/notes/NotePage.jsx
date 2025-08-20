@@ -14,6 +14,7 @@ import {usePagination} from "../../../hooks/usePagination.jsx";
 import {useNoteStatistics} from "../../../hooks/useNoteStatistics.jsx";
 import FilterSection from "../../utils/FilterSection.jsx";
 import {useYearRange} from "../../../hooks/useYearRange.jsx";
+import NotFoundPage from "../secondary/NotFoundPage.jsx";
 
 // Memoized FragranceCard
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -24,11 +25,12 @@ const NotePage = () => {
     const { note } = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const { theme } = useTheme();
 
     useEffect(() => {
-        document.title = `${note.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Note | Scentanyl`;
-    }, [note]);
+        error ? document.title = "Note Not Found | Scentanyl" : `${note.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Note | Scentanyl`;
+    }, [note, error]);
 
     // Use custom hooks
     const {
@@ -78,12 +80,20 @@ const NotePage = () => {
     const fetchNoteFragrances = async () => {
         try {
             setLoading(true);
+            setError(null);
             const response = await fetch(`/api/notes/${encodeURIComponent(note)}`);
+            if (!response.ok) {
+                throw new Error(`Note "${note}" not found`);
+            }
             const data = await response.json();
+            if (!data || (Array.isArray(data) && data.length === 0)) {
+                throw new Error(`No fragrances found for note "${note}"`);
+            }
             setFragrances(data);
             setLoading(false);
         } catch (error) {
             console.error('Error fetching note fragrances:', error);
+            setError(error.message);
             setLoading(false);
         }
     };
@@ -121,6 +131,11 @@ const NotePage = () => {
         return <LoadingPage/>;
     }
 
+    if (error) {
+        return (
+            <NotFoundPage headerNum={3} mainMessage={"Note Not Found"} secondaryMessage={`The note "${note}" could not be found or has no fragrances.`} />
+        );
+    }
     return (
         <PageLayout headerNum={3} style={<style jsx>{`
             @keyframes fadeIn {
