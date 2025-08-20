@@ -31,11 +31,11 @@ const Header = ({ page }) => {
         const checkLayout = () => {
             const width = window.innerWidth;
             const height = window.innerHeight;
-
+            const HORIZONTAL_HEADER_WIDTH_THRESHOLD = 1800;
             // Use stacked layout if:
             // - Width is less than 1800px OR
             // - Screen is very wide but very short (like Nest Hub Max: width > 1200 but height < 600)
-            const shouldStack = width < 1800 || (width > 1200 && height < 600);
+            const shouldStack = width < HORIZONTAL_HEADER_WIDTH_THRESHOLD || (width > 1200 && height < 600);
             setUseStackedLayout(shouldStack);
         };
 
@@ -83,11 +83,11 @@ const Header = ({ page }) => {
                 }
 
                 .dropdown-enter {
-                    animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+                    animation: slideDown cubic-bezier(0.4, 0, 0.2, 1) forwards;
                 }
 
                 .dropdown-exit {
-                    animation: slideUp 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+                    animation: slideUp cubic-bezier(0.4, 0, 0.2, 1) forwards;
                 }
 
                 .arrow-rotate {
@@ -219,12 +219,12 @@ const Header = ({ page }) => {
 
                             {/* Bottom row: Navigation centered with dropdown for overflow */}
                             <div className="flex justify-center">
-                                <div className="flex space-x-3 text-sm">
+                                <div className="flex space-x-2 text-sm">
                                     {items.slice(0, 4).map((item, index) => (
                                         <Link
                                             key={item.href}
                                             to={item.href}
-                                            className={`relative px-2 py-1 rounded transition-all duration-300 ${
+                                            className={`relative px-1.5 py-1 rounded transition-all duration-300 ${
                                                 index === page
                                                     ? 'text-black font-semibold bg-white shadow-md'
                                                     : 'text-white hover:text-blue-300 hover:bg-white/10'
@@ -247,7 +247,7 @@ const Header = ({ page }) => {
                                             </span>
                                         </button>
                                         {mobileMenuOpen && (
-                                            <div className="dropdown-enter absolute top-full left-1/2 transform -translate-x-1/2 bg-black/95 backdrop-blur-md rounded-lg py-2 px-3 space-y-1 min-w-[100px] mt-2 z-50 border border-white/20 shadow-xl">
+                                            <div className="dropdown-enter absolute top-full right-0 bg-black/95 backdrop-blur-md rounded-lg py-2 px-3 space-y-1 min-w-[100px] mt-2 z-50 border border-white/20 shadow-xl">
                                                 {items.slice(4).map((item, index) => (
                                                     <Link
                                                         key={item.href}

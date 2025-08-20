@@ -377,9 +377,9 @@ const AllBrandsPage = () => {
                             delay={100}
                             animateBy="words"
                             direction="bottom"
-                            className="flex justify-center text-2xl sm:text-3xl text-gray-400 mb-2 sm:mb-3 md:mb-4"
+                            className="flex justify-center text-2xl sm:text-3xl text-gray-300 mb-2 sm:mb-3 md:mb-4"
                         />
-                        <p className="text-gray-500 text-base sm:text-lg md:text-xl">
+                        <p className="text-gray-200 text-base sm:text-lg md:text-xl">
                             Try adjusting your search terms or filters
                         </p>
                     </div>

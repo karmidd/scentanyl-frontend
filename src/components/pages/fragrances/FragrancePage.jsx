@@ -7,6 +7,7 @@ import RandomFragranceButton from "../../utils/buttons/RandomFragranceButton.jsx
 import LoadingPage from "../primary/LoadingPage.jsx";
 import {useTheme} from "../../contexts/ThemeContext.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
+import NotFoundPage from "../secondary/NotFoundPage.jsx";
 
 const FragrancePage = () => {
     const { brand, name, id } = useParams();
@@ -17,8 +18,8 @@ const FragrancePage = () => {
     const { theme } = useTheme();
 
     useEffect(() => {
-        document.title = `${name} by ${brand} | Scentanyl`;
-    }, [brand, name]);
+        error ? document.title = "Fragrance Not Found | Scentanyl" : `${name} by ${brand} | Scentanyl`;
+    }, [brand, name, error]);
 
     useEffect(() => {
         const fetchFragrance = async () => {
@@ -49,32 +50,7 @@ const FragrancePage = () => {
 
     if (error) {
         return (
-            <div className="relative min-h-screen overflow-hidden">
-                <Background />
-                <div className="relative z-10 font-['Source_Serif_4',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
-                    <div className="text-white">
-                        <Header page={1}/>
-                        <main className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
-                            <div className="text-center space-y-4 sm:space-y-6 md:space-y-8">
-                                <BlurText
-                                    text="Fragrance Not Found"
-                                    delay={150}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl pt-32 sm:pt-40 md:pt-60 font-bold mb-2 sm:mb-3 md:mb-4 text-center flex justify-center"
-                                />
-                                <BlurText
-                                    text={error}
-                                    delay={80}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="text-gray-200 text-base sm:text-lg md:text-xl lg:text-2xl pt-2 sm:pt-3 md:pt-5 mb-2 sm:mb-3 md:mb-4 text-center flex justify-center"
-                                />
-                            </div>
-                        </main>
-                    </div>
-                </div>
-            </div>
+            <NotFoundPage headerNum={1} mainMessage={"Fragrance Not Found"} secondaryMessage={"Are you sure the URL is correct? If yes, send us a message and we'll sort this out!"} />
         );
     }
 

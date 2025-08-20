@@ -325,7 +325,7 @@ export default function SearchBar({
                 <button
                     onClick={() => handleModeSwitch('layered')}
                     type="button"
-                    className={`shadow-md cursor-pointer px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
+                    className={`text-shadow-xs shadow-md cursor-pointer px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
                         searchMode === 'layered'
                             ? `${theme.button.primary} text-white border border-none transform scale-105`
                             : `${theme.bg.input} ${theme.text.primary} border ${theme.border.primary} hover:scale-105`
@@ -336,7 +336,7 @@ export default function SearchBar({
                 <button
                     onClick={() => handleModeSwitch('uncategorized')}
                     type="button"
-                    className={`shadow-md cursor-pointer px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
+                    className={`text-shadow-xs shadow-md cursor-pointer px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
                         searchMode === 'uncategorized'
                             ? `${theme.button.primary} text-white border border-none transform scale-105`
                             : `${theme.bg.input} ${theme.text.primary} border ${theme.border.primary} hover:scale-105`
@@ -542,7 +542,7 @@ export default function SearchBar({
 
             {/* Notes Sections - UNCATEGORIZED MODE */}
             {searchMode === 'uncategorized' && (
-                <div className="space-y-2 sm:space-y-3 animate-slideDown mb-2">
+                <div className="space-y-2 sm:space-y-3 animate-fadeIn mb-2">
                     {/* Separator line between Accords and Uncategorized Notes */}
                     <div className="w-full h-px bg-gray-400 mb-8 mt-8 rounded-full opacity-60"></div>
 

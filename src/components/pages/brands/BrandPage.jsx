@@ -15,6 +15,7 @@ import {usePagination} from "../../../hooks/usePagination.jsx";
 import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
 import FilterSection from "../../utils/FilterSection.jsx";
 import {useYearRange} from "../../../hooks/useYearRange.jsx";
+import NotFoundPage from "../secondary/NotFoundPage.jsx";
 
 // Memoized FragranceCard
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -30,8 +31,8 @@ const BrandPage = () => {
     const { theme } = useTheme();
 
     useEffect(() => {
-        document.title = `${brand} | Scentanyl`;
-    }, [brand]);
+        error ? document.title = "Brand Not Found | Scentanyl" : `${brand} | Scentanyl`;
+    }, [brand, error]);
 
     // Use custom hooks
     const {
@@ -89,8 +90,19 @@ const BrandPage = () => {
             const brandData = await brandInfoResponse.json();
             const fragrancesData = await fragrancesResponse.json();
 
+            // Check if the brand data is actually valid
+            if (!brandData || !brandData.name || Object.keys(brandData).length === 0) {
+                throw new Error('Brand not found');
+            }
+
+                // Check if fragrances is empty or invalid
+            if (!fragrancesData || (Array.isArray(fragrancesData) && fragrancesData.length === 0)) {
+                // You might want to allow brands with no fragrances, so this could be optional
+                // throw new Error('No fragrances found for this brand');
+            }
+
             setBrandInfo(brandData);
-            setFragrances(fragrancesData);
+            setFragrances(fragrancesData || []);
             setLoading(false);
         } catch (error) {
             console.error('Error fetching brand data:', error);
@@ -130,34 +142,7 @@ const BrandPage = () => {
 
     if (error) {
         return (
-            <div className="relative min-h-screen overflow-hidden">
-                <Background />
-                <div className="relative z-10 font-['Source_Serif_4',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
-                    <div className="text-white">
-                        <Header page={2} />
-                        <main className="mt-5 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
-                            <div className="text-center py-8 sm:py-12 md:py-16">
-                                <BlurText
-                                    text="Brand Not Found"
-                                    delay={100}
-                                    animateBy="words"
-                                    direction="bottom"
-                                    className="flex justify-center text-3xl sm:text-4xl font-bold text-red-600 mb-2 sm:mb-3 md:mb-4"
-                                />
-                                <p className="text-gray-200 text-base sm:text-lg md:text-xl mb-4 sm:mb-6 md:mb-8">
-                                    The brand "{brand}" could not be found.
-                                </p>
-                                <button
-                                    onClick={() => navigate('/fragrances')}
-                                    className={`${theme.button.hover} ${theme.button.primary} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
-                                >
-                                    Browse All Fragrances
-                                </button>
-                            </div>
-                        </main>
-                    </div>
-                </div>
-            </div>
+            <NotFoundPage headerNum={2} mainMessage={"Brand Not Found"} secondaryMessage={"Are you sure the URL is correct? If yes, send us a message and we'll sort this out!"} />
         );
     }
 
