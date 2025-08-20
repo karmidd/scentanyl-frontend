@@ -16,7 +16,7 @@ export default function AboutPage() {
                     delay={10}
                     animateBy="words"
                     direction="top"
-                    className="mt-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                    className="text-shadow-lg mt-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                 />
 
                 <BlurText
@@ -24,22 +24,15 @@ export default function AboutPage() {
                     delay={10}
                     animateBy="words"
                     direction="top"
-                    className="mt-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                    className="text-shadow-lg mt-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                 />
 
                 <BlurText
-                    text={"Under the hood, Scentanyl is powered by a Spring Boot backend using JPA and a PostgreSQL database, ensuring fast and reliable access to fragrance data. The frontend is built with React and styled using Tailwind CSS, bundled with Vite for speed and optimized with ESLint for clean code."}
+                    text={"Scentanyl aims to achieve one goal: to give fragrance lovers a seamless and elegant way to discover what they’re looking for. Whether you're just beginning or deep in the world of scent, Scentanyl is made for you."}
                     delay={10}
                     animateBy="words"
                     direction="bottom"
-                    className="mt-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
-                />
-                <BlurText
-                    text={"But all that tech serves one goal: to give fragrance lovers a seamless and elegant way to discover what they’re looking for. Whether you're just beginning or deep in the world of scent, Scentanyl is made for you."}
-                    delay={10}
-                    animateBy="words"
-                    direction="bottom"
-                    className="mt-10 mb-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                    className="text-shadow-lg mt-10 mb-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                 />
             </div>
         </PageLayout>

@@ -17,7 +17,7 @@ export default function ContactPage() {
                     delay={10}
                     animateBy="words"
                     direction="top"
-                    className="mt-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                    className="text-shadow-lg mt-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                 />
 
                 <BlurText
@@ -25,7 +25,7 @@ export default function ContactPage() {
                     delay={10}
                     animateBy="words"
                     direction="top"
-                    className="mt-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                    className="text-shadow-lg mt-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                 />
 
                 <BlurText
@@ -33,35 +33,35 @@ export default function ContactPage() {
                     delay={10}
                     animateBy="words"
                     direction="bottom"
-                    className="mt-4 pl-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                    className="text-shadow-lg mt-4 pl-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                 />
                 <BlurText
                     text={"• Reporting missing or incorrect fragrance information"}
                     delay={10}
                     animateBy="words"
                     direction="bottom"
-                    className="mt-1 pl-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                    className="text-shadow-lg mt-1 pl-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                 />
                 <BlurText
                     text={"• Business partnerships and collaborations"}
                     delay={10}
                     animateBy="words"
                     direction="bottom"
-                    className="mt-1 pl-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                    className="text-shadow-lg mt-1 pl-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                 />
                 <BlurText
                     text={"• Technical issues or suggestions"}
                     delay={10}
                     animateBy="words"
                     direction="bottom"
-                    className="mt-1 pl-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                    className="text-shadow-lg mt-1 pl-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                 />
                 <BlurText
                     text={"• General feedback and feature requests"}
                     delay={10}
                     animateBy="words"
                     direction="bottom"
-                    className="mt-1 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2 pl-10"
+                    className="text-shadow-lg mt-1 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2 pl-10"
                 />
 
                 <BlurText
@@ -69,13 +69,13 @@ export default function ContactPage() {
                     delay={10}
                     animateBy="words"
                     direction="bottom"
-                    className="mt-10 flex justify-center text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                    className="text-shadow-lg mt-10 flex justify-center text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                 />
 
                 <div className="mt-4 mb-10 flex justify-center">
                     <a
                         href="mailto:contact@scentanyl.com"
-                        className="text-blue-400 hover:text-blue-300 transition-colors duration-300 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold hover:scale-105 transform transition-transform"
+                        className="text-shadow-lg text-blue-400 hover:text-blue-300 transition-colors duration-300 text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold hover:scale-105 transform transition-transform"
                     >
                         <BlurText
                             text={"contact@scentanyl.com"}
@@ -92,7 +92,7 @@ export default function ContactPage() {
                     delay={10}
                     animateBy="words"
                     direction="bottom"
-                    className="mt-6 mb-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
+                    className="text-shadow-lg mt-6 mb-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
                 />
             </div>
         </PageLayout>

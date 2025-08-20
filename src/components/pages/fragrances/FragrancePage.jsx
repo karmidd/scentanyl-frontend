@@ -228,6 +228,24 @@ const FragrancePage = () => {
                             </div>
                         </div>
                     )}
+                    {fragrance?.year && (
+                        <div className="flex items-center justify-center space-x-1">
+                            <BlurText
+                                text="Release Year: "
+                                delay={350}
+                                animateBy="words"
+                                direction="top"
+                                className="text-shadow-lg text-gray-200 text-sm sm:text-base md:text-lg lg:text-xl"
+                            />
+                            <BlurText
+                                text={fragrance.year.toString()}
+                                delay={300}
+                                animateBy="words"
+                                direction="top"
+                                className={`text-shadow-lg text-sm sm:text-base md:text-lg lg:text-xl font-bold ${theme.text.accent}`}
+                            />
+                        </div>
+                    )}
                 </div>
 
                 {/* View Image Button */}

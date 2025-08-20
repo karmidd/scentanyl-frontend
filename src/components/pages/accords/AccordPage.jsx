@@ -209,12 +209,24 @@ const AccordPage = () => {
                             delay={100}
                             animateBy="words"
                             direction="bottom"
-                            className="flex justify-center text-2xl sm:text-3xl text-gray-400 mb-2 sm:mb-3 md:mb-4"
+                            className="flex justify-center text-2xl sm:text-3xl text-gray-300 mb-2 sm:mb-3 md:mb-4"
                         />
-                        <p className="text-gray-500 text-base sm:text-lg md:text-xl">
+                        <p className="text-gray-200 text-base sm:text-lg md:text-xl">
                             {advancedSearchData.mode !== 'regular'
-                                ? 'Try adjusting your selected notes, accords, or filters'
-                                : 'Try adjusting your search terms or filters'
+                                ? <BlurText
+                                    text="Try adjusting your selected notes, accords, or filters"
+                                    delay={100}
+                                    animateBy="words"
+                                    direction="bottom"
+                                    className="flex justify-center mb-2 sm:mb-3 md:mb-4"
+                                />
+                                : <BlurText
+                                    text="Try adjusting your search terms or filters"
+                                    delay={50}
+                                    animateBy="words"
+                                    direction="bottom"
+                                    className="flex justify-center mb-2 sm:mb-3 md:mb-4"
+                                />
                             }
                         </p>
                     </div>
@@ -227,12 +239,12 @@ const AccordPage = () => {
                         delay={300}
                         animateBy="words"
                         direction="bottom"
-                        className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
+                        className="text-shadow-lg flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
                     />
                     <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
                         <button
                             onClick={() => navigate('/accords')}
-                            className={`cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
+                            className={`text-shadow-md shadow-lg cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
                         >
                             Back to All Accords
                         </button>

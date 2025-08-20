@@ -32,7 +32,7 @@ const GeneralCard = ({ name, total, message, onClick, href }) => {
 
                 {/* Total */}
                 <div className="flex items-center justify-between flex-grow">
-                    <div className={`${theme.text.secondary} text-xs sm:text-sm md:text-base lg:text-xl`}>
+                    <div className={`${theme.text.secondary} ${theme.text.groupHover} transition-colors duration-300 text-xs sm:text-sm md:text-base lg:text-xl`}>
                         Total
                     </div>
                     <div className={`text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold ${theme.text.other_accent}`}>
