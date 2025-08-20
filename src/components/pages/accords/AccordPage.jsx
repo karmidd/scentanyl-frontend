@@ -131,7 +131,7 @@ const AccordPage = () => {
         >
             {/* Hero Section */}
             <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
-                <HeroSection secondaryText={"Discover all fragrances featuring this distinctive accord"} primaryText={`${accord.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Accord`}/>
+                <HeroSection secondaryText={"Discover all fragrances featuring this distinctive accord"} primaryText={`${accord} Accord`}/>
 
                 {/* Accord Statistics */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 max-w-4xl mx-auto mb-4 sm:mb-6 md:mb-8 px-2">

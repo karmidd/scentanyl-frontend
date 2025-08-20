@@ -23,7 +23,7 @@ export default function FragranceCard({fragrance}) {
     return (
         <div
             key={fragrance.id}
-            className={`${theme.card.primary} shadow-lg p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 rounded-lg sm:rounded-xl border ${theme.border.primary} ${theme.border.hover} transition-all duration-300 hover:scale-105 cursor-pointer group h-full`}
+            className={`${theme.card.primary} shadow-lg p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 rounded-lg sm:rounded-xl border ${theme.border.primary} ${theme.border.hover} transition-all duration-300 hover:scale-105 cursor-pointer group`}
         >
             <a
                 href={`/fragrances/${encodeURIComponent(fragrance.brand)}/${encodeURIComponent(fragrance.name)}/${fragrance.id}`}
@@ -38,10 +38,10 @@ export default function FragranceCard({fragrance}) {
                     <span className={`${theme.text.secondary} ${theme.text.groupHover} duration-300 text-shadow-sm font-bold text-xs sm:text-sm md:text-lg`}>{fragrance.year}</span>
                 </div>
                 <div className="space-y-0.5 sm:space-y-1 md:space-y-1.5 lg:space-y-2 flex-grow">
-                    <h3 className={`text-shadow-sm text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold ${theme.text.groupHover} transition-colors line-clamp-2`}>
+                    <h3 className={`text-shadow-sm text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold ${theme.text.groupHover} transition-colors`}>
                         {fragrance.name}
                     </h3>
-                    <p className={`${theme.text.secondary} ${theme.text.groupHover} text-shadow-sm duration-300 text-xs sm:text-sm md:text-base lg:text-lg line-clamp-1`}>
+                    <p className={`${theme.text.secondary} ${theme.text.groupHover} text-shadow-sm duration-300 text-xs sm:text-sm md:text-base lg:text-lg`}>
                         by {fragrance.brand}
                     </p>
                 </div>

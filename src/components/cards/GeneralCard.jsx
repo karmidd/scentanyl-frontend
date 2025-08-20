@@ -16,17 +16,17 @@ const GeneralCard = ({ name, total, message, onClick, href }) => {
     };
     return (
         <div
-            className={`shadow-lg text-shadow-sm cursor-pointer ${theme.card.primary} ${theme.text.primary} border border-gray-700 rounded-lg sm:rounded-xl md:rounded-2xl p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 ${theme.border.hover} transition-all duration-300 hover:shadow-lg ${theme.shadow.button} hover:scale-105 transform group h-full`}
+            className={`shadow-lg text-shadow-sm cursor-pointer ${theme.card.primary} ${theme.text.primary} border border-gray-700 rounded-lg sm:rounded-xl md:rounded-2xl p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 ${theme.border.hover} transition-all duration-300 hover:shadow-lg ${theme.shadow.button} hover:scale-105 transform group`}
         >
             <a
                 href={href || '#'}
                 onMouseDown={handleClick}
-                className="block h-full no-underline text-inherit"
+                className="block no-underline text-inherit"
                 onClick={(e) => e.preventDefault()}
             >
-            <div className="space-y-1.5 sm:space-y-2 md:space-y-3 lg:space-y-4 flex flex-col h-full">
+            <div className="space-y-1.5 sm:space-y-2 md:space-y-3 lg:space-y-4 flex flex-col">
                 {/* Item Name */}
-                <h3 className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold ${theme.text.groupHover} transition-colors duration-300 capitalize line-clamp-2`}>
+                <h3 className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold ${theme.text.groupHover} transition-colors duration-300 capitalize`}>
                     {name}
                 </h3>
 
@@ -49,7 +49,7 @@ const GeneralCard = ({ name, total, message, onClick, href }) => {
                 </div>
 
                 {/* Hover Effect Text */}
-                <div className={`text-center ${theme.text.secondary} text-[10px] sm:text-xs md:text-sm ${theme.text.groupHover} transition-colors duration-300 line-clamp-2`}>
+                <div className={`text-center ${theme.text.secondary} text-[10px] sm:text-xs md:text-sm ${theme.text.groupHover} transition-colors duration-300`}>
                     {message}
                 </div>
             </div>

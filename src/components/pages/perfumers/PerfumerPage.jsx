@@ -217,7 +217,7 @@ const PerfumerPage = () => {
             <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
                 <div className="space-y-3 sm:space-y-4 md:space-y-6 text-center">
                     <BlurText
-                        text={`Explore all fragrances created by ${perfumer.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}`}
+                        text={`Explore all fragrances created by ${perfumer}`}
                         delay={350}
                         animateBy="words"
                         direction="bottom"

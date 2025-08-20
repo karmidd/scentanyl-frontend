@@ -140,8 +140,8 @@ const NotePage = () => {
         `}</style>}
         >
             {/* Hero Section */}
-            <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
-                <HeroSection secondaryText={"Discover all fragrances featuring this beautiful note"} primaryText={`${note.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Note`}/>
+            <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16 ">
+                <HeroSection secondaryText={"Discover all fragrances featuring this beautiful note"} primaryText={`${note} Note`}/>
 
                 {/* Note Statistics */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 md:gap-4 max-w-5xl mx-auto mb-4 sm:mb-6 md:mb-8 px-2">

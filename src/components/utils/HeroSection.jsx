@@ -9,7 +9,7 @@ export default function HeroSection({ primaryText, secondaryText }) {
                 delay={100}
                 animateBy="words"
                 direction="top"
-                className="text-shadow-lg text-white flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight px-2"
+                className="capitalize text-shadow-lg text-white flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight px-2"
             />
             {secondaryText && <BlurText
                 text={secondaryText}
