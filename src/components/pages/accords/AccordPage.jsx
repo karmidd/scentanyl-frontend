@@ -28,7 +28,7 @@ const AccordPage = () => {
     const { theme } = useTheme();
 
     useEffect(() => {
-        error ? document.title = "Accord Not Found | Scentanyl" : `${accord.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Accord | Scentanyl`;
+        error ? document.title = "Accord Not Found | Scentanyl" : document.title = `${accord.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Accord | Scentanyl`;
     }, [accord, error]);
 
     // Use custom hooks

@@ -31,7 +31,7 @@ const BrandPage = () => {
     const { theme } = useTheme();
 
     useEffect(() => {
-        error ? document.title = "Brand Not Found | Scentanyl" : `${brand} | Scentanyl`;
+        error ? document.title = "Brand Not Found | Scentanyl" : document.title = `${brand} | Scentanyl`;
     }, [brand, error]);
 
     // Use custom hooks
@@ -203,6 +203,21 @@ const BrandPage = () => {
                                         direction="bottom"
                                         className={`flex justify-center text-sm sm:text-base md:text-lg text-gray-300 italic`}
                                     />
+                                </div>
+                            )}
+                            {brandInfo.url && (
+                                <div className="items-center">
+                                    <a
+                                        href={brandInfo.url}
+                                    >
+                                        <BlurText
+                                            text={`${brandInfo.name}'s Website`}
+                                            delay={200}
+                                            animateBy="words"
+                                            direction="bottom"
+                                            className={"flex justify-center text-shadow-sm text-blue-400 hover:text-blue-400 transition-colors duration-300 text-sm sm:text-sm md:text-base font-semibold hover:scale-105 transform transition-transform"}
+                                        />
+                                    </a>
                                 </div>
                             )}
                         </div>

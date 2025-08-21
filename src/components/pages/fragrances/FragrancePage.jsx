@@ -18,7 +18,7 @@ const FragrancePage = () => {
     const { theme } = useTheme();
 
     useEffect(() => {
-        error ? document.title = "Fragrance Not Found | Scentanyl" : `${name} by ${brand} | Scentanyl`;
+        error ? document.title = "Fragrance Not Found | Scentanyl" : document.title =  `${name} by ${brand} | Scentanyl`;
     }, [brand, name, error]);
 
     useEffect(() => {

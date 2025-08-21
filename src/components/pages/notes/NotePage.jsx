@@ -29,7 +29,7 @@ const NotePage = () => {
     const { theme } = useTheme();
 
     useEffect(() => {
-        error ? document.title = "Note Not Found | Scentanyl" : `${note.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Note | Scentanyl`;
+        error ? document.title = "Note Not Found | Scentanyl" : document.title = `${note.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Note | Scentanyl`;
     }, [note, error]);
 
     // Use custom hooks

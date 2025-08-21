@@ -29,7 +29,7 @@ const PerfumerPage = () => {
     const { theme } = useTheme();
 
     useEffect(() => {
-        error ? document.title = "Perfumer Not Found | Scentanyl" : `${perfumer} | Scentanyl`;
+        error ? document.title = "Perfumer Not Found | Scentanyl" : document.title = `${perfumer} | Scentanyl`;
     }, [perfumer, error]);
 
     // Use custom hooks
