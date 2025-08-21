@@ -26,7 +26,7 @@ const GeneralCard = ({ name, total, message, onClick, href }) => {
             >
             <div className="space-y-1.5 sm:space-y-2 md:space-y-3 lg:space-y-4 flex flex-col">
                 {/* Item Name */}
-                <h3 className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold ${theme.text.groupHover} transition-colors duration-300 capitalize`}>
+                <h3 className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold ${theme.text.groupHover} ${theme.text.primary} transition-colors duration-300 capitalize`}>
                     {name}
                 </h3>
 

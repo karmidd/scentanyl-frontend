@@ -33,7 +33,7 @@ export default function BrandCard({brand}){
             <div className="relative z-10 flex flex-col">
                 {/* Brand Name - Always at top, centered */}
                 <div className="text-center mb-2 sm:mb-3">
-                    <h3 className={`text-shadow-sm text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold ${theme.text.groupHover} transition-colors duration-300 capitalize leading-tight`}>
+                    <h3 className={`text-shadow-sm text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold ${theme.text.groupHover} ${theme.text.primary} transition-colors duration-300 capitalize leading-tight`}>
                         {brand.name}
                     </h3>
                 </div>

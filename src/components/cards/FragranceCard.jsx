@@ -38,7 +38,7 @@ export default function FragranceCard({fragrance}) {
                     <span className={`${theme.text.secondary} ${theme.text.groupHover} duration-300 text-shadow-sm font-bold text-xs sm:text-sm md:text-lg`}>{fragrance.year}</span>
                 </div>
                 <div className="space-y-0.5 sm:space-y-1 md:space-y-1.5 lg:space-y-2 flex-grow">
-                    <h3 className={`text-shadow-sm text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold ${theme.text.groupHover} duration-300 transition-colors`}>
+                    <h3 className={`text-shadow-sm text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold ${theme.text.groupHover} ${theme.text.primary} duration-300 transition-colors`}>
                         {fragrance.name}
                     </h3>
                     <p className={`${theme.text.secondary} ${theme.text.groupHover} text-shadow-sm duration-300 text-xs sm:text-sm md:text-base lg:text-lg`}>

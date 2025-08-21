@@ -27,7 +27,7 @@ const NoteCard = ({ note, noteData, onClick, href  }) => {
             >
             <div className="space-y-1.5 sm:space-y-2 md:space-y-3 lg:space-y-4 flex flex-col">
                 <div className="flex items-center justify-between">
-                    <h3 className={`text-shadow-sm text-sm sm:text-base md:text-lg lg:text-xl font-bold ${theme.text.groupHover} transition-colors duration-300 capitalize`}>
+                    <h3 className={`text-shadow-sm text-sm sm:text-base md:text-lg lg:text-xl font-bold ${theme.text.groupHover} ${theme.text.primary} transition-colors duration-300 capitalize`}>
                         {note}
                     </h3>
                     <div className={`${theme.card.selected} text-shadow-sm text-white px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs md:text-sm font-semibold`}>
