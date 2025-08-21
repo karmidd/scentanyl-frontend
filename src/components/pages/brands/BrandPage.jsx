@@ -201,7 +201,7 @@ const BrandPage = () => {
                                         delay={200}
                                         animateBy="words"
                                         direction="bottom"
-                                        className={`flex justify-center text-sm sm:text-base md:text-lg text-gray-300 italic`}
+                                        className={`text-shadow-sm flex justify-center text-sm sm:text-base md:text-lg text-gray-200 italic`}
                                     />
                                 </div>
                             )}
@@ -209,14 +209,14 @@ const BrandPage = () => {
                                 <div className="items-center">
                                     <a
                                         href={brandInfo.url}
+                                        className="inline-block"
                                     >
                                         <BlurText
                                             text={`${brandInfo.name}'s Website`}
                                             delay={200}
                                             animateBy="words"
                                             direction="bottom"
-                                            className={"flex justify-center text-shadow-sm text-blue-400 hover:text-blue-400 transition-colors duration-300 text-sm sm:text-sm md:text-base font-semibold hover:scale-105 transform transition-transform"}
-                                        />
+                                            className={"text-shadow-sm text-blue-500 hover:text-blue-400 underline underline-offset-2 transition-colors duration-300 text-sm sm:text-sm md:text-base font-semibold hover:scale-105 transform transition-transform"}                                        />
                                     </a>
                                 </div>
                             )}

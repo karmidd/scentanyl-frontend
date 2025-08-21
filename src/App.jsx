@@ -17,6 +17,7 @@ const PerfumerPage = lazy(() => import("./components/pages/perfumers/PerfumerPag
 const AboutPage = lazy(() => import("./components/pages/secondary/AboutPage.jsx"));
 const PrivacyPage = lazy(() => import("./components/pages/secondary/PrivacyPage.jsx"));
 const ContactPage = lazy(() => import("./components/pages/secondary/ContactPage.jsx"));
+const ErrorPage = lazy(() => import("./components/pages/secondary/ErrorPage.jsx"));
 
 function App() {
     return (
@@ -53,6 +54,7 @@ function App() {
                             <Route path="/contact/" element={<ContactPage />} />
                             <Route path="/privacy" element={<PrivacyPage />} />
                             <Route path="/privacy/" element={<PrivacyPage />} />
+                            <Route path="*" element={<ErrorPage />} />
                         </Routes>
                     </div>
                 </Router>
