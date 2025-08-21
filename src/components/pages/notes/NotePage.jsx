@@ -279,12 +279,12 @@ const NotePage = () => {
                     delay={300}
                     animateBy="words"
                     direction="bottom"
-                    className="flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
+                    className="text-shadow-lg flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
                 />
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
                     <button
                         onClick={() => navigate('/notes')}
-                        className={`cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
+                        className={`text-shadow-md shadow-lg cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
                     >
                         Back to All Notes
                     </button>

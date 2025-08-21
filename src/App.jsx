@@ -15,7 +15,7 @@ const AccordPage = lazy(() => import("./components/pages/accords/AccordPage.jsx"
 const AllPerfumersPage = lazy(() => import("./components/pages/perfumers/AllPerfumersPage.jsx"));
 const PerfumerPage = lazy(() => import("./components/pages/perfumers/PerfumerPage.jsx"));
 const AboutPage = lazy(() => import("./components/pages/secondary/AboutPage.jsx"));
-const PrivacyPage = lazy(() => import("./components/pages/secondary/PrivacyPage.jsx"));
+const PrivacyPolicyPage = lazy(() => import("./components/pages/secondary/./PrivacyPolicyPage"));
 const ContactPage = lazy(() => import("./components/pages/secondary/ContactPage.jsx"));
 const ErrorPage = lazy(() => import("./components/pages/secondary/ErrorPage.jsx"));
 
@@ -52,8 +52,8 @@ function App() {
                             <Route path="/about/" element={<AboutPage />} />
                             <Route path="/contact" element={<ContactPage />} />
                             <Route path="/contact/" element={<ContactPage />} />
-                            <Route path="/privacy" element={<PrivacyPage />} />
-                            <Route path="/privacy/" element={<PrivacyPage />} />
+                            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                            <Route path="/privacy-policy/" element={<PrivacyPolicyPage />} />
                             <Route path="*" element={<ErrorPage />} />
                         </Routes>
                     </div>

@@ -741,7 +741,7 @@ export default function SearchBar({
                 }
 
                 .animate-fadeIn {
-                    animation: fadeIn 0.3s ease-out;
+                    animation: fadeIn 0.1s ease-out;
                 }
             `}</style>
 

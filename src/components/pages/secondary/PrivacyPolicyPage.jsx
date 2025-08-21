@@ -3,7 +3,7 @@ import HeroSection from "../../utils/HeroSection.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import React, {useEffect} from "react";
 
-export default function PrivacyPage() {
+export default function PrivacyPolicyPage() {
     useEffect(() => {
         document.title = `Privacy Policy | Scentanyl`;
     }, []);

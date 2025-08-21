@@ -17,7 +17,7 @@ const NoteCard = ({ note, noteData, onClick, href  }) => {
     };
     return (
         <div
-            className={`shadow-lg group relative ${theme.text.primary} ${theme.card.primary} border border-gray-700 rounded-lg sm:rounded-xl p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 ${theme.border.hover} transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20`}
+            className={`shadow-lg group relative ${theme.text.primary} ${theme.card.primary} border border-gray-700 rounded-lg sm:rounded-xl p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 ${theme.border.hover} ${theme.shadow.button} transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20`}
         >
             <a
                 href={href || '#'}

@@ -1,0 +1,28 @@
+# Scentanyl Robots.txt
+User-agent: *
+Allow: /
+
+# Allow crawling of all content
+Allow: /fragrances
+Allow: /brands
+Allow: /notes
+Allow: /accords
+Allow: /perfumers
+
+# Disallow API endpoints
+Disallow: /api/
+
+# Sitemap: https://scentanyl.com/sitemap.xml
+
+# Crawl-delay (optional - prevents server overload)
+Crawl-delay: 1
+
+# Popular search engine bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
