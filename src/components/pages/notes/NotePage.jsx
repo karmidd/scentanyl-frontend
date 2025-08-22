@@ -162,19 +162,19 @@ const NotePage = () => {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 md:gap-4 max-w-5xl mx-auto mb-4 sm:mb-6 md:mb-8 px-2">
                     <div className={`${theme.card.primary} shadow-lg rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
                         <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-blue-500">{noteStats.totalFragrances}</div>
-                        <div className={`text-shadow-xs text-xs sm:text-sm ${theme.text.secondary}`}>Total</div>
+                        <div className={`text-shadow-xs text-xs sm:text-sm pt-2.5 ${theme.text.secondary}`}>Total</div>
                     </div>
                     <div className={`${theme.card.primary} shadow-lg rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
                         <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-green-500">{noteStats.topNotes}</div>
-                        <div className={`text-shadow-xs text-xs sm:text-sm ${theme.text.secondary}`}>As a Top Note</div>
+                        <div className={`text-shadow-xs text-xs sm:text-sm pt-2.5 ${theme.text.secondary}`}>As a Top Note</div>
                     </div>
                     <div className={`${theme.card.primary} shadow-lg rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
                         <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-yellow-500">{noteStats.middleNotes}</div>
-                        <div className={`text-shadow-xs text-xs sm:text-sm ${theme.text.secondary}`}>As a Middle Note</div>
+                        <div className={`text-shadow-xs text-xs sm:text-sm pt-2.5 ${theme.text.secondary}`}>As a Middle Note</div>
                     </div>
                     <div className={`${theme.card.primary} shadow-lg rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
                         <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-purple-500">{noteStats.baseNotes}</div>
-                        <div className={`text-shadow-xs text-xs sm:text-sm ${theme.text.secondary}`}>As a Base Note</div>
+                        <div className={`text-shadow-xs text-xs sm:text-sm pt-2.5 ${theme.text.secondary}`}>As a Base Note</div>
                     </div>
                     <div className={`${theme.card.primary} shadow-lg rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700 col-span-2 sm:col-span-1`}>
                         <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-orange-500">{noteStats.uncategorizedNotes}</div>

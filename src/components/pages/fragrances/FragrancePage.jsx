@@ -315,7 +315,7 @@ const FragrancePage = () => {
                         <div className="space-y-3 sm:space-y-4">
                             <BlurText
                                 text="Top Notes"
-                                delay={700}
+                                delay={400}
                                 animateBy="words"
                                 direction="top"
                                 className={`text-shadow-lg text-2xl sm:text-3xl font-semibold ${theme.text.accent} flex justify-center`}
@@ -342,7 +342,7 @@ const FragrancePage = () => {
                         <div className="space-y-3 sm:space-y-4">
                             <BlurText
                                 text="Middle Notes"
-                                delay={900}
+                                delay={300}
                                 animateBy="words"
                                 direction="top"
                                 className={`text-shadow-lg text-2xl sm:text-3xl font-semibold ${theme.text.accent} flex justify-center`}
@@ -369,7 +369,7 @@ const FragrancePage = () => {
                         <div className="space-y-3 sm:space-y-4">
                             <BlurText
                                 text="Base Notes"
-                                delay={1100}
+                                delay={200}
                                 animateBy="words"
                                 direction="top"
                                 className={`text-shadow-lg text-2xl sm:text-3xl font-semibold ${theme.text.accent} flex justify-center`}
@@ -396,7 +396,7 @@ const FragrancePage = () => {
                         <div className="space-y-3 sm:space-y-4">
                             <BlurText
                                 text="Uncategorized Notes"
-                                delay={1300}
+                                delay={400}
                                 animateBy="words"
                                 direction="top"
                                 className={`text-shadow-lg text-2xl sm:text-3xl font-semibold ${theme.text.accent} flex justify-center`}
