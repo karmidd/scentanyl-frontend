@@ -11,6 +11,10 @@ export default defineConfig(({ mode }) => {
     server: {
       allowedHosts: ['.ngrok-free.app'],
       port: 4000,
+      base:'/',
+      build: {
+        outDir: 'dist'
+      },
       proxy: {
         '/api': {
           target: env.VITE_API_URL,
