@@ -161,9 +161,9 @@ const AllPerfumersPage = () => {
                             delay={100}
                             animateBy="words"
                             direction="bottom"
-                            className="flex justify-center text-2xl sm:text-3xl text-gray-400 mb-2 sm:mb-3 md:mb-4"
+                            className="text-shadow-md flex justify-center text-2xl sm:text-3xl text-gray-300 mb-2 sm:mb-3 md:mb-4"
                         />
-                        <p className="text-gray-300 text-base sm:text-lg md:text-xl">
+                        <p className="text-shadow-md text-gray-200 text-base sm:text-lg md:text-xl">
                             Try adjusting your search terms
                         </p>
                     </div>
