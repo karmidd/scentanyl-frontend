@@ -19,7 +19,8 @@ const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
 
 const AllFragrancesPage = () => {
     const [loading, setLoading] = useState(true);
-
+    const API_BASE_URL = import.meta.env.VITE_API_URL
+    
     useEffect(() => {
         document.title = `Fragrances | Scentanyl`;
     }, []);
@@ -58,7 +59,7 @@ const AllFragrancesPage = () => {
         const fetchFragrances = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('/api/fragrances');
+                const response = await fetch(`${API_BASE_URL}/api/fragrances`);
                 const data = await response.json();
                 setFragrances(data);
                 setLoading(false);
@@ -69,7 +70,7 @@ const AllFragrancesPage = () => {
         };
 
         fetchFragrances();
-    }, [setFragrances]);
+    }, [API_BASE_URL, setFragrances]);
 
     // Reset pagination when filters change
     useEffect(() => {

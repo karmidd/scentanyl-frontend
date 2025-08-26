@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Suspense, lazy } from 'react';
+import {lazy, useEffect} from 'react';
 import {ThemeProvider} from "./components/contexts/ThemeContext.jsx";
 
 // Lazy load all components
@@ -20,6 +20,11 @@ const ContactPage = lazy(() => import("./components/pages/secondary/ContactPage.
 const ErrorPage = lazy(() => import("./components/pages/secondary/ErrorPage.jsx"));
 
 function App() {
+    useEffect(() => {
+        console.log('Current path:', window.location.pathname);
+        console.log('Window width:', window.innerWidth);
+        console.log('Component mounted successfully');
+    }, []);
     return (
         <>
             <ThemeProvider>
