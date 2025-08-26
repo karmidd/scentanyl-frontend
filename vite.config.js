@@ -11,6 +11,7 @@ export default defineConfig(({ mode }) => {
     server: {
       allowedHosts: ['.ngrok-free.app'],
       port: 4000,
+      publicDir: 'public',
       base:'/',
       build: {
         outDir: 'dist'
