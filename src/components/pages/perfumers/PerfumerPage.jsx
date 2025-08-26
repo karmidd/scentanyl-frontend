@@ -27,6 +27,7 @@ const PerfumerPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { theme } = useTheme();
+    const API_BASE_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         error ? document.title = "Perfumer Not Found | Scentanyl" : document.title = `${perfumer} | Scentanyl`;
@@ -77,7 +78,7 @@ const PerfumerPage = () => {
             setLoading(true);
             setError(null);
 
-            const response = await fetch(`/api/perfumers/${encodeURIComponent(perfumer)}`);
+            const response = await fetch(`${API_BASE_URL}/api/perfumers/${encodeURIComponent(perfumer)}`);
 
             if (!response.ok) {
                 throw new Error('Perfumer not found');

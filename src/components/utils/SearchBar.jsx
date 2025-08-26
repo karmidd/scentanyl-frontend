@@ -34,7 +34,8 @@ export default function SearchBar({
     const [activeDropdown, setActiveDropdown] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const dropdownRef = useRef(null);
-
+    const API_BASE_URL = import.meta.env.VITE_API_URL
+    
     // Fetch available notes and accords
     useEffect(() => {
         if (enableAdvancedSearch) {
@@ -71,12 +72,11 @@ export default function SearchBar({
                 excludedNotes: excludedNotes
             });
         }
-    }, [searchMode, JSON.stringify(selectedAccords), JSON.stringify(excludedAccords),
-        JSON.stringify(selectedNotes), JSON.stringify(excludedNotes), enableAdvancedSearch]);
+    }, [searchMode, enableAdvancedSearch, onAdvancedSearchChange, selectedAccords, excludedAccords, selectedNotes, excludedNotes]);
 
     const fetchNotes = async () => {
         try {
-            const response = await fetch('/api/notes');
+            const response = await fetch(`${API_BASE_URL}/api/notes`);
             if (response.ok) {
                 const data = await response.json();
                 const noteNames = Array.isArray(data)
@@ -99,7 +99,7 @@ export default function SearchBar({
 
     const fetchAccords = async () => {
         try {
-            const response = await fetch('/api/accords');
+            const response = await fetch(`${API_BASE_URL}/api/accords`);
             if (response.ok) {
                 const data = await response.json();
                 const accordNames = Array.isArray(data)

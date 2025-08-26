@@ -26,6 +26,7 @@ const AccordPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { theme } = useTheme();
+    const API_BASE_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         error ? document.title = "Accord Not Found | Scentanyl" : document.title = `${accord.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Accord | Scentanyl`;
@@ -75,7 +76,7 @@ const AccordPage = () => {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch(`/api/accords/${encodeURIComponent(accord)}`);
+            const response = await fetch(`${API_BASE_URL}/api/accords/${encodeURIComponent(accord)}`);
             if (!response.ok) {
                 throw new Error(`Accord "${accord}" not found`);
             }

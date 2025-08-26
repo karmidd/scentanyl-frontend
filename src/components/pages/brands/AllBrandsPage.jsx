@@ -26,6 +26,7 @@ const AllBrandsPage = () => {
     const [parentSearchTerm, setParentSearchTerm] = useState('');
     const dropdownRef = useRef(null);
     const { theme } = useTheme();
+    const API_BASE_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         document.title = `Brands | Scentanyl`;
@@ -95,7 +96,7 @@ const AllBrandsPage = () => {
     const fetchBrands = async () => {
         try {
             setLoading(true);
-            const response = await fetch('/api/brands');
+            const response = await fetch(`${API_BASE_URL}/api/brands`);
             const data = await response.json();
             setBrands(data);
             setLoading(false);

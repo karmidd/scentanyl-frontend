@@ -15,12 +15,13 @@ const HomePage = () => {
     const [featuredFragrances, setFeaturedFragrances] = useState([]);
     const [featuredBrands, setFeaturedBrands] = useState([]);
     const [loading, setLoading] = useState(true);
+    const API_BASE_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         const fetchFeaturedFragrances = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('/api/random-frag?count=4');
+                const response = await fetch(`${API_BASE_URL}/api/random-frag?count=4`);
                 if (!response.ok) throw new Error('Failed to fetch fragrances');
                 const fragrances = await response.json();
                 setFeaturedFragrances(fragrances);
@@ -38,7 +39,7 @@ const HomePage = () => {
         const fetchFeaturedBrands = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('/api/random-brand?count=4');
+                const response = await fetch(`${API_BASE_URL}/api/random-brand?count=4`);
                 if (!response.ok) throw new Error('Failed to fetch brands');
                 const brands = await response.json();
                 setFeaturedBrands(brands);

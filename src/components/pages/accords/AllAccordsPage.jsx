@@ -20,6 +20,7 @@ const MemoizedGeneralCard = memo(GeneralCard, (prevProps, nextProps) => {
 const AllAccordsPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const API_BASE_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         document.title = `Accords | Scentanyl`;
@@ -55,7 +56,7 @@ const AllAccordsPage = () => {
     const fetchAccords = async () => {
         try {
             setLoading(true);
-            const response = await fetch('/api/accords');
+            const response = await fetch(`${API_BASE_URL}/api/accords`);
             const accordsArray = await response.json();
             setAccords(accordsArray);
             setLoading(false);

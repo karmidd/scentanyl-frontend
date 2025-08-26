@@ -20,6 +20,7 @@ const MemoizedGeneralCard = memo(GeneralCard, (prevProps, nextProps) => {
 const AllPerfumersPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const API_BASE_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         document.title = `Perfumers | Scentanyl`;
@@ -55,7 +56,7 @@ const AllPerfumersPage = () => {
     const fetchPerfumers = async () => {
         try {
             setLoading(true);
-            const response = await fetch('/api/perfumers');
+            const response = await fetch(`${API_BASE_URL}/api/perfumers`);
             const perfumersArray = await response.json();
             setPerfumers(perfumersArray);
             setLoading(false);

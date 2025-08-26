@@ -29,6 +29,7 @@ const BrandPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { theme } = useTheme();
+    const API_BASE_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         error ? document.title = "Brand Not Found | Scentanyl" : document.title = `${brand} | Scentanyl`;
@@ -79,8 +80,8 @@ const BrandPage = () => {
             setError(null);
 
             const [brandInfoResponse, fragrancesResponse] = await Promise.all([
-                fetch(`/api/brands/${encodeURIComponent(brand)}/info`),
-                fetch(`/api/brands/${encodeURIComponent(brand)}`)
+                fetch(`${API_BASE_URL}/api/brands/${encodeURIComponent(brand)}/info`),
+                fetch(`${API_BASE_URL}/api/brands/${encodeURIComponent(brand)}`)
             ]);
 
             if (!brandInfoResponse.ok || !fragrancesResponse.ok) {

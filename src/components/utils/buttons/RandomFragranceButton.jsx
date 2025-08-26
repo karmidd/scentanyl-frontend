@@ -3,9 +3,11 @@ import {useNavigate} from "react-router-dom";
 
 export default function RandomFragranceButton({className, text}) {
     const navigate = useNavigate();
+    const API_BASE_URL = import.meta.env.VITE_API_URL
+
     const handleRandomClick = async () => {
         try {
-            const response = await fetch('/api/random-frag');
+            const response = await fetch(`${API_BASE_URL}/api/random-frag`);
             const fragrance = await response.json();
 
             // Encode for URL safety

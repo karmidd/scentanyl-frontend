@@ -27,6 +27,7 @@ const NotePage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { theme } = useTheme();
+    const API_BASE_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         error ? document.title = "Note Not Found | Scentanyl" : document.title = `${note.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Note | Scentanyl`;
@@ -81,7 +82,7 @@ const NotePage = () => {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch(`/api/notes/${encodeURIComponent(note)}`);
+            const response = await fetch(`${API_BASE_URL}/api/notes/${encodeURIComponent(note)}`);
             if (!response.ok) {
                 throw new Error(`Note "${note}" not found`);
             }
