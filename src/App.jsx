@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, BrowserRouter} from 'react-router-dom';
 import {lazy, useEffect} from 'react';
 import {ThemeProvider} from "./components/contexts/ThemeContext.jsx";
 
@@ -29,7 +29,7 @@ function App() {
         <>
             <ThemeProvider>
                 <Router>
-                    <div className="App">
+                    <BrowserRouter>
                         <Routes>
                             <Route path="" element={<HomePage />} />
                             <Route path="/" element={<HomePage />} />
@@ -61,7 +61,7 @@ function App() {
                             <Route path="/privacy-policy/" element={<PrivacyPolicyPage />} />
                             <Route path="*" element={<ErrorPage />} />
                         </Routes>
-                    </div>
+                    </BrowserRouter>
                 </Router>
             </ThemeProvider>
         </>
