@@ -21,7 +21,6 @@ const AllFragrancesPage = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
-
     // Filter states
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedGender, setSelectedGender] = useState('all');
@@ -37,8 +36,8 @@ const AllFragrancesPage = () => {
 
     // Stats for filters
     const [stats, setStats] = useState({
-        minYear: 1900,
-        maxYear: new Date().getFullYear(),
+        minYear: null,
+        maxYear: null,
         genderCounts: { all: 0, men: 0, women: 0, unisex: 0 }
     });
 
@@ -68,8 +67,6 @@ const AllFragrancesPage = () => {
 
     // Main fetch function
     const fetchFragrances = useCallback(async (pageNum, append = false) => {
-        if (!append) setLoading(true);
-        else setIsLoadingMore(true);
 
         try {
             const params = new URLSearchParams({
@@ -88,9 +85,20 @@ const AllFragrancesPage = () => {
                 // Add advanced search params if needed
                 ...(advancedSearchData.mode !== 'regular' && {
                     advancedMode: advancedSearchData.mode,
-                    accords: advancedSearchData.accords.join(','),
-                    excludedAccords: advancedSearchData.excludedAccords.join(','),
-                    // Add notes params as needed
+                    ...(advancedSearchData.accords.length > 0 && { accords: advancedSearchData.accords.join(',') }),
+                    ...(advancedSearchData.excludedAccords.length > 0 && { excludedAccords: advancedSearchData.excludedAccords.join(',') }),
+                    ...(advancedSearchData.mode === 'layered' && {
+                        topNotes: advancedSearchData.notes.top.join(','),
+                        middleNotes: advancedSearchData.notes.middle.join(','),
+                        baseNotes: advancedSearchData.notes.base.join(','),
+                        excludedTopNotes: advancedSearchData.excludedNotes.top.join(','),
+                        excludedMiddleNotes: advancedSearchData.excludedNotes.middle.join(','),
+                        excludedBaseNotes: advancedSearchData.excludedNotes.base.join(',')
+                    }),
+                    ...(advancedSearchData.mode === 'uncategorized' && {
+                        notes: advancedSearchData.notes.uncategorized.join(','),
+                        excludedNotes: advancedSearchData.excludedNotes.uncategorized.join(',')
+                    })
                 })
             });
 
@@ -118,7 +126,9 @@ const AllFragrancesPage = () => {
         setPage(0);
         fetchFragrances(0, false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedSearchQuery, selectedGender, yearRange, yearSort, advancedSearchData.mode, advancedSearchData.accords.length, advancedSearchData.excludedAccords.length]);
+    }, [debouncedSearchQuery, selectedGender, yearRange, yearSort, advancedSearchData.mode, advancedSearchData.accords.length, advancedSearchData.excludedAccords.length,
+        JSON.stringify(advancedSearchData.notes),
+        JSON.stringify(advancedSearchData.excludedNotes)]);
 
     // Callbacks for filter changes
     const handleSearch = useCallback((e) => {

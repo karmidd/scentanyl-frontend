@@ -11,13 +11,14 @@ export default function FilterSection({genderFilterData, yearFilterData}) {
 
             {/* Year Filter - Below Gender */}
             <div className="flex justify-center">
-                <YearFilterButton
-                    onYearRangeChange={yearFilterData.onYearRangeChange}
-                    onSortChange={yearFilterData.onSortChange}
-                    minYear={yearFilterData.minYear}
-                    maxYear={yearFilterData.maxYear}
-                    initialRange={null}
-                />
+                {yearFilterData.minYear !== null && yearFilterData.maxYear !== null && (
+                    <YearFilterButton
+                        onYearRangeChange={yearFilterData.onYearRangeChange}
+                        onSortChange={yearFilterData.onSortChange}
+                        minYear={yearFilterData.minYear}
+                        maxYear={yearFilterData.maxYear}
+                    />
+                )}
             </div>
         </div>
     );

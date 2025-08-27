@@ -6,16 +6,14 @@ const YearFilterButton = ({
                               onSortChange,
                               minYear,
                               maxYear,
-                              currentSort,
-                              currentRange,
                               initialRange = null
                           }) => {
     const { theme } = useTheme();
     const [isOpen, setIsOpen] = useState(false);
-    const [yearRange, setYearRange] = useState(currentRange || initialRange || [minYear, maxYear]);
+    const [yearRange, setYearRange] = useState(initialRange || [minYear, maxYear]);
     const [isEditingMin, setIsEditingMin] = useState(false);
     const [isEditingMax, setIsEditingMax] = useState(false);
-    const [sortOrder, setSortOrder] = useState(currentSort || 'none'); // 'none', 'newest', 'oldest'
+    const [sortOrder, setSortOrder] = useState('none'); // 'none', 'newest', 'oldest'
     const [isDragging, setIsDragging] = useState(null); // null, 'min', 'max'
     const [tempMinYear, setTempMinYear] = useState('');
     const [tempMaxYear, setTempMaxYear] = useState('');
