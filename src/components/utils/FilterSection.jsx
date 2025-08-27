@@ -16,6 +16,7 @@ export default function FilterSection({genderFilterData, yearFilterData}) {
                     onSortChange={yearFilterData.onSortChange}
                     minYear={yearFilterData.minYear}
                     maxYear={yearFilterData.maxYear}
+                    initialRange={null}
                 />
             </div>
         </div>

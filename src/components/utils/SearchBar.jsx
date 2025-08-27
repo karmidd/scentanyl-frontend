@@ -756,7 +756,10 @@ export default function SearchBar({
                             {enableAdvancedSearch && (
                                 <button
                                     type="button"
-                                    onClick={() => handleModeSwitch('layered')}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleModeSwitch('layered');
+                                    }}
                                     className={`cursor-pointer shadow-lg ${theme.button.primary} p-2 sm:p-4 md:p-5 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 transform`}
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">

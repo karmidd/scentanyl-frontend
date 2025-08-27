@@ -7,10 +7,7 @@ import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
-import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
-import {usePagination} from "../../../hooks/usePagination.jsx";
 import FilterSection from "../../utils/FilterSection.jsx";
-import {useYearRange} from "../../../hooks/useYearRange.jsx";
 
 // Memoized FragranceCard for better performance
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -19,90 +16,148 @@ const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
 
 const AllFragrancesPage = () => {
     const [loading, setLoading] = useState(true);
-    const API_BASE_URL = import.meta.env.VITE_API_URL
-    
+    const [fragrances, setFragrances] = useState([]);
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [totalElements, setTotalElements] = useState(0);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+    // Filter states
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedGender, setSelectedGender] = useState('all');
+    const [yearRange, setYearRange] = useState(null);
+    const [yearSort, setYearSort] = useState('none');
+    const [advancedSearchData, setAdvancedSearchData] = useState({
+        mode: 'regular',
+        accords: [],
+        excludedAccords: [],
+        notes: { top: [], middle: [], base: [], uncategorized: [] },
+        excludedNotes: { top: [], middle: [], base: [], uncategorized: [] }
+    });
+
+    // Stats for filters
+    const [stats, setStats] = useState({
+        minYear: 1900,
+        maxYear: new Date().getFullYear(),
+        genderCounts: { all: 0, men: 0, women: 0, unisex: 0 }
+    });
+
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
+    const PAGE_SIZE = 50;
+
     useEffect(() => {
         document.title = `Fragrances | Scentanyl`;
     }, []);
 
-    // Use custom hook for all filtering logic (now includes year filtering)
-    const {
-        setFragrances,
-        fragrances,
-        filteredFragrances,
-        searchQuery,
-        setSearchQuery,
-        selectedGender,
-        setSelectedGender,
-        advancedSearchData,
-        setAdvancedSearchData,
-        yearRange,
-        setYearRange,
-        yearSort,
-        setYearSort
-    } = useFragranceFilter();
-
-    // Calculate year range from fragrances
-    const [minYear, maxYear] = useYearRange(fragrances);
-
-    // Use custom hook for pagination
-    const {
-        displayedItems: displayedFragrances,
-        hasMore,
-        isLoadingMore,
-        loadMore,
-        reset: resetPagination
-    } = usePagination(filteredFragrances, 20);
-
-    // Fetch fragrances on mount
+    // Debounce search
+    const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
     useEffect(() => {
-        const fetchFragrances = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch(`${API_BASE_URL}/api/fragrances`);
-                const data = await response.json();
-                setFragrances(data);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching fragrances:', error);
-                setLoading(false);
+        const timer = setTimeout(() => {
+            setDebouncedSearchQuery(searchQuery);
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
+
+    // Fetch stats once on mount
+    useEffect(() => {
+        fetch(`${API_BASE_URL}/api/fragrances/stats`)
+            .then(res => res.json())
+            .then(data => setStats(data))
+            .catch(err => console.error('Error fetching stats:', err));
+    }, [API_BASE_URL]);
+
+    // Main fetch function
+    const fetchFragrances = useCallback(async (pageNum, append = false) => {
+        if (!append) setLoading(true);
+        else setIsLoadingMore(true);
+
+        try {
+            const params = new URLSearchParams({
+                page: pageNum,
+                size: PAGE_SIZE,
+                ...(debouncedSearchQuery && { search: debouncedSearchQuery }),
+                ...(selectedGender !== 'all' && { gender: selectedGender }),
+                ...(yearRange && {
+                    minYear: yearRange[0],
+                    maxYear: yearRange[1]
+                }),
+                ...(yearSort !== 'none' && {
+                    sortBy: 'year',
+                    sortDirection: yearSort === 'newest' ? 'DESC' : 'ASC'
+                }),
+                // Add advanced search params if needed
+                ...(advancedSearchData.mode !== 'regular' && {
+                    advancedMode: advancedSearchData.mode,
+                    accords: advancedSearchData.accords.join(','),
+                    excludedAccords: advancedSearchData.excludedAccords.join(','),
+                    // Add notes params as needed
+                })
+            });
+
+            const response = await fetch(`${API_BASE_URL}/api/fragrances?${params}`);
+            const data = await response.json();
+
+            if (append) {
+                setFragrances(prev => [...prev, ...data.content]);
+            } else {
+                setFragrances(data.content);
             }
-        };
 
-        fetchFragrances();
-    }, [API_BASE_URL, setFragrances]);
+            setTotalPages(data.totalPages);
+            setTotalElements(data.totalElements);
+        } catch (error) {
+            console.error('Error fetching fragrances:', error);
+        } finally {
+            setLoading(false);
+            setIsLoadingMore(false);
+        }
+    }, [API_BASE_URL, debouncedSearchQuery, selectedGender, yearRange, yearSort, advancedSearchData]);
 
-    // Reset pagination when filters change
+    // Fetch when filters change (reset to page 0)
     useEffect(() => {
-        resetPagination();
-    }, [searchQuery, selectedGender, advancedSearchData, yearRange, yearSort, resetPagination]);
+        setPage(0);
+        fetchFragrances(0, false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [debouncedSearchQuery, selectedGender, yearRange, yearSort, advancedSearchData.mode, advancedSearchData.accords.length, advancedSearchData.excludedAccords.length]);
 
-    // Memoized callbacks
+    // Callbacks for filter changes
     const handleSearch = useCallback((e) => {
         e.preventDefault();
-        // Search is handled automatically by the hook
     }, []);
 
     const handleSearchChange = useCallback((e) => {
         setSearchQuery(e.target.value);
-    }, [setSearchQuery]);
+    }, []);
 
     const handleGenderChange = useCallback((gender) => {
         setSelectedGender(gender);
-    }, [setSelectedGender]);
+        setPage(0);
+    }, []);
 
     const handleAdvancedSearchChange = useCallback((newAdvancedSearchData) => {
         setAdvancedSearchData(newAdvancedSearchData);
-    }, [setAdvancedSearchData]);
+        setPage(0);
+    }, []);
 
-    // New callbacks for year filtering
     const handleYearRangeChange = useCallback((range) => {
         setYearRange(range);
-    }, [setYearRange]);
+        setPage(0);
+    }, []);
 
     const handleYearSortChange = useCallback((sort) => {
         setYearSort(sort);
-    }, [setYearSort]);
+        setPage(0);
+    }, []);
+
+    const loadMore = useCallback(() => {
+        if (page < totalPages - 1 && !isLoadingMore) {
+            const nextPage = page + 1;
+            setPage(nextPage);
+            fetchFragrances(nextPage, true);
+        }
+    }, [page, totalPages, isLoadingMore, fetchFragrances]);
+
+    const hasMore = page < totalPages - 1;
 
     if (loading) {
         return <LoadingPage />;
@@ -149,30 +204,33 @@ const AllFragrancesPage = () => {
                 <FilterSection
                     genderFilterData={{
                         onClick: handleGenderChange,
-                        selectedGender: selectedGender
+                        selectedGender: selectedGender,
+                        counts: stats.genderCounts || { all: 0, men: 0, women: 0, unisex: 0 }
                     }}
                     yearFilterData={{
                         onYearRangeChange: handleYearRangeChange,
                         onSortChange: handleYearSortChange,
-                        minYear: minYear,
-                        maxYear: maxYear
+                        minYear: stats.minYear,
+                        maxYear: stats.maxYear,
+                        currentRange: yearRange,
+                        currentSort: yearSort
                     }}
                 />
 
                 {/* Results Counter */}
                 <ResultsCounter
-                    displayedCount={displayedFragrances.length}
-                    filteredCount={filteredFragrances.length}
+                    displayedCount={fragrances.length}
+                    filteredCount={totalElements}
                     type={"fragrances"}
                 />
             </div>
 
             {/* Fragrances Grid */}
             <div className="space-y-4 sm:space-y-6 md:space-y-8">
-                {displayedFragrances.length > 0 ? (
+                {fragrances.length > 0 ? (
                     <>
                         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
-                            {displayedFragrances.map((fragrance, index) => (
+                            {fragrances.map((fragrance, index) => (
                                 <div
                                     key={fragrance.id}
                                     className="animate-fadeIn"
