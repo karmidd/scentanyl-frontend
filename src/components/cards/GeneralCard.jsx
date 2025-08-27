@@ -1,5 +1,6 @@
 import React from 'react';
 import {useTheme} from "../contexts/ThemeContext.jsx";
+import {Link} from "react-router-dom";
 
 const GeneralCard = ({ name, total, message, onClick, href }) => {
     const { theme } = useTheme();
@@ -18,8 +19,8 @@ const GeneralCard = ({ name, total, message, onClick, href }) => {
         <div
             className={`shadow-lg text-shadow-sm cursor-pointer ${theme.card.primary} ${theme.text.primary} border border-gray-700 rounded-lg sm:rounded-xl md:rounded-2xl p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 ${theme.border.hover} transition-all duration-300 hover:shadow-lg ${theme.shadow.button} hover:scale-105 transform group`}
         >
-            <a
-                href={href || '#'}
+            <Link
+                to={href || '#'}
                 onMouseDown={handleClick}
                 className="block no-underline text-inherit"
                 onClick={(e) => e.preventDefault()}
@@ -53,7 +54,7 @@ const GeneralCard = ({ name, total, message, onClick, href }) => {
                     {message}
                 </div>
             </div>
-            </a>
+            </Link>
         </div>
     );
 };

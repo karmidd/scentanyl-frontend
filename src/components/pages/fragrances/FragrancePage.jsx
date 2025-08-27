@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import Background from "../../primary/Background.jsx";
 import Header from "../../primary/Header.jsx";
 import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
@@ -121,8 +121,8 @@ const FragrancePage = () => {
                                 direction="top"
                                 className="text-shadow-lg text-xl sm:text-2xl md:text-3xl text-gray-200"
                             />
-                            <a
-                                href={`/brands/${encodeURIComponent(fragrance?.brand)}`}
+                            <Link
+                                to={`/brands/${encodeURIComponent(fragrance?.brand)}`}
                                 onMouseDown={(e) => handleLinkClick(e, `/brands/${encodeURIComponent(fragrance?.brand)}`)}
                                 className="cursor-pointer hover:scale-105 transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-lg px-1 sm:px-2 py-0.5 sm:py-1 no-underline text-inherit inline-block"
                                 onClick={(e) => e.preventDefault()}
@@ -134,7 +134,7 @@ const FragrancePage = () => {
                                     direction="top"
                                     className={`text-shadow-lg text-xl sm:text-2xl md:text-3xl ${theme.text.accent} font-semibold`}
                                 />
-                            </a>
+                            </Link>
                         </div>
                         <span className={`px-3 sm:px-4 py-1.5 sm:py-2 ${fragrance.gender === "men" ? "bg-blue-800" : fragrance.gender === "women" ? "bg-pink-600" : "bg-gradient-to-r from-pink-600 via-purple-500 to-blue-800"} rounded-full shadow-lg text-sm sm:text-base md:text-lg lg:text-xl font-medium mt-2 sm:mt-0 sm:ml-2`}>
                                         <BlurText
@@ -167,8 +167,8 @@ const FragrancePage = () => {
                                                             return (
                                                                 <span key={perfumerIndex} className="inline-flex items-center">
                                                                     {isClickable ? (
-                                                                        <a
-                                                                            href={`/perfumers/${encodeURIComponent(perfumer)}`}
+                                                                        <Link
+                                                                            to={`/perfumers/${encodeURIComponent(perfumer)}`}
                                                                             onMouseDown={(e) => handleLinkClick(e, `/perfumers/${encodeURIComponent(perfumer)}`)}
                                                                             className="cursor-pointer hover:scale-105 transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-lg px-2 py-1 no-underline text-inherit inline-block"
                                                                             onClick={(e) => e.preventDefault()}
@@ -180,7 +180,7 @@ const FragrancePage = () => {
                                                                                 direction="top"
                                                                                 className={`text-shadow-lg text-base sm:text-lg md:text-xl lg:text-2xl font-bold ${theme.text.accent}`}
                                                                             />
-                                                                        </a>
+                                                                        </Link>
                                                                     ) : (
                                                                         <BlurText
                                                                             text={perfumer}
@@ -294,16 +294,16 @@ const FragrancePage = () => {
                         />
                         <div className="flex flex-wrap gap-2 sm:gap-3 justify-center px-2">
                             {parseAccords(fragrance.accords).map((accord, index) => (
-                                <a
+                                <Link
                                     key={index}
-                                    href={`/accords/${encodeURIComponent(accord)}`}
+                                    to={`/accords/${encodeURIComponent(accord)}`}
                                     onMouseDown={(e) => handleLinkClick(e, `/accords/${encodeURIComponent(accord)}`)}
                                     className={`text-shadow-sm px-3 sm:px-4 py-1.5 sm:py-2 ${theme.card.primary} rounded-lg shadow-lg text-sm sm:text-base md:text-lg lg:text-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 ${theme.card.hover} cursor-pointer animate-fadeIn no-underline text-inherit inline-block`}
                                     style={{animationDelay: `${550 + index * 100}ms`}}
                                     onClick={(e) => e.preventDefault()}
                                 >
                                     {accord.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
-                                </a>
+                                </Link>
                             ))}
                         </div>
                     </div>
@@ -323,16 +323,16 @@ const FragrancePage = () => {
                             />
                             <div className="gap-2 sm:gap-3 md:gap-4 flex justify-center flex-wrap px-2">
                                 {parseNotes(fragrance.topNotes).map((note, index) => (
-                                    <a
+                                    <Link
                                         key={index}
-                                        href={`/notes/${encodeURIComponent(note)}`}
+                                        to={`/notes/${encodeURIComponent(note)}`}
                                         onMouseDown={(e) => handleLinkClick(e, `/notes/${encodeURIComponent(note)}`)}
                                         className={`${theme.card.primary} text-shadow-sm shadow-lg p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn no-underline text-inherit inline-block`}
                                         style={{animationDelay: `${750 + index * 100}ms`}}
                                         onClick={(e) => e.preventDefault()}
                                     >
                                         <span className="text-sm sm:text-base md:text-lg lg:text-xl font-medium">{note}</span>
-                                    </a>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
@@ -350,16 +350,16 @@ const FragrancePage = () => {
                             />
                             <div className="gap-2 sm:gap-3 md:gap-4 flex justify-center flex-wrap px-2">
                                 {parseNotes(fragrance.middleNotes).map((note, index) => (
-                                    <a
+                                    <Link
                                         key={index}
-                                        href={`/notes/${encodeURIComponent(note)}`}
+                                        to={`/notes/${encodeURIComponent(note)}`}
                                         onMouseDown={(e) => handleLinkClick(e, `/notes/${encodeURIComponent(note)}`)}
                                         className={`${theme.card.primary} text-shadow-sm shadow-lg p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn no-underline text-inherit inline-block`}
                                         style={{animationDelay: `${750 + index * 100}ms`}}
                                         onClick={(e) => e.preventDefault()}
                                     >
                                         <span className="text-sm sm:text-base md:text-lg lg:text-xl font-medium">{note}</span>
-                                    </a>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
@@ -377,16 +377,16 @@ const FragrancePage = () => {
                             />
                             <div className="gap-2 sm:gap-3 md:gap-4 flex justify-center flex-wrap px-2">
                                 {parseNotes(fragrance.baseNotes).map((note, index) => (
-                                    <a
+                                    <Link
                                         key={index}
-                                        href={`/notes/${encodeURIComponent(note)}`}
+                                        to={`/notes/${encodeURIComponent(note)}`}
                                         onMouseDown={(e) => handleLinkClick(e, `/notes/${encodeURIComponent(note)}`)}
                                         className={`${theme.card.primary} text-shadow-sm shadow-lg p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn no-underline text-inherit inline-block`}
                                         style={{animationDelay: `${750 + index * 100}ms`}}
                                         onClick={(e) => e.preventDefault()}
                                     >
                                         <span className="text-sm sm:text-base md:text-lg lg:text-xl font-medium">{note}</span>
-                                    </a>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
@@ -404,16 +404,16 @@ const FragrancePage = () => {
                             />
                             <div className="gap-2 sm:gap-3 md:gap-4 flex justify-center flex-wrap px-2">
                                 {parseNotes(fragrance.uncategorizedNotes).map((note, index) => (
-                                    <a
+                                    <Link
                                         key={index}
-                                        href={`/notes/${encodeURIComponent(note)}`}
+                                        to={`/notes/${encodeURIComponent(note)}`}
                                         onMouseDown={(e) => handleLinkClick(e, `/notes/${encodeURIComponent(note)}`)}
                                         className={`${theme.card.primary} text-shadow-sm shadow-lg p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border border-gray-700 ${theme.border.hover} transition-all duration-300 hover:scale-105 flex items-center justify-center cursor-pointer ${theme.card.hover} animate-fadeIn no-underline text-inherit inline-block`}
                                         style={{animationDelay: `${750 + index * 100}ms`}}
                                         onClick={(e) => e.preventDefault()}
                                     >
                                         <span className="text-sm sm:text-base md:text-lg lg:text-xl font-medium">{note}</span>
-                                    </a>
+                                    </Link>
                                 ))}
                             </div>
                         </div>

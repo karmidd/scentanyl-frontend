@@ -1,5 +1,5 @@
 import React from "react";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useTheme} from "../contexts/ThemeContext.jsx";
 
 export default function FragranceCard({fragrance}) {
@@ -25,8 +25,8 @@ export default function FragranceCard({fragrance}) {
             key={fragrance.id}
             className={`${theme.card.primary} shadow-lg p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 rounded-lg sm:rounded-xl border border-gray-700 ${theme.border.hover} ${theme.shadow.button} transition-all duration-300 hover:scale-105 cursor-pointer group`}
         >
-            <a
-                href={`/fragrances/${encodeURIComponent(fragrance.brand)}/${encodeURIComponent(fragrance.name)}/${fragrance.id}`}
+            <Link
+                to={`/fragrances/${encodeURIComponent(fragrance.brand)}/${encodeURIComponent(fragrance.name)}/${fragrance.id}`}
                 onMouseDown={(e) => handleFragranceClick(fragrance, e)}
                 className="block h-full no-underline text-inherit"
             >
@@ -52,7 +52,7 @@ export default function FragranceCard({fragrance}) {
                     </svg>
                 </div>
             </div>
-            </a>
+            </Link>
         </div>
     );
 }

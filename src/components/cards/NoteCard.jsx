@@ -1,5 +1,6 @@
 import React from "react";
 import {useTheme} from "../contexts/ThemeContext.jsx";
+import {Link} from "react-router-dom";
 
 const NoteCard = ({ note, noteData, onClick, href  }) => {
     const { totalFragrances, topNotes, middleNotes, baseNotes, uncategorizedNotes } = noteData;
@@ -19,8 +20,8 @@ const NoteCard = ({ note, noteData, onClick, href  }) => {
         <div
             className={`shadow-lg group relative ${theme.text.primary} ${theme.card.primary} border border-gray-700 rounded-lg sm:rounded-xl p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 ${theme.border.hover} ${theme.shadow.button} transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20`}
         >
-            <a
-                href={href || '#'}
+            <Link
+                to={href || '#'}
                 onMouseDown={handleClick}
                 className="block no-underline text-inherit"
                 onClick={(e) => e.preventDefault()}
@@ -60,7 +61,7 @@ const NoteCard = ({ note, noteData, onClick, href  }) => {
                     </div>
                 </div>
             </div>
-            </a>
+            </Link>
         </div>
     );
 };

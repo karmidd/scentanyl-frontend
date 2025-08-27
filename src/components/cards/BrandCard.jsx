@@ -1,5 +1,5 @@
 import React from "react";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useTheme} from "../contexts/ThemeContext.jsx";
 
 export default function BrandCard({brand}){
@@ -22,8 +22,8 @@ export default function BrandCard({brand}){
         <div
             className={`shadow-lg cursor-pointer ${theme.card.primary} ${theme.text.primary} border border-gray-700 rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-5 lg:p-6 xl:p-7 ${theme.border.hover} transition-all duration-300 hover:shadow-lg ${theme.shadow.button} hover:scale-105 transform group relative overflow-hidden`}
         >
-            <a
-                href={`/brands/${brand.name}`}
+            <Link
+                to={`/brands/${brand.name}`}
                 onMouseDown={(e) => handleBrandClick(e, brand.name)}
                 className="block h-full no-underline text-inherit"
             >
@@ -89,7 +89,7 @@ export default function BrandCard({brand}){
                     </div>
                 </div>
             </div>
-            </a>
+            </Link>
         </div>
     );
 }
