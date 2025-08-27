@@ -28,39 +28,39 @@ function App() {
     return (
         <>
             <ThemeProvider>
-                    <BrowserRouter>
-                        <Routes>
-                            <Route path="" element={<HomePage />} />
-                            <Route path="/" element={<HomePage />} />
-                            <Route path="/fragrances/:brand/:name/:id" element={<FragrancePage />} />
-                            <Route path="/fragrances/:brand/:name/:id/" element={<FragrancePage />} />
-                            <Route path="/brands" element={<AllBrandsPage />} />
-                            <Route path="/brands/" element={<AllBrandsPage />} />
-                            <Route path="/brands/:brand" element={<BrandPage />} />
-                            <Route path="/brands/:brand/" element={<BrandPage />} />
-                            <Route path="/fragrances" element={<AllFragrancesPage />} />
-                            <Route path="/fragrances/" element={<AllFragrancesPage />} />
-                            <Route path="/notes" element={<AllNotesPage />} />
-                            <Route path="/notes/" element={<AllNotesPage />} />
-                            <Route path="/notes/:note" element={<NotePage />} />
-                            <Route path="/notes/:note/" element={<NotePage />} />
-                            <Route path="/accords" element={<AllAccordsPage />} />
-                            <Route path="/accords/" element={<AllAccordsPage />} />
-                            <Route path="/accords/:accord" element={<AccordPage />} />
-                            <Route path="/accords/:accord/" element={<AccordPage />} />
-                            <Route path="/perfumers" element={<AllPerfumersPage />} />
-                            <Route path="/perfumers/" element={<AllPerfumersPage />} />
-                            <Route path="/perfumers/:perfumer" element={<PerfumerPage />} />
-                            <Route path="/perfumers/:perfumer/" element={<PerfumerPage />} />
-                            <Route path="/about" element={<AboutPage />} />
-                            <Route path="/about/" element={<AboutPage />} />
-                            <Route path="/contact" element={<ContactPage />} />
-                            <Route path="/contact/" element={<ContactPage />} />
-                            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-                            <Route path="/privacy-policy/" element={<PrivacyPolicyPage />} />
-                            <Route path="*" element={<ErrorPage />} />
-                        </Routes>
-                    </BrowserRouter>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="" element={<HomePage />} />
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/fragrances/:brand/:name/:id" element={<FragrancePage />} />
+                        <Route path="/fragrances/:brand/:name/:id/" element={<FragrancePage />} />
+                        <Route path="/brands" element={<AllBrandsPage />} />
+                        <Route path="/brands/" element={<AllBrandsPage />} />
+                        <Route path="/brands/:brand" element={<BrandPage />} />
+                        <Route path="/brands/:brand/" element={<BrandPage />} />
+                        <Route path="/fragrances" element={<AllFragrancesPage />} />
+                        <Route path="/fragrances/" element={<AllFragrancesPage />} />
+                        <Route path="/notes" element={<AllNotesPage />} />
+                        <Route path="/notes/" element={<AllNotesPage />} />
+                        <Route path="/notes/:note" element={<NotePage />} />
+                        <Route path="/notes/:note/" element={<NotePage />} />
+                        <Route path="/accords" element={<AllAccordsPage />} />
+                        <Route path="/accords/" element={<AllAccordsPage />} />
+                        <Route path="/accords/:accord" element={<AccordPage />} />
+                        <Route path="/accords/:accord/" element={<AccordPage />} />
+                        <Route path="/perfumers" element={<AllPerfumersPage />} />
+                         <Route path="/perfumers/" element={<AllPerfumersPage />} />
+                        <Route path="/perfumers/:perfumer" element={<PerfumerPage />} />
+                        <Route path="/perfumers/:perfumer/" element={<PerfumerPage />} />
+                        <Route path="/about" element={<AboutPage />} />
+                        <Route path="/about/" element={<AboutPage />} />
+                        <Route path="/contact" element={<ContactPage />} />
+                        <Route path="/contact/" element={<ContactPage />} />
+                        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                        <Route path="/privacy-policy/" element={<PrivacyPolicyPage />} />
+                        <Route path="*" element={<ErrorPage />} />
+                    </Routes>
+                </BrowserRouter>
             </ThemeProvider>
         </>
     )
