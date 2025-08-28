@@ -9,9 +9,6 @@ import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
-import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
-import {usePagination} from "../../../hooks/usePagination.jsx";
-import {useYearRange} from "../../../hooks/useYearRange.jsx";
 import FilterSection from "../../utils/FilterSection.jsx";
 import NotFoundPage from "../secondary/NotFoundPage.jsx";
 
@@ -27,71 +24,122 @@ const AccordPage = () => {
     const [error, setError] = useState(null);
     const { theme } = useTheme();
     const API_BASE_URL = import.meta.env.VITE_API_URL
+    const [fragrances, setFragrances] = useState([]);
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [totalElements, setTotalElements] = useState(0);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const PAGE_SIZE = 50;
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedGender, setSelectedGender] = useState('all');
+    const [yearRange, setYearRange] = useState(null);
+    const [yearSort, setYearSort] = useState('none');
+    const [advancedSearchData, setAdvancedSearchData] = useState({
+        mode: 'regular',
+        accords: [],
+        excludedAccords: [],
+        notes: { top: [], middle: [], base: [], uncategorized: [] },
+        excludedNotes: { top: [], middle: [], base: [], uncategorized: [] }
+    });
+    const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchQuery(searchQuery);
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
 
     useEffect(() => {
         error ? document.title = "Accord Not Found | Scentanyl" : document.title = `${accord.split(/(\s|\(|\))/).map(w => /^[a-zA-Z]/.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join('')} Accord | Scentanyl`;
     }, [accord, error]);
 
-    // Use custom hooks
-    const {
-        fragrances,
-        setFragrances,
-        filteredFragrances,
-        searchQuery,
-        setSearchQuery,
-        selectedGender,
-        setSelectedGender,
-        advancedSearchData,
-        setAdvancedSearchData,
-        genderCounts,
-        yearRange,
-        setYearRange,
-        yearSort,
-        setYearSort
-    } = useFragranceFilter();
-
     // Calculate year range from fragrances
-    const [minYear, maxYear] = useYearRange(fragrances);
+    const [stats, setStats] = useState({
+        minYear: null,
+        maxYear: null,
+        genderCounts: { all: 0, men: 0, women: 0, unisex: 0 }
+    });
 
-    const {
-        displayedItems: displayedFragrances,
-        hasMore,
-        isLoadingMore,
-        loadMore,
-        reset: resetPagination
-    } = usePagination(filteredFragrances, 20);
-
-    useEffect(() => {
-        if (accord) {
-            fetchAccordFragrances();
+    const loadMore = useCallback(() => {
+        if (page < totalPages - 1 && !isLoadingMore) {
+            const nextPage = page + 1;
+            setPage(nextPage);
+            fetchFragrances(nextPage, true);
         }
-    }, [accord]);
+    }, [page, totalPages, isLoadingMore]);
 
-    // Reset pagination when filters change
+    const hasMore = page < totalPages - 1;
+
     useEffect(() => {
-        resetPagination();
-    }, [searchQuery, selectedGender, advancedSearchData, yearRange, yearSort, resetPagination]);
+        setPage(0);
+        fetchFragrances(0, false);
+    }, [debouncedSearchQuery, selectedGender, yearRange, yearSort, advancedSearchData.mode, advancedSearchData.accords.length, advancedSearchData.excludedAccords.length, JSON.stringify(advancedSearchData.notes), JSON.stringify(advancedSearchData.excludedNotes)]);
 
-    const fetchAccordFragrances = async () => {
+    useEffect(() => {
+        fetch(`${API_BASE_URL}/api/accords/${encodeURIComponent(accord)}/stats`)
+            .then(res => res.json())
+            .then(data => setStats(data))
+            .catch(err => console.error('Error fetching stats:', err));
+    }, [API_BASE_URL, accord]);
+
+    const fetchFragrances = useCallback(async (pageNum, append = false) => {
         try {
-            setLoading(true);
-            setError(null);
-            const response = await fetch(`${API_BASE_URL}/api/accords/${encodeURIComponent(accord)}`);
+            const params = new URLSearchParams({
+                page: pageNum,
+                size: PAGE_SIZE,
+                ...(searchQuery && { search: searchQuery }),
+                ...(selectedGender !== 'all' && { gender: selectedGender }),
+                ...(yearRange && {
+                    minYear: yearRange[0],
+                    maxYear: yearRange[1]
+                }),
+                ...(yearSort !== 'none' && {
+                    sortBy: 'year',
+                    sortDirection: yearSort === 'newest' ? 'DESC' : 'ASC'
+                }),
+                ...(advancedSearchData.mode !== 'regular' && {
+                    advancedMode: advancedSearchData.mode,
+                    ...(advancedSearchData.accords.length > 0 && { accords: advancedSearchData.accords.join(',') }),
+                    ...(advancedSearchData.excludedAccords.length > 0 && { excludedAccords: advancedSearchData.excludedAccords.join(',') }),
+                    ...(advancedSearchData.mode === 'layered' && {
+                        topNotes: advancedSearchData.notes.top.join(','),
+                        middleNotes: advancedSearchData.notes.middle.join(','),
+                        baseNotes: advancedSearchData.notes.base.join(','),
+                        excludedTopNotes: advancedSearchData.excludedNotes.top.join(','),
+                        excludedMiddleNotes: advancedSearchData.excludedNotes.middle.join(','),
+                        excludedBaseNotes: advancedSearchData.excludedNotes.base.join(',')
+                    }),
+                    ...(advancedSearchData.mode === 'uncategorized' && {
+                        notes: advancedSearchData.notes.uncategorized.join(','),
+                        excludedNotes: advancedSearchData.excludedNotes.uncategorized.join(',')
+                    })
+                })
+            });
+
+            const response = await fetch(`${API_BASE_URL}/api/accords/${encodeURIComponent(accord)}?${params}`);
+
             if (!response.ok) {
                 throw new Error(`Accord "${accord}" not found`);
             }
+
             const data = await response.json();
-            if (!data || (Array.isArray(data) && data.length === 0)) {
-                throw new Error(`No fragrances found for accord "${accord}"`);
+
+            if (append) {
+                setFragrances(prev => [...prev, ...data.content]);
+            } else {
+                setFragrances(data.content);
             }
-            setFragrances(data);
-            setLoading(false);
+
+            setTotalPages(data.totalPages);
+            setTotalElements(data.totalElements);
         } catch (error) {
             console.error('Error fetching accord fragrances:', error);
             setError(error.message);
+        } finally {
             setLoading(false);
+            setIsLoadingMore(false);
         }
-    };
+    }, [API_BASE_URL, accord, debouncedSearchQuery, selectedGender, yearRange, yearSort, advancedSearchData]);
 
     // Memoized callbacks
     const handleSearch = useCallback((e) => {
@@ -153,19 +201,19 @@ const AccordPage = () => {
                 {/* Accord Statistics */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 max-w-4xl mx-auto mb-4 sm:mb-6 md:mb-8 px-2">
                     <div className={`${theme.card.primary} shadow-lg rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
-                        <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-blue-500">{genderCounts.all}</div>
+                        <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-blue-500">{stats.genderCounts.all}</div>
                         <div className={`text-shadow-xs text-xs sm:text-sm ${theme.text.secondary}`}>Total Fragrances</div>
                     </div>
                     <div className={`${theme.card.primary} shadow-lg rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
-                        <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-green-500">{genderCounts.men}</div>
+                        <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-green-500">{stats.genderCounts.men}</div>
                         <div className={`text-shadow-xs text-xs sm:text-sm ${theme.text.secondary}`}>Men's</div>
                     </div>
                     <div className={`${theme.card.primary} shadow-lg rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
-                        <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-pink-500">{genderCounts.women}</div>
+                        <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-pink-500">{stats.genderCounts.women}</div>
                         <div className={`text-shadow-xs text-xs sm:text-sm ${theme.text.secondary}`}>Women's</div>
                     </div>
                     <div className={`${theme.card.primary} shadow-lg rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-gray-700`}>
-                        <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-purple-500">{genderCounts.unisex}</div>
+                        <div className="text-shadow-xs text-xl sm:text-2xl md:text-3xl font-bold text-purple-500">{stats.genderCounts.unisex}</div>
                         <div className={`text-shadow-xs text-xs sm:text-sm ${theme.text.secondary}`}>Unisex</div>
                     </div>
                 </div>
@@ -188,20 +236,24 @@ const AccordPage = () => {
                     yearFilterData={{
                         onYearRangeChange: handleYearRangeChange,
                         onSortChange: handleYearSortChange,
-                        minYear: minYear,
-                        maxYear: maxYear
+                        minYear: stats.minYear,
+                        maxYear: stats.maxYear
                     }}
                 />
 
-                <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={filteredFragrances.length} type={"fragrances"} />
+                <ResultsCounter
+                    displayedCount={fragrances.length}
+                    filteredCount={totalElements}
+                    type={"fragrances"}
+                />
             </div>
 
             {/* Fragrances Grid */}
             <div className="space-y-4 sm:space-y-6 md:space-y-8">
-                {displayedFragrances.length > 0 ? (
+                {fragrances.length > 0 ? (
                     <>
                         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
-                            {displayedFragrances.map((fragrance, index) => (
+                            {fragrances.map((fragrance, index) => (
                                 <div
                                     key={fragrance.id}
                                     className="animate-fadeIn"
