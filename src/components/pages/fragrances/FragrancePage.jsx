@@ -7,7 +7,8 @@ import RandomFragranceButton from "../../utils/buttons/RandomFragranceButton.jsx
 import LoadingPage from "../primary/LoadingPage.jsx";
 import {useTheme} from "../../contexts/ThemeContext.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
-import NotFoundPage from "../secondary/NotFoundPage.jsx";
+import NotFoundPage from "../secondary/errors/NotFoundPage.jsx";
+import {apiFetch} from "../../utils/apiFetch.jsx";
 
 const FragrancePage = () => {
     const { brand, name, id } = useParams();
@@ -26,7 +27,7 @@ const FragrancePage = () => {
         const fetchFragrance = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${API_BASE_URL}/api/fragrances/${encodeURIComponent(brand)}/${encodeURIComponent(name)}/${id}`);
+                const response = await apiFetch(`${API_BASE_URL}/api/fragrances/${encodeURIComponent(brand)}/${encodeURIComponent(name)}/${id}`);
                 if (!response.ok) {
                     throw new Error(`Fragrance "${name}" from the brand "${brand}" not found`);
                 }

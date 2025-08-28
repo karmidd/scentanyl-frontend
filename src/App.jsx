@@ -17,7 +17,9 @@ const PerfumerPage = lazy(() => import("./components/pages/perfumers/PerfumerPag
 const AboutPage = lazy(() => import("./components/pages/secondary/AboutPage.jsx"));
 const PrivacyPolicyPage = lazy(() => import("./components/pages/secondary/./PrivacyPolicyPage"));
 const ContactPage = lazy(() => import("./components/pages/secondary/ContactPage.jsx"));
-const ErrorPage = lazy(() => import("./components/pages/secondary/ErrorPage.jsx"));
+const ErrorPage404 = lazy(() => import("./components/pages/secondary/errors/ErrorPage404.jsx"));
+const ErrorPage429 = lazy(() => import("./components/pages/secondary/errors/ErrorPage429.jsx"));
+
 
 function App() {
     return (
@@ -53,7 +55,8 @@ function App() {
                         <Route path="/contact/" element={<ContactPage />} />
                         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
                         <Route path="/privacy-policy/" element={<PrivacyPolicyPage />} />
-                        <Route path="*" element={<ErrorPage />} />
+                        <Route path="/rate-limited" element={<ErrorPage429 />} />
+                        <Route path="*" element={<ErrorPage404 />} />
                     </Routes>
                 </BrowserRouter>
             </ThemeProvider>

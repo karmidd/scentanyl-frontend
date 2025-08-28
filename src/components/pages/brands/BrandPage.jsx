@@ -15,7 +15,7 @@ import {usePagination} from "../../../hooks/usePagination.jsx";
 import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
 import FilterSection from "../../utils/FilterSection.jsx";
 import {useYearRange} from "../../../hooks/useYearRange.jsx";
-import NotFoundPage from "../secondary/NotFoundPage.jsx";
+import NotFoundPage from "../secondary/errors/NotFoundPage.jsx";
 
 // Memoized FragranceCard
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {

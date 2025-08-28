@@ -9,6 +9,7 @@ import LoadingPage from "./LoadingPage.jsx";
 import BrowseAllButton from "../../utils/buttons/BrowseAllButton.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
+import {apiFetch} from "../../utils/apiFetch.jsx";
 
 const HomePage = () => {
     const { theme } = useTheme();
@@ -21,7 +22,7 @@ const HomePage = () => {
         const fetchFeaturedFragrances = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${API_BASE_URL}/api/random-frag?count=4`);
+                const response = await apiFetch(`${API_BASE_URL}/api/random-frag?count=4`);
                 if (!response.ok) throw new Error('Failed to fetch fragrances');
                 const fragrances = await response.json();
                 setFeaturedFragrances(fragrances);
@@ -39,7 +40,7 @@ const HomePage = () => {
         const fetchFeaturedBrands = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${API_BASE_URL}/api/random-brand?count=4`);
+                const response = await apiFetch(`${API_BASE_URL}/api/random-brand?count=4`);
                 if (!response.ok) throw new Error('Failed to fetch brands');
                 const brands = await response.json();
                 setFeaturedBrands(brands);

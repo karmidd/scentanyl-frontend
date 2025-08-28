@@ -11,6 +11,7 @@ import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
 import {useItemFilter} from "../../../hooks/useItemFilter.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
+import {apiFetch} from "../../utils/apiFetch.jsx";
 
 // Memoized GeneralCard
 const MemoizedGeneralCard = memo(GeneralCard, (prevProps, nextProps) => {
@@ -56,7 +57,7 @@ const AllPerfumersPage = () => {
     const fetchPerfumers = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_BASE_URL}/api/perfumers`);
+            const response = await apiFetch(`${API_BASE_URL}/api/perfumers`);
             const perfumersArray = await response.json();
             setPerfumers(perfumersArray);
             setLoading(false);

@@ -10,7 +10,8 @@ import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
 import FilterSection from "../../utils/FilterSection.jsx";
-import NotFoundPage from "../secondary/NotFoundPage.jsx";
+import NotFoundPage from "../secondary/errors/NotFoundPage.jsx";
+import {apiFetch} from "../../utils/apiFetch.jsx";
 
 // Memoized FragranceCard
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -116,7 +117,7 @@ const AccordPage = () => {
                 })
             });
 
-            const response = await fetch(`${API_BASE_URL}/api/accords/${encodeURIComponent(accord)}?${params}`);
+            const response = await apiFetch(`${API_BASE_URL}/api/accords/${encodeURIComponent(accord)}?${params}`);
 
             if (!response.ok) {
                 throw new Error(`Accord "${accord}" not found`);

@@ -14,7 +14,8 @@ import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
 import FilterSection from "../../utils/FilterSection.jsx";
 import {useYearRange} from "../../../hooks/useYearRange.jsx";
-import NotFoundPage from "../secondary/NotFoundPage.jsx";
+import NotFoundPage from "../secondary/errors/NotFoundPage.jsx";
+import {apiFetch} from "../../utils/apiFetch.jsx";
 
 // Memoized FragranceCard
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -78,7 +79,7 @@ const PerfumerPage = () => {
             setLoading(true);
             setError(null);
 
-            const response = await fetch(`${API_BASE_URL}/api/perfumers/${encodeURIComponent(perfumer)}`);
+            const response = await apiFetch(`${API_BASE_URL}/api/perfumers/${encodeURIComponent(perfumer)}`);
 
             if (!response.ok) {
                 throw new Error('Perfumer not found');

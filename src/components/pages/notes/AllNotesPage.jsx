@@ -10,6 +10,7 @@ import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
 import {useItemFilter} from "../../../hooks/useItemFilter.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
+import {apiFetch} from "../../utils/apiFetch.jsx";
 
 
 // Memoized NoteCard
@@ -57,7 +58,7 @@ const AllNotesPage = () => {
     const fetchNotes = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_BASE_URL}/api/notes`);
+            const response = await apiFetch(`${API_BASE_URL}/api/notes`);
             const notesArray = await response.json();
             setNotes(notesArray);
             setLoading(false);

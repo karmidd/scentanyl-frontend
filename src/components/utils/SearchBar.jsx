@@ -1,6 +1,7 @@
 import RandomFragranceButton from "./buttons/RandomFragranceButton.jsx";
 import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "../contexts/ThemeContext.jsx";
+import {apiFetch} from "./apiFetch.jsx";
 
 export default function SearchBar({
                                       size,
@@ -76,7 +77,7 @@ export default function SearchBar({
 
     const fetchNotes = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/notes`);
+            const response = await apiFetch(`${API_BASE_URL}/api/notes`);
             if (response.ok) {
                 const data = await response.json();
                 const noteNames = Array.isArray(data)
@@ -99,7 +100,7 @@ export default function SearchBar({
 
     const fetchAccords = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/accords`);
+            const response = await apiFetch(`${API_BASE_URL}/api/accords`);
             if (response.ok) {
                 const data = await response.json();
                 const accordNames = Array.isArray(data)

@@ -11,6 +11,7 @@ import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
 import {useBrandFilter} from "../../../hooks/useBrandFilter.jsx";
 import {usePagination} from "../../../hooks/usePagination.jsx";
+import {apiFetch} from "../../utils/apiFetch.jsx";
 
 
 // Memoized BrandCard
@@ -96,7 +97,7 @@ const AllBrandsPage = () => {
     const fetchBrands = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_BASE_URL}/api/brands`);
+            const response = await apiFetch(`${API_BASE_URL}/api/brands`);
             const data = await response.json();
             setBrands(data);
             setLoading(false);

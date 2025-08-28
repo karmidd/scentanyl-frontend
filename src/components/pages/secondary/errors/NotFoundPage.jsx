@@ -1,5 +1,5 @@
-import PageLayout from "../../primary/PageLayout.jsx";
-import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
+import PageLayout from "../../../primary/PageLayout.jsx";
+import BlurText from "../../../../blocks/TextAnimations/BlurText/BlurText.jsx";
 import React from "react";
 
 export default function NotFoundPage({ headerNum, mainMessage, secondaryMessage }) {

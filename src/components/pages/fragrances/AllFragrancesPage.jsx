@@ -8,6 +8,7 @@ import ResultsCounter from "../../utils/ResultsCounter.jsx";
 import HeroSection from "../../utils/HeroSection.jsx";
 import PageLayout from "../../primary/PageLayout.jsx";
 import FilterSection from "../../utils/FilterSection.jsx";
+import {apiFetch} from "../../utils/apiFetch.jsx";
 
 // Memoized FragranceCard for better performance
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -102,7 +103,7 @@ const AllFragrancesPage = () => {
                 })
             });
 
-            const response = await fetch(`${API_BASE_URL}/api/fragrances?${params}`);
+            const response = await apiFetch(`${API_BASE_URL}/api/fragrances?${params}`);
             const data = await response.json();
 
             if (append) {
