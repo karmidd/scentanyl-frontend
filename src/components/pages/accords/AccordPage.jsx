@@ -77,7 +77,7 @@ const AccordPage = () => {
     }, [debouncedSearchQuery, selectedGender, yearRange, yearSort, advancedSearchData.mode, advancedSearchData.accords.length, advancedSearchData.excludedAccords.length, JSON.stringify(advancedSearchData.notes), JSON.stringify(advancedSearchData.excludedNotes)]);
 
     useEffect(() => {
-        fetch(`${API_BASE_URL}/api/accords/${encodeURIComponent(accord)}/stats`)
+        apiFetch(`${API_BASE_URL}/api/accords/${encodeURIComponent(accord)}/stats`)
             .then(res => res.json())
             .then(data => setStats(data))
             .catch(err => console.error('Error fetching stats:', err));

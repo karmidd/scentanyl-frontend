@@ -60,7 +60,7 @@ const AllFragrancesPage = () => {
 
     // Fetch stats once on mount
     useEffect(() => {
-        fetch(`${API_BASE_URL}/api/fragrances/stats`)
+        apiFetch(`${API_BASE_URL}/api/fragrances/stats`)
             .then(res => res.json())
             .then(data => setStats(data))
             .catch(err => console.error('Error fetching stats:', err));

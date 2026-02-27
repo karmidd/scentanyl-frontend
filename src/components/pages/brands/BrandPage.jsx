@@ -16,6 +16,7 @@ import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
 import FilterSection from "../../utils/FilterSection.jsx";
 import {useYearRange} from "../../../hooks/useYearRange.jsx";
 import NotFoundPage from "../secondary/errors/NotFoundPage.jsx";
+import {apiFetch} from "../../utils/apiFetch.jsx";
 
 // Memoized FragranceCard
 const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
@@ -80,8 +81,8 @@ const BrandPage = () => {
             setError(null);
 
             const [brandInfoResponse, fragrancesResponse] = await Promise.all([
-                fetch(`${API_BASE_URL}/api/brands/${encodeURIComponent(brand)}/info`),
-                fetch(`${API_BASE_URL}/api/brands/${encodeURIComponent(brand)}`)
+                apiFetch(`${API_BASE_URL}/api/brands/${encodeURIComponent(brand)}/info`),
+                apiFetch(`${API_BASE_URL}/api/brands/${encodeURIComponent(brand)}`)
             ]);
 
             if (!brandInfoResponse.ok || !fragrancesResponse.ok) {

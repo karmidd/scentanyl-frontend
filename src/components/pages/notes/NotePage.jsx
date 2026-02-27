@@ -73,7 +73,7 @@ const NotePage = () => {
     useEffect(() => {
         if (note) {
             // Fetch note stats
-            fetch(`${API_BASE_URL}/api/notes/${encodeURIComponent(note)}/stats`)
+            apiFetch(`${API_BASE_URL}/api/notes/${encodeURIComponent(note)}/stats`)
                 .then(res => res.json())
                 .then(data => setStats(data))
                 .catch(err => console.error('Error fetching note stats:', err));
