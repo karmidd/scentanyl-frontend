@@ -1,59 +1,46 @@
 import React from 'react';
-import {useTheme} from "../contexts/ThemeContext.jsx";
-import {Link} from "react-router-dom";
+import { useTheme } from "../contexts/ThemeContext.jsx";
+import { Link } from "react-router-dom";
 
 const GeneralCard = ({ name, total, message, onClick, href }) => {
-    const { theme } = useTheme();
+    const { isDarkMode } = useTheme();
+
+    const ink        = isDarkMode ? '#ece6d6' : '#1a1612';
+    const ink3       = isDarkMode ? '#5a5346' : '#a39a8a';
+    const accent     = isDarkMode ? '#c8965a' : '#8b5a1f';
+    const paper      = isDarkMode ? '#15120e' : '#ede8db';
+    const rule       = isDarkMode ? 'rgba(236,230,214,0.18)' : 'rgba(26,22,18,0.20)';
+    const ruleSoft   = isDarkMode ? 'rgba(236,230,214,0.08)' : 'rgba(26,22,18,0.08)';
+
     const handleClick = (e) => {
         if (e.button === 1) return;
-
-        if (e.button === 0 && (e.ctrlKey || e.metaKey)) {
-            e.preventDefault();
-            if (href) window.open(href, '_blank');
-        } else if (e.button === 0) {
-            e.preventDefault();
-            if (onClick) onClick();
-        }
+        if (e.button === 0 && (e.ctrlKey || e.metaKey)) { e.preventDefault(); if (href) window.open(href, '_blank'); }
+        else if (e.button === 0) { e.preventDefault(); if (onClick) onClick(); }
     };
+
     return (
         <div
-            className={`shadow-lg text-shadow-sm cursor-pointer ${theme.card.primary} ${theme.text.primary} border border-gray-700 rounded-lg sm:rounded-xl md:rounded-2xl p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 ${theme.border.hover} transition-all duration-300 hover:shadow-lg ${theme.shadow.button} hover:scale-105 transform group`}
+            style={{ background: paper, border: `1px solid ${rule}`, padding: '22px 18px', cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 12, transition: 'border-color .3s' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = accent; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = rule; }}
         >
-            <Link
-                to={href || '#'}
-                onMouseDown={handleClick}
-                className="block no-underline text-inherit"
-                onClick={(e) => e.preventDefault()}
-            >
-            <div className="space-y-1.5 sm:space-y-2 md:space-y-3 lg:space-y-4 flex flex-col">
-                {/* Item Name */}
-                <h3 className={`text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold ${theme.text.groupHover} ${theme.text.primary} transition-colors duration-300 capitalize`}>
+            <Link to={href || '#'} onMouseDown={handleClick} onClick={e => e.preventDefault()} style={{ textDecoration: 'none', color: 'inherit', display: 'contents' }}>
+                <h3 style={{ fontFamily: "'Playfair Display','Georgia',serif", fontStyle: 'italic', fontWeight: 400, fontSize: 22, lineHeight: 1.12, color: ink, margin: 0, textTransform: 'capitalize' }}>
                     {name}
                 </h3>
 
-                {/* Total */}
-                <div className="flex items-center justify-between flex-grow">
-                    <div className={`${theme.text.secondary} ${theme.text.groupHover} transition-colors duration-300 text-xs sm:text-sm md:text-base lg:text-xl`}>
-                        Total
-                    </div>
-                    <div className={`text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold ${theme.text.other_accent}`}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
+                    <span style={{ fontFamily: "'Playfair Display','Georgia',serif", fontStyle: 'italic', fontSize: 36, color: accent, lineHeight: 1 }}>
                         {total}
-                    </div>
+                    </span>
+                    <span style={{ fontFamily: "'JetBrains Mono',ui-monospace,monospace", fontSize: 9, letterSpacing: '.18em', textTransform: 'uppercase', color: ink3 }}>
+                        total
+                    </span>
                 </div>
 
-                {/* Visual Indicator */}
-                <div className="shadow-md w-full bg-gray-800 rounded-full h-1 sm:h-1.5 md:h-2">
-                    <div
-                        className={`${theme.card.indicator} h-1 sm:h-1.5 md:h-2 rounded-full transition-all duration-300`}
-                        style={{ width: `${Math.min(100, (total / 100) * 100)}%` }}
-                    ></div>
+                <div style={{ fontFamily: "'JetBrains Mono',ui-monospace,monospace", fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: ink3, textAlign: 'center', borderTop: `1px solid ${ruleSoft}`, paddingTop: 10 }}>
+                    {message || 'Explore →'}
                 </div>
-
-                {/* Hover Effect Text */}
-                <div className={`text-center ${theme.text.secondary} text-[10px] sm:text-xs md:text-sm ${theme.text.groupHover} transition-colors duration-300`}>
-                    {message}
-                </div>
-            </div>
             </Link>
         </div>
     );

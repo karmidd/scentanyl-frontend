@@ -1,80 +1,32 @@
-// Solution: Dual-layer background with smooth transition
-import Silk from "../../blocks/Backgrounds/Silk/Silk.jsx";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useTheme } from "../contexts/ThemeContext";
 
-const Background = () => {
-    const { theme, isDarkMode } = useTheme();
-    const [showingLayer, setShowingLayer] = useState('A');
-    const [layerAColor, setLayerAColor] = useState(theme.background.primary);
-    const [layerBColor, setLayerBColor] = useState(theme.background.primary);
-    const [hasInitialized, setHasInitialized] = useState(false);
+// Seamlessly tiling fractal noise — renders as paper/linen grain when overlaid
+const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E")`;
 
-    useEffect(() => {
-        // Skip the transition effect on initial load
-        if (!hasInitialized) {
-            setHasInitialized(true);
-            return;
-        }
-
-        const newColor = theme.background.primary;
-
-        // Update the hidden layer with new color
-        if (showingLayer === 'A') {
-            setLayerBColor(newColor);
-        } else {
-            setLayerAColor(newColor);
-        }
-
-        // Small delay to ensure the hidden layer is ready
-        const timer = setTimeout(() => {
-            setShowingLayer(prev => prev === 'A' ? 'B' : 'A');
-        }, 50);
-
-        return () => clearTimeout(timer);
-    }, [isDarkMode]); // Trigger on theme change
+export default function Background() {
+    const { isDarkMode } = useTheme();
+    const base     = isDarkMode ? '#0a0907' : '#f3efe5';
+    const vignette = isDarkMode
+        ? 'radial-gradient(ellipse at 50% 38%, transparent 42%, rgba(0,0,0,0.55) 100%)'
+        : 'radial-gradient(ellipse at 50% 38%, transparent 42%, rgba(26,22,18,0.13) 100%)';
 
     return (
-        <div className="fixed top-0 left-0 w-screen h-screen z-0">
-            {/* Fallback solid background to prevent white flash - behind everything */}
-            <div
-                className="absolute inset-0 z-0"
-                style={{ backgroundColor: theme.background.primary }}
-            />
-
-            {/* Layer A */}
-            <div
-                className={`absolute inset-0 z-10 transition-opacity duration-500 ${
-                    showingLayer === 'A' ? 'opacity-100' : 'opacity-0'
-                }`}
-            >
-                <Silk
-                    key={`A-${layerAColor}`}
-                    speed={5}
-                    scale={1}
-                    color={layerAColor}
-                    noiseIntensity={0.3}
-                    rotation={1.54}
-                />
-            </div>
-
-            {/* Layer B */}
-            <div
-                className={`absolute inset-0 z-10 transition-opacity duration-500 ${
-                    showingLayer === 'B' ? 'opacity-100' : 'opacity-0'
-                }`}
-            >
-                <Silk
-                    key={`B-${layerBColor}`}
-                    speed={5}
-                    scale={1}
-                    color={layerBColor}
-                    noiseIntensity={0.3}
-                    rotation={1.54}
-                />
-            </div>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 0, backgroundColor: base, transition: 'background-color 0.6s' }}>
+            <div style={{
+                position: 'absolute', inset: 0,
+                backgroundImage: GRAIN,
+                backgroundRepeat: 'repeat',
+                backgroundSize: '256px 256px',
+                mixBlendMode: 'overlay',
+                opacity: 0.065,
+                pointerEvents: 'none',
+            }} />
+            <div style={{
+                position: 'absolute', inset: 0,
+                background: vignette,
+                pointerEvents: 'none',
+            }} />
         </div>
     );
-};
-
-export default Background;
+}

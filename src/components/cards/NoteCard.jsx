@@ -1,66 +1,58 @@
 import React from "react";
-import {useTheme} from "../contexts/ThemeContext.jsx";
-import {Link} from "react-router-dom";
+import { useTheme } from "../contexts/ThemeContext.jsx";
+import { Link } from "react-router-dom";
 
-const NoteCard = ({ note, noteData, onClick, href  }) => {
+const NoteCard = ({ note, noteData, onClick, href }) => {
     const { totalFragrances, topNotes, middleNotes, baseNotes, uncategorizedNotes } = noteData;
-    const { theme } = useTheme();
+    const { isDarkMode } = useTheme();
+
+    const ink        = isDarkMode ? '#ece6d6' : '#1a1612';
+    const ink2       = isDarkMode ? '#9a9183' : '#6b6457';
+    const ink3       = isDarkMode ? '#5a5346' : '#a39a8a';
+    const accent     = isDarkMode ? '#c8965a' : '#8b5a1f';
+    const paper      = isDarkMode ? '#15120e' : '#ede8db';
+    const rule       = isDarkMode ? 'rgba(236,230,214,0.18)' : 'rgba(26,22,18,0.20)';
+    const ruleSoft   = isDarkMode ? 'rgba(236,230,214,0.08)' : 'rgba(26,22,18,0.08)';
+
     const handleClick = (e) => {
         if (e.button === 1) return;
-
-        if (e.button === 0 && (e.ctrlKey || e.metaKey)) {
-            e.preventDefault();
-            if (href) window.open(href, '_blank');
-        } else if (e.button === 0) {
-            e.preventDefault();
-            if (onClick) onClick();
-        }
+        if (e.button === 0 && (e.ctrlKey || e.metaKey)) { e.preventDefault(); if (href) window.open(href, '_blank'); }
+        else if (e.button === 0) { e.preventDefault(); if (onClick) onClick(); }
     };
+
+    const row = (label, val) => (
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+            <span style={{ color: ink3 }}>{label}</span>
+            <span style={{ color: accent, fontStyle: 'italic', fontFamily: "'Playfair Display','Georgia',serif", fontSize: 15 }}>{val}</span>
+        </div>
+    );
+
     return (
         <div
-            className={`shadow-lg group relative ${theme.text.primary} ${theme.card.primary} border border-gray-700 rounded-lg sm:rounded-xl p-2 sm:p-3 md:p-4 lg:p-5 xl:p-6 ${theme.border.hover} ${theme.shadow.button} transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20`}
+            style={{ background: paper, border: `1px solid ${rule}`, padding: '22px 18px', cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 12, transition: 'border-color .3s' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = accent; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = rule; }}
         >
-            <Link
-                to={href || '#'}
-                onMouseDown={handleClick}
-                className="block no-underline text-inherit"
-                onClick={(e) => e.preventDefault()}
-            >
-            <div className="space-y-1.5 sm:space-y-2 md:space-y-3 lg:space-y-4 flex flex-col">
-                <div className="flex items-center justify-between">
-                    <h3 className={`text-shadow-sm text-sm sm:text-base md:text-lg lg:text-xl font-bold ${theme.text.groupHover} ${theme.text.primary} transition-colors duration-300 capitalize`}>
+            <Link to={href || '#'} onMouseDown={handleClick} onClick={e => e.preventDefault()} style={{ textDecoration: 'none', color: 'inherit', display: 'contents' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                    <h3 style={{ fontFamily: "'Playfair Display','Georgia',serif", fontStyle: 'italic', fontWeight: 400, fontSize: 22, color: ink, margin: 0, textTransform: 'capitalize' }}>
                         {note}
                     </h3>
-                    <div className={`${theme.card.selected} text-shadow-sm text-white px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs md:text-sm font-semibold`}>
+                    <span style={{ fontFamily: "'Playfair Display','Georgia',serif", fontStyle: 'italic', fontSize: 28, color: accent, lineHeight: 1 }}>
                         {totalFragrances}
-                    </div>
+                    </span>
                 </div>
 
-                <div className={`text-shadow-xs space-y-0.5 sm:space-y-1 md:space-y-1.5 lg:space-y-2 ${theme.text.secondary} ${theme.text.groupHover} duration-300 font-bold text-[10px] sm:text-xs md:text-sm flex-grow`}>
-                    <div className="flex justify-between">
-                        <span className="truncate pr-1">As a Top Note:</span>
-                        <span>{topNotes}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="truncate pr-1">As a Middle Note:</span>
-                        <span>{middleNotes}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="truncate pr-1">As a Base Note:</span>
-                        <span>{baseNotes}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="truncate pr-1">As an Uncategorized Note:</span>
-                        <span>{uncategorizedNotes}</span>
-                    </div>
+                <div style={{ fontFamily: "'JetBrains Mono',ui-monospace,monospace", fontSize: 9, letterSpacing: '.14em', textTransform: 'uppercase', display: 'flex', flexDirection: 'column', gap: 6, borderTop: `1px solid ${ruleSoft}`, paddingTop: 12 }}>
+                    {row('Top', topNotes)}
+                    {row('Middle', middleNotes)}
+                    {row('Base', baseNotes)}
+                    {row('Uncat.', uncategorizedNotes)}
                 </div>
 
-                <div className="pt-1 sm:pt-1.5 md:pt-2 border-t border-gray-600/30">
-                    <div className={`text-center text-shadow-xs ${theme.text.secondary} text-[9px] sm:text-[10px] md:text-xs lg:text-sm ${theme.text.groupHover} transition-colors duration-300`}>
-                        Click to explore fragrances with this note
-                    </div>
+                <div style={{ fontFamily: "'JetBrains Mono',ui-monospace,monospace", fontSize: 8, letterSpacing: '.18em', textTransform: 'uppercase', color: ink3, textAlign: 'center', borderTop: `1px solid ${ruleSoft}`, paddingTop: 10 }}>
+                    Explore →
                 </div>
-            </div>
             </Link>
         </div>
     );

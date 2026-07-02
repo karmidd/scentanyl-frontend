@@ -1,19 +1,44 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../contexts/ThemeContext.jsx';
 
-const Footer = () => {
+export default function Footer() {
+    const { isDarkMode } = useTheme();
+    const ink3  = isDarkMode ? '#5a5346' : '#a39a8a';
+    const accent = isDarkMode ? '#c8965a' : '#8b5a1f';
+    const rule  = isDarkMode ? 'rgba(236,230,214,0.18)' : 'rgba(26,22,18,0.20)';
+
     return (
-        <footer className="text-shadow-lg text-white py-4 px-4 sm:px-6 lg:px-20 mt-10 bg-black/24 backdrop-blur-md">
-            <div className="font-['Source_Serif_4',serif] mx-auto flex flex-col sm:flex-row justify-between items-center text-sm xs:text-xs lg:text-xl space-y-2 sm:space-y-0">
-                <div>&copy; {new Date().getFullYear()} Scentanyl. All rights reserved.</div>
-                <div className="flex space-x-6">
-                    <Link to="/about" className={`cursor-pointer hover:scale-105 transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-lg px-1 sm:px-2 py-0.5 sm:py-1`}>About</Link>
-                    <Link to="/contact" className={`cursor-pointer hover:scale-105 transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-lg px-1 sm:px-2 py-0.5 sm:py-1`}>Contact</Link>
-                    <Link to="/privacy-policy" className={`cursor-pointer hover:scale-105 transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-lg px-1 sm:px-2 py-0.5 sm:py-1`}>Privacy Policy</Link>
+        <>
+            <style>{`
+                .sl-ftr * { box-sizing: border-box; }
+                .sl-ftr-a {
+                    font-family: 'JetBrains Mono', ui-monospace, monospace;
+                    font-size: 9px; letter-spacing: .28em; text-transform: uppercase;
+                    color: ${ink3}; text-decoration: none;
+                    transition: color .25s;
+                }
+                .sl-ftr-a:hover { color: ${accent}; }
+            `}</style>
+            <footer
+                className="sl-ftr"
+                style={{
+                    borderTop: `1px solid ${rule}`,
+                    padding: '28px 32px',
+                    display: 'flex', justifyContent: 'space-between',
+                    alignItems: 'center', gap: 20, flexWrap: 'wrap',
+                    fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+                    fontSize: 9, letterSpacing: '.22em', textTransform: 'uppercase',
+                    color: ink3,
+                }}
+            >
+                <div>© {new Date().getFullYear()} Scentanyl</div>
+                <div style={{ display: 'flex', gap: 28 }}>
+                    <Link to="/about"          className="sl-ftr-a">About</Link>
+                    <Link to="/contact"        className="sl-ftr-a">Contact</Link>
+                    <Link to="/privacy-policy" className="sl-ftr-a">Privacy</Link>
                 </div>
-            </div>
-        </footer>
+            </footer>
+        </>
     );
-};
-
-export default Footer;
+}

@@ -89,7 +89,20 @@ export const ThemeProvider = ({ children }) => {
 
         //Main Background colors
         background: {
-            primary: isDarkMode ? '#080731' : '#A3B3FF',
+            primary: isDarkMode ? '#0a0907' : '#f3efe5',
+        },
+
+        // Salon design-system tokens — shared across all salon-styled components
+        salon: {
+            ink:        isDarkMode ? '#ece6d6' : '#1a1612',
+            ink2:       isDarkMode ? '#9a9183' : '#6b6457',
+            ink3:       isDarkMode ? '#5a5346' : '#a39a8a',
+            rule:       isDarkMode ? 'rgba(236,230,214,0.18)' : 'rgba(26,22,18,0.20)',
+            ruleSoft:   isDarkMode ? 'rgba(236,230,214,0.08)' : 'rgba(26,22,18,0.08)',
+            paper:      isDarkMode ? '#15120e' : '#ede8db',
+            accent:     isDarkMode ? '#c8965a' : '#8b5a1f',
+            accentSoft: isDarkMode ? 'rgba(200,150,90,0.16)' : 'rgba(139,90,31,0.14)',
+            pageBg:     isDarkMode ? '#0a0907' : '#f3efe5',
         },
 
         randomDiscoveryButton: {
