@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useCallback, memo } from 'react';
-import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
-import FragranceCard from "../../cards/FragranceCard.jsx";
-import LoadingPage from "../primary/LoadingPage.jsx";
-import SearchBar from "../../utils/SearchBar.jsx";
-import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
-import ResultsCounter from "../../utils/ResultsCounter.jsx";
-import HeroSection from "../../utils/HeroSection.jsx";
-import PageLayout from "../../primary/PageLayout.jsx";
-import FilterSection from "../../utils/FilterSection.jsx";
-import {apiFetch} from "../../utils/apiFetch.jsx";
+import LoadingPage from '../primary/LoadingPage.jsx';
+import PageLayout from '../../primary/PageLayout.jsx';
+import PageHero from '../../ui/PageHero.jsx';
+import SearchLine from '../../ui/SearchLine.jsx';
+import ResultsLine from '../../ui/ResultsLine.jsx';
+import CatalogueGrid from '../../ui/CatalogueGrid.jsx';
+import FragranceCatCard from '../../ui/FragranceCatCard.jsx';
+import LoadMoreRow from '../../ui/LoadMoreRow.jsx';
+import EmptyState from '../../ui/EmptyState.jsx';
+import Composer from '../../ui/Composer.jsx';
+import FragranceFilterBar from './FragranceFilterBar.jsx';
+import { apiFetch } from '../../utils/apiFetch.jsx';
 
-// Memoized FragranceCard for better performance
-const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
+// Memoized card for better performance
+const MemoizedFragranceCatCard = memo(FragranceCatCard, (prevProps, nextProps) => {
     return prevProps.fragrance.id === nextProps.fragrance.id;
 });
 
@@ -22,6 +24,7 @@ const AllFragrancesPage = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [composerOpen, setComposerOpen] = useState(false);
     // Filter states
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedGender, setSelectedGender] = useState('all');
@@ -174,116 +177,87 @@ const AllFragrancesPage = () => {
         return <LoadingPage />;
     }
 
+    const composing = advancedSearchData.mode !== 'regular';
+
     return (
-        <PageLayout headerNum={1} style={<style jsx>{`
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
+        <PageLayout headerNum={1}>
+            <PageHero
+                title="Discover fragrances."
+                titleItalic="fragrances."
+                sub={totalElements.toLocaleString()}
+                subLines={[composing ? 'match your composition' : 'in the archive · indexing']}
+            />
 
-            .animate-fadeIn {
-                animation: fadeIn 0.6s ease-out;
-            }
-        `}</style>}
-        >
-            {/* Hero Section */}
-            <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
-                <HeroSection
-                    primaryText={"Discover Fragrances"}
-                    secondaryText={"Explore thousands of exquisite fragrances from luxury to niche perfumes"}
-                />
+            <SearchLine
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onSubmit={handleSearch}
+                placeholder="Search fragrances, brands, notes, or accords…"
+            />
 
-                {/* Search Bar */}
-                <SearchBar
-                    size={4}
-                    onSubmit={handleSearch}
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    message={"Search fragrances, brands, notes, or accords..."}
-                    includeRandomButton={true}
-                    enableAdvancedSearch={true}
-                    onAdvancedSearchChange={handleAdvancedSearchChange}
-                />
+            <FragranceFilterBar
+                selectedGender={selectedGender}
+                onGenderChange={handleGenderChange}
+                genderCounts={stats.genderCounts || { all: 0, men: 0, women: 0, unisex: 0 }}
+                minYear={stats.minYear}
+                maxYear={stats.maxYear}
+                yearRange={yearRange}
+                onYearRangeChange={handleYearRangeChange}
+                yearSort={yearSort}
+                onYearSortChange={handleYearSortChange}
+                advancedSearchData={advancedSearchData}
+                onAdvancedSearchChange={handleAdvancedSearchChange}
+                onOpenComposer={() => setComposerOpen(true)}
+            />
 
-                {/* Filter Buttons Row */}
-                <FilterSection
-                    genderFilterData={{
-                        onClick: handleGenderChange,
-                        selectedGender: selectedGender,
-                        counts: stats.genderCounts || { all: 0, men: 0, women: 0, unisex: 0 }
-                    }}
-                    yearFilterData={{
-                        onYearRangeChange: handleYearRangeChange,
-                        onSortChange: handleYearSortChange,
-                        minYear: stats.minYear,
-                        maxYear: stats.maxYear,
-                        currentRange: yearRange,
-                        currentSort: yearSort
-                    }}
-                />
+            <ResultsLine
+                shown={fragrances.length}
+                total={totalElements}
+                type="fragrances"
+                right={yearSort === 'none' ? 'relevance' : `year · ${yearSort}`}
+            />
 
-                {/* Results Counter */}
-                <ResultsCounter
-                    displayedCount={fragrances.length}
-                    filteredCount={totalElements}
-                    type={"fragrances"}
-                />
-            </div>
-
-            {/* Fragrances Grid */}
-            <div className="space-y-4 sm:space-y-6 md:space-y-8">
-                {fragrances.length > 0 ? (
-                    <>
-                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
-                            {fragrances.map((fragrance, index) => (
-                                <div
-                                    key={fragrance.id}
-                                    className="animate-fadeIn"
-                                    style={{
-                                        animationDelay: `${(index % 20) * 50}ms`,
-                                        animationFillMode: 'both'
-                                    }}
-                                >
-                                    <MemoizedFragranceCard fragrance={fragrance} />
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Load More Button */}
-                        {hasMore && (
-                            <LoadMoreButton
-                                onClick={loadMore}
-                                disabled={isLoadingMore}
-                                message={"Load More Fragrances"}
+            {fragrances.length > 0 ? (
+                <>
+                    <CatalogueGrid>
+                        {fragrances.map((fragrance, index) => (
+                            <MemoizedFragranceCatCard
+                                key={fragrance.id}
+                                fragrance={fragrance}
+                                index={index}
+                                highlightAccords={advancedSearchData.accords}
                             />
-                        )}
-                    </>
-                ) : (
-                    <div className="text-center py-8 sm:py-12 md:py-16">
-                        <BlurText
-                            text="No fragrances found"
-                            delay={100}
-                            animateBy="words"
-                            direction="bottom"
-                            className="flex justify-center text-2xl sm:text-3xl text-gray-300 mb-2 sm:mb-3 md:mb-4"
+                        ))}
+                    </CatalogueGrid>
+
+                    {hasMore ? (
+                        <LoadMoreRow
+                            onClick={loadMore}
+                            disabled={isLoadingMore}
+                            label="↓ Load more fragrances"
+                            note={`${fragrances.length.toLocaleString()} of ${totalElements.toLocaleString()}`}
                         />
-                        <p className="text-gray-200 text-base sm:text-lg md:text-xl">
-                            {advancedSearchData.mode !== 'regular'
-                                ? 'Try adjusting your selected notes, accords, or filters'
-                                : yearRange
-                                    ? 'Try adjusting your year range or other filters'
-                                    : 'Try adjusting your search terms or filters'
-                            }
-                        </p>
-                    </div>
-                )}
-            </div>
+                    ) : (
+                        <div style={{ paddingBottom: 80 }} />
+                    )}
+                </>
+            ) : (
+                <EmptyState
+                    big="Nothing matches that composition."
+                    small={composing
+                        ? 'try removing an excluded note, or widening the search'
+                        : yearRange
+                            ? 'try adjusting your year range or other filters'
+                            : 'try adjusting your search terms or filters'}
+                />
+            )}
+
+            <Composer
+                open={composerOpen}
+                onClose={() => setComposerOpen(false)}
+                value={advancedSearchData}
+                onChange={handleAdvancedSearchChange}
+            />
         </PageLayout>
     );
 };

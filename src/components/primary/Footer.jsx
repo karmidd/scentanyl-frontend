@@ -3,16 +3,45 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
-        <footer className="text-shadow-lg text-white py-4 px-4 sm:px-6 lg:px-20 mt-10 bg-black/24 backdrop-blur-md">
-            <div className="font-['Source_Serif_4',serif] mx-auto flex flex-col sm:flex-row justify-between items-center text-sm xs:text-xs lg:text-xl space-y-2 sm:space-y-0">
-                <div>&copy; {new Date().getFullYear()} Scentanyl. All rights reserved.</div>
-                <div className="flex space-x-6">
-                    <Link to="/about" className={`cursor-pointer hover:scale-105 transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-lg px-1 sm:px-2 py-0.5 sm:py-1`}>About</Link>
-                    <Link to="/contact" className={`cursor-pointer hover:scale-105 transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-lg px-1 sm:px-2 py-0.5 sm:py-1`}>Contact</Link>
-                    <Link to="/privacy-policy" className={`cursor-pointer hover:scale-105 transition-all duration-300 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-lg px-1 sm:px-2 py-0.5 sm:py-1`}>Privacy Policy</Link>
+        <>
+            <footer className="bottom">
+                <div className="brand-block">
+                    <div className="name">Scentanyl<em>.</em></div>
+                    <p>A working archive of considered perfumery. Bring an opinion; leave with three.</p>
                 </div>
+                <div>
+                    <h4>Browse</h4>
+                    <ul>
+                        <li><Link to="/fragrances">Fragrances</Link></li>
+                        <li><Link to="/brands">Brands</Link></li>
+                        <li><Link to="/notes">Notes</Link></li>
+                        <li><Link to="/accords">Accords</Link></li>
+                        <li><Link to="/perfumers">Perfumers</Link></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>The Salon</h4>
+                    <ul>
+                        <li><Link to="/salon">Threads</Link></li>
+                        <li><Link to="/salon">Annotations</Link></li>
+                        <li><Link to="/salon">Perfumers in residence</Link></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>House</h4>
+                    <ul>
+                        <li><Link to="/about">About</Link></li>
+                        <li><Link to="/contact">Contact</Link></li>
+                        <li><Link to="/privacy-policy">Privacy</Link></li>
+                    </ul>
+                </div>
+            </footer>
+            <div className="colophon">
+                <span>© Scentanyl, {new Date().getFullYear()}</span>
+                <span>A working archive of considered perfumery</span>
+                <span>Set in Bodoni Moda &amp; Inter</span>
             </div>
-        </footer>
+        </>
     );
 };
 

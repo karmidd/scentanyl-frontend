@@ -1,80 +1,28 @@
-// Solution: Dual-layer background with smooth transition
-import Silk from "../../blocks/Backgrounds/Silk/Silk.jsx";
-import React, { useState, useEffect } from "react";
-import { useTheme } from "../contexts/ThemeContext";
+import React from 'react';
+import './Background.css';
 
-const Background = () => {
-    const { theme, isDarkMode } = useTheme();
-    const [showingLayer, setShowingLayer] = useState('A');
-    const [layerAColor, setLayerAColor] = useState(theme.background.primary);
-    const [layerBColor, setLayerBColor] = useState(theme.background.primary);
-    const [hasInitialized, setHasInitialized] = useState(false);
-
-    useEffect(() => {
-        // Skip the transition effect on initial load
-        if (!hasInitialized) {
-            setHasInitialized(true);
-            return;
-        }
-
-        const newColor = theme.background.primary;
-
-        // Update the hidden layer with new color
-        if (showingLayer === 'A') {
-            setLayerBColor(newColor);
-        } else {
-            setLayerAColor(newColor);
-        }
-
-        // Small delay to ensure the hidden layer is ready
-        const timer = setTimeout(() => {
-            setShowingLayer(prev => prev === 'A' ? 'B' : 'A');
-        }, 50);
-
-        return () => clearTimeout(timer);
-    }, [isDarkMode]); // Trigger on theme change
-
+/**
+ * The site background (DESIGN_SYSTEM.md §8).
+ *
+ * One fixed layer, entirely GPU-composited:
+ *  - three large, very soft radial "light pools" drifting via transform only
+ *    (compositor thread — no layout, no repaint, no per-frame JS)
+ *  - a static top "spotlight" glow
+ *  - an edge vignette
+ * Softness comes from radial-gradient, never filter:blur.
+ * Freezes under prefers-reduced-motion (CSS) or via the `frozen` prop.
+ * Render once near the app root; app content sits above at z-index 1+.
+ */
+export default function Background({ frozen = false }) {
     return (
-        <div className="fixed top-0 left-0 w-screen h-screen z-0">
-            {/* Fallback solid background to prevent white flash - behind everything */}
-            <div
-                className="absolute inset-0 z-0"
-                style={{ backgroundColor: theme.background.primary }}
-            />
-
-            {/* Layer A */}
-            <div
-                className={`absolute inset-0 z-10 transition-opacity duration-500 ${
-                    showingLayer === 'A' ? 'opacity-100' : 'opacity-0'
-                }`}
-            >
-                <Silk
-                    key={`A-${layerAColor}`}
-                    speed={5}
-                    scale={1}
-                    color={layerAColor}
-                    noiseIntensity={0.3}
-                    rotation={1.54}
-                />
+        <div className={`sc-bg${frozen ? ' frozen' : ''}`} aria-hidden="true">
+            <div className="sc-bg-spot" />
+            <div className="sc-bg-pools">
+                <div className="sc-pool p1" />
+                <div className="sc-pool p2" />
+                <div className="sc-pool p3" />
             </div>
-
-            {/* Layer B */}
-            <div
-                className={`absolute inset-0 z-10 transition-opacity duration-500 ${
-                    showingLayer === 'B' ? 'opacity-100' : 'opacity-0'
-                }`}
-            >
-                <Silk
-                    key={`B-${layerBColor}`}
-                    speed={5}
-                    scale={1}
-                    color={layerBColor}
-                    noiseIntensity={0.3}
-                    rotation={1.54}
-                />
-            </div>
+            <div className="sc-bg-vignette" />
         </div>
     );
-};
-
-export default Background;
+}

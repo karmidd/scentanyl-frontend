@@ -1,0 +1,54 @@
+/* Background — CSS-only, GPU-composited (DESIGN_SYSTEM.md §8) */
+.sc-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    background: var(--bg);
+    transition: background .5s ease;
+}
+
+.sc-bg-pools { position: absolute; inset: -20%; }
+
+.sc-pool {
+    position: absolute;
+    border-radius: 50%;
+    will-change: transform;
+}
+.sc-pool.p1 {
+    width: 70vmax; height: 70vmax; left: -10vmax; top: -15vmax;
+    background: radial-gradient(circle at 50% 50%, var(--pool-1), transparent 62%);
+    animation: sc-drift1 38s ease-in-out infinite alternate;
+}
+.sc-pool.p2 {
+    width: 60vmax; height: 60vmax; right: -12vmax; top: 10vmax;
+    background: radial-gradient(circle at 50% 50%, var(--pool-2), transparent 60%);
+    animation: sc-drift2 52s ease-in-out infinite alternate;
+}
+.sc-pool.p3 {
+    width: 80vmax; height: 80vmax; left: 20vmax; bottom: -30vmax;
+    background: radial-gradient(circle at 50% 50%, var(--pool-3), transparent 64%);
+    animation: sc-drift3 46s ease-in-out infinite alternate;
+}
+
+@keyframes sc-drift1 { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(8vmax, 5vmax, 0) scale(1.12); } }
+@keyframes sc-drift2 { from { transform: translate3d(0, 0, 0) scale(1.05); } to { transform: translate3d(-7vmax, 4vmax, 0) scale(1); } }
+@keyframes sc-drift3 { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(5vmax, -6vmax, 0) scale(1.1); } }
+
+/* static spotlight from the top, like a shop's ceiling light */
+.sc-bg-spot {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%);
+}
+
+.sc-bg-vignette {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 38%, transparent 0%, transparent 45%, var(--bg) 100%);
+    opacity: .9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sc-pool { animation: none !important; }
+}
+.sc-bg.frozen .sc-pool { animation: none !important; }

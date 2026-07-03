@@ -1,4 +1,8 @@
 // contexts/ThemeContext.jsx
+// Single source of truth for the design tokens (see DESIGN_SYSTEM.md §2).
+// The tokens live as CSS variables in index.css; this context drives the
+// `html.dark` / `html.light` class and exposes the raw values for the rare
+// case a component needs them in JS.
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const ThemeContext = createContext();
@@ -11,6 +15,37 @@ export const useTheme = () => {
     return context;
 };
 
+export const TOKENS = {
+    dark: {
+        bg: '#0a0907',
+        bg2: '#100e0b',
+        paper: '#15120e',
+        ink: '#ece6d6',
+        ink2: '#9a9183',
+        ink3: '#5a5346',
+        rule: 'rgba(236,230,214,0.18)',
+        ruleSoft: 'rgba(236,230,214,0.08)',
+        hairline: 'rgba(236,230,214,0.14)',
+        accent: '#c8965a',
+        accent2: '#d8a878',
+        accentSoft: 'rgba(200,150,90,0.16)',
+    },
+    light: {
+        bg: '#f3efe5',
+        bg2: '#ebe6d8',
+        paper: '#ede8db',
+        ink: '#1a1612',
+        ink2: '#6b6457',
+        ink3: '#a39a8a',
+        rule: 'rgba(26,22,18,0.20)',
+        ruleSoft: 'rgba(26,22,18,0.08)',
+        hairline: 'rgba(26,22,18,0.14)',
+        accent: '#8b5a1f',
+        accent2: '#a5722f',
+        accentSoft: 'rgba(139,90,31,0.14)',
+    },
+};
+
 export const ThemeProvider = ({ children }) => {
     const [isDarkMode, setIsDarkMode] = useState(() => {
         // Check localStorage for saved preference, default to dark
@@ -18,15 +53,16 @@ export const ThemeProvider = ({ children }) => {
         return saved ? saved === 'dark' : true;
     });
 
-    // Update localStorage when theme changes
+    // Update localStorage and html class when theme changes
     useEffect(() => {
         localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
 
-        // Add/remove dark class to html element for global CSS if needed
         if (isDarkMode) {
             document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
         } else {
             document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light');
         }
     }, [isDarkMode]);
 
@@ -34,77 +70,7 @@ export const ThemeProvider = ({ children }) => {
         setIsDarkMode(prev => !prev);
     };
 
-    const theme = {
-        // Background colors
-        bg: {
-            primary: isDarkMode ? 'bg-black' : 'bg-white',
-            secondary: isDarkMode ? 'bg-gray-900' : 'bg-gray-100',
-            tertiary: isDarkMode ? 'bg-gray-800' : 'bg-gray-200',
-            card: isDarkMode ? 'bg-gray-800' : 'bg-white',
-            input: isDarkMode ? 'bg-gray-900' : 'bg-indigo-100',
-        },
-
-        // Text colors
-        text: {
-            primary: isDarkMode ? 'text-white' : 'text-gray-800',
-            secondary: isDarkMode ? 'text-gray-400' : 'text-gray-700',
-            accent: isDarkMode ? 'text-blue-500' : 'text-[#d6dfff]',
-            muted: isDarkMode ? 'text-gray-500' : 'text-gray-500',
-            groupHover: isDarkMode ? 'group-hover:text-blue-500' : 'group-hover:text-[#676adc]',
-            hover: isDarkMode ? 'hover:text-blue-500' : 'hover:text-[#676adc]',
-            other_accent: isDarkMode ? 'text-blue-500' : 'text-[#676adc]',
-            include: isDarkMode ? 'text-green-400' : 'text-green-700',
-            exclude: isDarkMode ? 'text-red-400' : 'text-red-600',
-        },
-
-        // Border colors
-        border: {
-            primary: isDarkMode ? 'border-gray-700' : 'border-gray-400',
-            secondary: isDarkMode ? 'border-gray-600' : 'border-gray-400',
-            accent: isDarkMode ? 'border-blue-400' : 'border-indigo-400',
-            hover: isDarkMode ? 'hover:border-blue-600' : 'hover:border-indigo-500',
-            groupHover: isDarkMode ? 'group-hover:border-blue-600' : 'group-hover:border-indigo-500',
-            focus: isDarkMode ? 'focus:border-blue-400' : 'focus:border-indigo-400',
-        },
-
-        // Button styles
-        button: {
-            primary: isDarkMode
-                ? 'bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800'
-                : 'bg-gradient-to-r from-indigo-200 via-indigo-300 to-indigo-300',
-            secondary: isDarkMode
-                ? 'border border-blue-800 text-blue-400 hover:bg-blue-800 hover:text-white'
-                : 'border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white',
-            ghost: isDarkMode
-                ? 'text-gray-400 hover:text-white hover:bg-gray-800'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
-            browseAll: isDarkMode ? "bg-gradient-to-r from-purple-600 via-blue-600 to-blue-800" : "bg-gradient-to-r from-indigo-300 via-purple-300 to-indigo-400"
-        },
-
-        // Shadow styles
-        shadow: {
-            card: isDarkMode ? 'shadow-2xl shadow-black/20' : 'shadow-lg shadow-gray-200',
-            button: isDarkMode ? 'shadow-2xl hover:shadow-blue-500/25' : 'shadow-lg hover:shadow-indigo-300/25',
-        },
-
-        //Main Background colors
-        background: {
-            primary: isDarkMode ? '#080731' : '#A3B3FF',
-        },
-
-        randomDiscoveryButton: {
-            primary: isDarkMode ? "bg-gradient-to-br from-gray-700 to-gray-900" : "bg-gradient-to-br from-indigo-50 to-indigo-200",
-        },
-
-        card: {
-            primary: isDarkMode ? "bg-gradient-to-br from-gray-900 to-gray-800" : "bg-gradient-to-br from-indigo-300 to-indigo-100",
-            secondary: isDarkMode ? "bg-gradient-to-br from-gray-700 to-gray-600" : "bg-gradient-to-br from-indigo-100 to-indigo-50",
-            hover: isDarkMode ? "hover:from-gray-800 hover:to-gray-700" : "hover:from-indigo-200 hover:to-indigo-100",
-            blur: isDarkMode ? "bg-gray-900/50 backdrop-blur-sm" : "bg-gray-900/50 backdrop-blur-sm",
-            selected: isDarkMode ? 'bg-blue-800 text-white shadow-lg transition-all duration-300' : 'bg-indigo-400 text-white shadow-lg transition-all duration-300',
-            indicator: isDarkMode ? "bg-gradient-to-r from-blue-600 to-blue-400" : "bg-gradient-to-r from-indigo-500 to-indigo-300"
-        }
-    };
+    const theme = isDarkMode ? TOKENS.dark : TOKENS.light;
 
     const value = {
         isDarkMode,

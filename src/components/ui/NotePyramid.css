@@ -1,0 +1,59 @@
+/* Notes pyramid — stacked tiers with scroll reveal */
+
+.pyramid { border: 1px solid var(--rule-soft); border-top: none; }
+.pyr-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 30px 40px 0; gap: 16px; flex-wrap: wrap;
+}
+.pyr-head .t { font-family: var(--serif); font-style: italic; font-size: 30px; color: var(--ink); }
+.pyr-head .sub {
+    font-family: var(--mono); font-size: 9px; letter-spacing: .24em;
+    text-transform: uppercase; color: var(--ink-3);
+}
+
+.pyramid .tier {
+    display: grid; grid-template-columns: 240px 1fr; gap: 32px;
+    align-items: start; padding: 32px 40px;
+    border-bottom: 1px solid var(--rule-soft);
+    position: relative;
+}
+.pyramid .tier:last-child { border-bottom: none; }
+.pyramid .tier::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+    background: var(--accent);
+    transform: scaleY(0); transform-origin: top;
+    transition: transform .8s var(--ease);
+}
+.pyramid .tier.in::before { transform: scaleY(1); }
+.pyramid .tier .ti {
+    font-family: var(--mono); font-size: 9px; letter-spacing: .24em;
+    text-transform: uppercase; color: var(--ink-3);
+}
+.pyramid .tier .tn {
+    font-family: var(--serif); font-style: italic; font-size: 34px; line-height: 1;
+    color: var(--ink); margin-top: 8px;
+}
+.pyramid .tier.heart .tn { color: var(--accent); }
+.pyramid .tier .desc {
+    font-family: var(--sans); font-size: 12px; line-height: 1.6;
+    color: var(--ink-2); margin-top: 12px; max-width: 200px;
+}
+.pyramid .tier .notes { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 6px; }
+.pyramid .note {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--ink-2);
+    border: 1px solid var(--rule-soft); padding: 11px 16px;
+    cursor: pointer;
+    transition: border-color .25s, color .25s, transform .25s, background .25s, opacity .25s;
+    opacity: 0; transform: translateY(12px);
+}
+.pyramid .tier.in .note { opacity: 1; transform: none; }
+.pyramid .note:hover { border-color: var(--accent); color: var(--accent); }
+.pyramid .tier.heart .note { background: var(--accent-soft); border-color: transparent; }
+.pyramid .tier.heart .note:hover { border-color: var(--accent); }
+
+@media (max-width: 880px) {
+    .pyramid .tier { grid-template-columns: 1fr; gap: 14px; padding: 26px 24px; }
+    .pyramid .tier .desc { max-width: none; }
+    .pyr-head { padding: 26px 24px 0; }
+}

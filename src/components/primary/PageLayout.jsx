@@ -1,29 +1,26 @@
-import Background from "./Background.jsx";
-import Header from "./Header.jsx";
-import React from "react";
-import Footer from "./Footer.jsx";
-import {useTheme} from "../contexts/ThemeContext.jsx";
+import React from 'react';
+import Background from './Background.jsx';
+import Nav from './Nav.jsx';
+import Footer from './Footer.jsx';
 
-export default function PageLayout({ headerNum = 0, children, style }) {
-    const { theme } = useTheme();
+/**
+ * Shared page shell: background + grain/vignette overlays + nav + footer.
+ * `headerNum` keeps the old contract (0 home · 1 fragrances · 2 brands ·
+ * 3 notes · 4 accords · 5 perfumers · 6 salon).
+ * `fullBleed` lets a page manage its own .stage sections (Home, Salon).
+ */
+export default function PageLayout({ headerNum = 0, children, style, fullBleed = false }) {
     return (
         <>
-            <div className="relative min-h-screen overflow-hidden">
-                <Background />
-                <div className="relative z-10 font-['Source_Serif_4',serif] text-base sm:text-lg md:text-xl lg:text-2xl">
-                    <div className={theme.text.primary}>
-                        {/* Header */}
-                        <Header page={headerNum} />
-                        {/* Main Content */}
-                        <main className="mt-5 max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 pt-[80px] sm:pt-[100px] md:pt-[160px]">
-                            {children}
-                        </main>
-                    </div>
-                </div>
-                {style}
-            </div>
-            {/* Footer */}
-            <Footer/>
+            <Background />
+            <div className="grain" aria-hidden="true" />
+            <div className="vignette" aria-hidden="true" />
+            <Nav page={headerNum} />
+            <main style={{ position: 'relative', zIndex: 2 }}>
+                {fullBleed ? children : <div className="stage">{children}</div>}
+            </main>
+            {style}
+            <Footer />
         </>
     );
 }

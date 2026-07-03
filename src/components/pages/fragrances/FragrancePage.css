@@ -1,0 +1,55 @@
+/* Fragrance detail — the specimen card */
+
+.specimen {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border: 1px solid var(--rule-soft);
+    margin-top: 24px;
+}
+.specimen .img-col {
+    border-right: 1px solid var(--rule-soft);
+    padding: 40px; position: relative;
+    display: flex; flex-direction: column;
+}
+.specimen .img-col .cap {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    margin-top: 16px;
+    font-family: var(--mono); font-size: 9px; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--ink-3);
+}
+.specimen .img-col .cap a { color: var(--accent); transition: opacity .2s; }
+.specimen .img-col .cap a:hover { opacity: .7; }
+
+.specimen .info-col { padding: 44px 40px; display: flex; flex-direction: column; }
+.specimen .specno {
+    font-family: var(--mono); font-size: 9px; letter-spacing: .24em;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 22px;
+}
+.specimen h1 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(48px, 5.5vw, 84px);
+    line-height: .9; letter-spacing: -.02em;
+    margin: 0 0 8px;
+}
+.specimen h1 em { font-style: italic; }
+.specimen .byline {
+    font-family: var(--serif); font-style: italic; font-size: 24px;
+    color: var(--ink-2); margin-bottom: 30px;
+}
+.specimen .byline a { color: var(--accent); transition: opacity .2s; }
+.specimen .byline a:hover { opacity: .7; }
+.specimen .accord-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.specimen .actions { display: flex; gap: 8px; margin-top: 30px; flex-wrap: wrap; }
+
+.frag-more { padding: 60px 0 90px; text-align: center; }
+.frag-more .t { font-family: var(--serif); font-style: italic; font-size: 30px; color: var(--ink); margin-bottom: 8px; }
+.frag-more .sub {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 26px;
+}
+.frag-more .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+@media (max-width: 880px) {
+    .specimen { grid-template-columns: 1fr; }
+    .specimen .img-col { border-right: none; border-bottom: 1px solid var(--rule-soft); padding: 28px 24px; }
+    .specimen .info-col { padding: 28px 24px; }
+}
