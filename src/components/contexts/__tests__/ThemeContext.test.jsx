@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, renderHook, act } from '@testing-library/react'
 import React from 'react'
-import { ThemeProvider, useTheme } from '../ThemeContext'
+import { ThemeProvider, useTheme, TOKENS } from '../ThemeContext'
 
 // Mock localStorage
 const localStorageMock = {
@@ -24,7 +24,6 @@ Object.defineProperty(document.documentElement, 'classList', {
 
 describe('ThemeContext', () => {
     beforeEach(() => {
-        // Clear all mocks before each test
         vi.clearAllMocks()
         localStorageMock.clear()
         mockClassList.add.mockClear()
@@ -35,7 +34,7 @@ describe('ThemeContext', () => {
         it('should provide theme context to children', () => {
             const TestComponent = () => {
                 const { theme } = useTheme()
-                return <div>{theme.text.primary}</div>
+                return <div>{theme.ink}</div>
             }
 
             render(
@@ -44,7 +43,7 @@ describe('ThemeContext', () => {
                 </ThemeProvider>
             )
 
-            expect(screen.getByText('text-white')).toBeInTheDocument()
+            expect(screen.getByText(TOKENS.dark.ink)).toBeInTheDocument()
         })
 
         it('should throw error when useTheme is used outside ThemeProvider', () => {
@@ -53,7 +52,6 @@ describe('ThemeContext', () => {
                 return null
             }
 
-            // Suppress console.error for this test
             const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
             expect(() => render(<TestComponent />)).toThrow('useTheme must be used within a ThemeProvider')
@@ -71,6 +69,7 @@ describe('ThemeContext', () => {
             expect(result.current.isDarkMode).toBe(true)
             expect(localStorageMock.setItem).toHaveBeenCalledWith('theme', 'dark')
             expect(mockClassList.add).toHaveBeenCalledWith('dark')
+            expect(mockClassList.remove).toHaveBeenCalledWith('light')
         })
 
         it('should use localStorage value when available', () => {
@@ -83,6 +82,7 @@ describe('ThemeContext', () => {
             expect(result.current.isDarkMode).toBe(false)
             expect(localStorageMock.setItem).toHaveBeenCalledWith('theme', 'light')
             expect(mockClassList.remove).toHaveBeenCalledWith('dark')
+            expect(mockClassList.add).toHaveBeenCalledWith('light')
         })
 
         it('should toggle theme when toggleTheme is called', () => {
@@ -116,17 +116,18 @@ describe('ThemeContext', () => {
                 result.current.toggleTheme()
             })
             expect(mockClassList.remove).toHaveBeenCalledWith('dark')
+            expect(mockClassList.add).toHaveBeenCalledWith('light')
 
             // Toggle back to dark
             act(() => {
                 result.current.toggleTheme()
             })
-            expect(mockClassList.add).toHaveBeenCalledTimes(2)
+            expect(mockClassList.add).toHaveBeenLastCalledWith('dark')
         })
     })
 
     describe('Theme values', () => {
-        it('should provide correct dark theme values', () => {
+        it('should provide correct dark theme tokens', () => {
             localStorageMock.getItem.mockReturnValue('dark')
 
             const { result } = renderHook(() => useTheme(), {
@@ -135,14 +136,13 @@ describe('ThemeContext', () => {
 
             const { theme } = result.current
 
-            // Test a few key theme values
-            expect(theme.bg.primary).toBe('bg-black')
-            expect(theme.text.primary).toBe('text-white')
-            expect(theme.button.primary).toContain('from-blue-600')
-            expect(theme.background.primary).toBe('#080731')
+            expect(theme.bg).toBe('#0a0907')
+            expect(theme.ink).toBe('#ece6d6')
+            expect(theme.accent).toBe('#c8965a')
+            expect(theme).toEqual(TOKENS.dark)
         })
 
-        it('should provide correct light theme values', () => {
+        it('should provide correct light theme tokens', () => {
             localStorageMock.getItem.mockReturnValue('light')
 
             const { result } = renderHook(() => useTheme(), {
@@ -151,11 +151,10 @@ describe('ThemeContext', () => {
 
             const { theme } = result.current
 
-            // Test a few key theme values
-            expect(theme.bg.primary).toBe('bg-white')
-            expect(theme.text.primary).toBe('text-gray-800')
-            expect(theme.button.primary).toContain('from-indigo-200')
-            expect(theme.background.primary).toBe('#A3B3FF')
+            expect(theme.bg).toBe('#f3efe5')
+            expect(theme.ink).toBe('#1a1612')
+            expect(theme.accent).toBe('#8b5a1f')
+            expect(theme).toEqual(TOKENS.light)
         })
 
         it('should update all theme values when toggling', () => {
@@ -171,24 +170,22 @@ describe('ThemeContext', () => {
 
             const lightTheme = result.current.theme
 
-            // Verify that theme values actually changed
-            expect(darkTheme.bg.primary).not.toBe(lightTheme.bg.primary)
-            expect(darkTheme.text.primary).not.toBe(lightTheme.text.primary)
-            expect(darkTheme.border.primary).not.toBe(lightTheme.border.primary)
-            expect(darkTheme.background.primary).not.toBe(lightTheme.background.primary)
+            expect(darkTheme.bg).not.toBe(lightTheme.bg)
+            expect(darkTheme.ink).not.toBe(lightTheme.ink)
+            expect(darkTheme.accent).not.toBe(lightTheme.accent)
+            expect(darkTheme.rule).not.toBe(lightTheme.rule)
         })
     })
 
     describe('Integration with components', () => {
         it('should update child components when theme changes', () => {
-            // Explicitly set dark mode for this test
             localStorageMock.getItem.mockReturnValue('dark')
 
             const TestComponent = () => {
                 const { theme, isDarkMode, toggleTheme } = useTheme()
                 return (
                     <div>
-                        <div data-testid="bg-primary">{theme.bg.primary}</div>
+                        <div data-testid="bg">{theme.bg}</div>
                         <div data-testid="mode">{isDarkMode ? 'dark' : 'light'}</div>
                         <button onClick={toggleTheme}>Toggle</button>
                     </div>
@@ -201,14 +198,14 @@ describe('ThemeContext', () => {
                 </ThemeProvider>
             )
 
-            expect(screen.getByTestId('bg-primary')).toHaveTextContent('bg-black')
+            expect(screen.getByTestId('bg')).toHaveTextContent('#0a0907')
             expect(screen.getByTestId('mode')).toHaveTextContent('dark')
 
             act(() => {
                 screen.getByText('Toggle').click()
             })
 
-            expect(screen.getByTestId('bg-primary')).toHaveTextContent('bg-white')
+            expect(screen.getByTestId('bg')).toHaveTextContent('#f3efe5')
             expect(screen.getByTestId('mode')).toHaveTextContent('light')
         })
 
@@ -228,7 +225,6 @@ describe('ThemeContext', () => {
 
             expect(screen.getByText('light')).toBeInTheDocument()
 
-            // Unmount and remount
             unmount()
 
             render(
@@ -237,7 +233,6 @@ describe('ThemeContext', () => {
                 </ThemeProvider>
             )
 
-            // Should still be light mode
             expect(screen.getByText('light')).toBeInTheDocument()
         })
     })
@@ -250,8 +245,8 @@ describe('ThemeContext', () => {
                 wrapper: ThemeProvider
             })
 
-            // Should default to dark when invalid
-            expect(result.current.isDarkMode).toBe(false) // 'invalid' !== 'dark', so false
+            // 'invalid' !== 'dark', so falls back to light
+            expect(result.current.isDarkMode).toBe(false)
             expect(localStorageMock.setItem).toHaveBeenCalledWith('theme', 'light')
         })
     })
