@@ -1,6 +1,7 @@
 import {Routes, Route, BrowserRouter} from 'react-router-dom';
-import {lazy} from 'react';
+import {lazy, Suspense} from 'react';
 import {ThemeProvider} from "./components/contexts/ThemeContext.jsx";
+import LoadingPage from "./components/pages/primary/LoadingPage.jsx";
 
 // Lazy load all components
 const HomePage = lazy(() => import("./components/pages/primary/HomePage.jsx"));
@@ -14,6 +15,7 @@ const AllAccordsPage = lazy(() => import("./components/pages/accords/AllAccordsP
 const AccordPage = lazy(() => import("./components/pages/accords/AccordPage.jsx"));
 const AllPerfumersPage = lazy(() => import("./components/pages/perfumers/AllPerfumersPage.jsx"));
 const PerfumerPage = lazy(() => import("./components/pages/perfumers/PerfumerPage.jsx"));
+const SalonPage = lazy(() => import("./components/pages/salon/SalonPage.jsx"));
 const AboutPage = lazy(() => import("./components/pages/secondary/AboutPage.jsx"));
 const PrivacyPolicyPage = lazy(() => import("./components/pages/secondary/./PrivacyPolicyPage"));
 const ContactPage = lazy(() => import("./components/pages/secondary/ContactPage.jsx"));
@@ -26,6 +28,7 @@ function App() {
         <>
             <ThemeProvider>
                 <BrowserRouter>
+                    <Suspense fallback={<LoadingPage />}>
                     <Routes>
                         <Route path="" element={<HomePage />} />
                         <Route path="/" element={<HomePage />} />
@@ -49,6 +52,8 @@ function App() {
                          <Route path="/perfumers/" element={<AllPerfumersPage />} />
                         <Route path="/perfumers/:perfumer" element={<PerfumerPage />} />
                         <Route path="/perfumers/:perfumer/" element={<PerfumerPage />} />
+                        <Route path="/salon" element={<SalonPage />} />
+                        <Route path="/salon/" element={<SalonPage />} />
                         <Route path="/about" element={<AboutPage />} />
                         <Route path="/about/" element={<AboutPage />} />
                         <Route path="/contact" element={<ContactPage />} />
@@ -58,6 +63,7 @@ function App() {
                         <Route path="/rate-limited" element={<ErrorPage429 />} />
                         <Route path="*" element={<ErrorPage404 />} />
                     </Routes>
+                    </Suspense>
                 </BrowserRouter>
             </ThemeProvider>
         </>

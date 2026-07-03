@@ -1,59 +1,25 @@
-import PageLayout from "../../primary/PageLayout.jsx";
-import HeroSection from "../../utils/HeroSection.jsx";
-import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
-import React, {useEffect} from "react";
+import React from 'react';
+import ProsePage from './ProsePage.jsx';
 
 export default function PrivacyPolicyPage() {
-    useEffect(() => {
-        document.title = `Privacy Policy | Scentanyl`;
-    }, []);
     return (
-        <PageLayout headerNum={0}>
-            <HeroSection primaryText={"Privacy Policy"} secondaryText={"Last updated: July 30, 2025"} />
-            <div className="py-4 px-9 sm:px-6 lg:px-10 mt-8 bg-black/34 backdrop-blur-md">
-                <BlurText
-                    text={"At Scentanyl, we respect your privacy. This website does not collect personal information, does not use cookies, and does not track users."}
-                    delay={10}
-                    animateBy="words"
-                    direction="top"
-                    className="text-shadow-lg mt-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
-                />
-                <BlurText
-                    text={"What we don’t do:"}
-                    delay={10}
-                    animateBy="words"
-                    direction="top"
-                    className="text-shadow-lg mt-5 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
-                />
-                <BlurText
-                    text={"• We do not collect names, emails, or other personal details."}
-                    delay={10}
-                    animateBy="words"
-                    direction="bottom"
-                    className="text-shadow-lg mt-4 pl-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
-                />
-                <BlurText
-                    text={"• We do not require user accounts or logins."}
-                    delay={10}
-                    animateBy="words"
-                    direction="bottom"
-                    className="text-shadow-lg mt-1 pl-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
-                />
-                <BlurText
-                    text={"• We do not use cookies or third-party trackers."}
-                    delay={10}
-                    animateBy="words"
-                    direction="bottom"
-                    className="text-shadow-lg mt-1 pl-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
-                />
-                <BlurText
-                    text={"• We do not display advertisements."}
-                    delay={10}
-                    animateBy="words"
-                    direction="bottom"
-                    className="text-shadow-lg mt-1 mb-10 pl-10 flex justify-left text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto text-center px-2"
-                />
-            </div>
-        </PageLayout>
+        <ProsePage
+            docTitle="Privacy Policy | Scentanyl"
+            eyebrow="Privacy"
+            eyebrowRight="last updated · July 30, 2025"
+            title="Privacy policy."
+        >
+            <p className="lede">
+                At Scentanyl, we respect your privacy. This website does not collect personal
+                information, does not use cookies, and does not track users.
+            </p>
+            <p>What we don't do:</p>
+            <ul>
+                <li>We do not collect names, emails, or other personal details.</li>
+                <li>We do not require user accounts or logins.</li>
+                <li>We do not use cookies or third-party trackers.</li>
+                <li>We do not display advertisements.</li>
+            </ul>
+        </ProsePage>
     );
 }
