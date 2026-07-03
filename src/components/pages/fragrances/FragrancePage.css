@@ -40,14 +40,6 @@
 .specimen .accord-pills { display: flex; gap: 6px; flex-wrap: wrap; }
 .specimen .actions { display: flex; gap: 8px; margin-top: 30px; flex-wrap: wrap; }
 
-.frag-more { padding: 60px 0 90px; text-align: center; }
-.frag-more .t { font-family: var(--serif); font-style: italic; font-size: 30px; color: var(--ink); margin-bottom: 8px; }
-.frag-more .sub {
-    font-family: var(--mono); font-size: 10px; letter-spacing: .2em;
-    text-transform: uppercase; color: var(--ink-3); margin-bottom: 26px;
-}
-.frag-more .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-
 @media (max-width: 880px) {
     .specimen { grid-template-columns: 1fr; }
     .specimen .img-col { border-right: none; border-bottom: 1px solid var(--rule-soft); padding: 28px 24px; }

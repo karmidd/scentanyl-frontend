@@ -1,0 +1,44 @@
+/* FilterSelect — mono dropdown filter */
+
+.fselect { position: relative; }
+.fselect-btn {
+    font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-2);
+    border: 1px solid var(--rule-soft); padding: 8px 12px;
+    transition: border-color .25s, color .25s;
+    display: inline-flex; align-items: center; gap: 8px;
+}
+.fselect-btn:hover { color: var(--ink); border-color: var(--rule); }
+.fselect-btn.set { border-color: var(--accent); color: var(--accent); }
+.fselect-btn .caret { opacity: .6; }
+
+.fselect-panel {
+    position: absolute; top: calc(100% + 6px); left: 0; z-index: 40;
+    min-width: 240px; max-width: 320px;
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+    box-shadow: 0 30px 80px -30px rgba(0, 0, 0, .6);
+    padding: 10px;
+}
+.fselect-panel input {
+    width: 100%; background: transparent;
+    border: 0; border-bottom: 1px solid var(--rule-soft);
+    outline: 0; padding: 6px 2px 8px;
+    font-family: var(--serif); font-style: italic; font-size: 14px; color: var(--ink);
+}
+.fselect-panel input::placeholder { color: var(--ink-3); }
+.fselect-list { max-height: 240px; overflow-y: auto; margin-top: 8px; }
+.fselect-list button {
+    display: block; width: 100%; text-align: left;
+    font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-2);
+    padding: 8px 6px; border-bottom: 1px solid var(--rule-soft);
+    transition: color .2s, background .2s;
+}
+.fselect-list button:last-child { border-bottom: none; }
+.fselect-list button:hover { color: var(--ink); background: var(--accent-soft); }
+.fselect-list button.on { color: var(--accent); }
+.fselect-list .none {
+    font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-3); padding: 10px 6px;
+}

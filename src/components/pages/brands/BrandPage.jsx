@@ -1,25 +1,25 @@
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Background from "../../primary/Background.jsx";
-import Header from "../../primary/Header.jsx";
-import BlurText from "../../../blocks/TextAnimations/BlurText/BlurText.jsx";
-import FragranceCard from "../../cards/FragranceCard.jsx";
-import {useTheme} from "../../contexts/ThemeContext.jsx";
-import LoadingPage from "../primary/LoadingPage.jsx";
-import SearchBar from "../../utils/SearchBar.jsx";
-import ResultsCounter from "../../utils/ResultsCounter.jsx";
-import HeroSection from "../../utils/HeroSection.jsx";
-import LoadMoreButton from "../../utils/buttons/LoadMoreButton.jsx";
-import PageLayout from "../../primary/PageLayout.jsx";
-import {usePagination} from "../../../hooks/usePagination.jsx";
-import {useFragranceFilter} from "../../../hooks/useFragranceFilter.jsx";
-import FilterSection from "../../utils/FilterSection.jsx";
-import {useYearRange} from "../../../hooks/useYearRange.jsx";
-import NotFoundPage from "../secondary/errors/NotFoundPage.jsx";
-import {apiFetch} from "../../utils/apiFetch.jsx";
+import LoadingPage from '../primary/LoadingPage.jsx';
+import PageLayout from '../../primary/PageLayout.jsx';
+import NotFoundPage from '../secondary/errors/NotFoundPage.jsx';
+import Breadcrumb from '../../ui/Breadcrumb.jsx';
+import PageHero from '../../ui/PageHero.jsx';
+import SearchLine from '../../ui/SearchLine.jsx';
+import ResultsLine from '../../ui/ResultsLine.jsx';
+import CatalogueGrid from '../../ui/CatalogueGrid.jsx';
+import FragranceCatCard from '../../ui/FragranceCatCard.jsx';
+import LoadMoreRow from '../../ui/LoadMoreRow.jsx';
+import EmptyState from '../../ui/EmptyState.jsx';
+import Composer from '../../ui/Composer.jsx';
+import FragranceFilterBar from '../fragrances/FragranceFilterBar.jsx';
+import { usePagination } from '../../../hooks/usePagination.jsx';
+import { useFragranceFilter } from '../../../hooks/useFragranceFilter.jsx';
+import { useYearRange } from '../../../hooks/useYearRange.jsx';
+import { apiFetch } from '../../utils/apiFetch.jsx';
 
-// Memoized FragranceCard
-const MemoizedFragranceCard = memo(FragranceCard, (prevProps, nextProps) => {
+// Memoized card
+const MemoizedFragranceCatCard = memo(FragranceCatCard, (prevProps, nextProps) => {
     return prevProps.fragrance.id === nextProps.fragrance.id;
 });
 
@@ -29,8 +29,8 @@ const BrandPage = () => {
     const [brandInfo, setBrandInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { theme } = useTheme();
-    const API_BASE_URL = import.meta.env.VITE_API_URL
+    const [composerOpen, setComposerOpen] = useState(false);
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         error ? document.title = "Brand Not Found | Scentanyl" : document.title = `${brand} | Scentanyl`;
@@ -47,6 +47,7 @@ const BrandPage = () => {
         setSelectedGender,
         advancedSearchData,
         setAdvancedSearchData,
+        genderCounts,
         yearRange,
         setYearRange,
         yearSort,
@@ -97,12 +98,6 @@ const BrandPage = () => {
                 throw new Error('Brand not found');
             }
 
-                // Check if fragrances is empty or invalid
-            if (!fragrancesData || (Array.isArray(fragrancesData) && fragrancesData.length === 0)) {
-                // You might want to allow brands with no fragrances, so this could be optional
-                // throw new Error('No fragrances found for this brand');
-            }
-
             setBrandInfo(brandData);
             setFragrances(fragrancesData || []);
             setLoading(false);
@@ -139,7 +134,7 @@ const BrandPage = () => {
     }, [setYearSort]);
 
     if (loading) {
-        return <LoadingPage/>;
+        return <LoadingPage />;
     }
 
     if (error) {
@@ -149,176 +144,104 @@ const BrandPage = () => {
     }
 
     return (
-        <PageLayout headerNum={2} style={<style jsx>{`
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
+        <PageLayout headerNum={2}>
+            <Breadcrumb
+                style={{ paddingTop: 30 }}
+                items={[
+                    { label: 'Brands', to: '/brands' },
+                    { label: brandInfo?.name || brand },
+                ]}
+            />
 
-            .animate-fadeIn {
-                animation: fadeIn 0.6s ease-out;
-            }
-        `}</style>}
-        >
-            {/* Brand Info Section */}
-            {brandInfo && (
-                <div className="space-y-6 sm:space-y-8 md:space-y-10 mb-4 sm:mb-6 md:mb-8">
-                    <div className="text-center space-y-3 sm:space-y-4 md:space-y-6">
-                        <BlurText
-                            text={brandInfo.name}
-                            delay={100}
-                            animateBy="words"
-                            direction="top"
-                            className="text-shadow-lg flex justify-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-bold leading-tight px-2"
-                        />
-                        <div className="space-y-2 sm:space-y-3">
-                            {brandInfo.country && (
-                                <div className="inline-flex items-center">
-                                    <BlurText
-                                        text={`From `}
-                                        delay={150}
-                                        animateBy="words"
-                                        direction="bottom"
-                                        className={`text-shadow-md text-xl sm:text-2xl md:text-3xl text-gray-200`}
-                                    />
-                                    <BlurText
-                                        text={`${brandInfo.country}`}
-                                        delay={150}
-                                        animateBy="words"
-                                        direction="bottom"
-                                        className={`text-shadow-md text-xl sm:text-2xl md:text-3xl font-semibold ${theme.text.accent}`}
-                                    />
-                                </div>
-                            )}
-                            {brandInfo.parent && (
-                                <div className="items-center">
-                                    <BlurText
-                                        text={`Part of  ${brandInfo.parent}`}
-                                        delay={200}
-                                        animateBy="words"
-                                        direction="bottom"
-                                        className={`text-shadow-sm flex justify-center text-sm sm:text-base md:text-lg text-gray-200 italic`}
-                                    />
-                                </div>
-                            )}
-                            {brandInfo.url && (
-                                <div className="items-center">
-                                    <a
-                                        href={brandInfo.url}
-                                        className="inline-block"
-                                    >
-                                        <BlurText
-                                            text={`${brandInfo.name}'s Website`}
-                                            delay={200}
-                                            animateBy="words"
-                                            direction="bottom"
-                                            className={"text-shadow-sm text-blue-500 hover:text-blue-400 underline underline-offset-2 transition-colors duration-300 text-sm sm:text-sm md:text-base font-semibold hover:scale-105 transform transition-transform"}                                        />
-                                    </a>
-                                </div>
-                            )}
-                        </div>
-                    </div>
+            <PageHero
+                title={`${brandInfo?.name || brand}.`}
+                sub={genderCounts.all.toLocaleString()}
+                subLines={[
+                    'fragrances in the house',
+                    ...(brandInfo?.country ? [brandInfo.country] : []),
+                    ...(brandInfo?.parent ? [`part of ${brandInfo.parent}`] : []),
+                ]}
+            />
+
+            {brandInfo?.url && (
+                <div className="crumb" style={{ paddingBottom: 18 }}>
+                    <a href={brandInfo.url} target="_blank" rel="noopener noreferrer" className="here">
+                        ⤴ {brandInfo.name}'s website
+                    </a>
                 </div>
             )}
 
-            {/* Search and Filter Section */}
-            <div className="space-y-4 sm:space-y-6 md:space-y-8 mb-8 sm:mb-12 md:mb-16">
-                <HeroSection secondaryText={`Discover all fragrances from ${brandInfo?.name || brand}`}/>
+            <SearchLine
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onSubmit={handleSearch}
+                placeholder="Search fragrances, notes, or accords…"
+            />
 
-                <SearchBar
-                    size={4}
-                    onSubmit={handleSearch}
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    message={"Search fragrances, notes, or accords..."}
-                    enableAdvancedSearch={true}
-                    onAdvancedSearchChange={handleAdvancedSearchChange}
-                />
+            <FragranceFilterBar
+                selectedGender={selectedGender}
+                onGenderChange={handleGenderChange}
+                genderCounts={genderCounts}
+                minYear={minYear}
+                maxYear={maxYear}
+                yearRange={yearRange}
+                onYearRangeChange={handleYearRangeChange}
+                yearSort={yearSort}
+                onYearSortChange={handleYearSortChange}
+                advancedSearchData={advancedSearchData}
+                onAdvancedSearchChange={handleAdvancedSearchChange}
+                onOpenComposer={() => setComposerOpen(true)}
+            />
 
-                <FilterSection
-                    genderFilterData={{
-                        onClick: handleGenderChange,
-                        selectedGender: selectedGender
-                    }}
-                    yearFilterData={{
-                        onYearRangeChange: handleYearRangeChange,
-                        onSortChange: handleYearSortChange,
-                        minYear: minYear,
-                        maxYear: maxYear
-                    }}
-                />
+            <ResultsLine shown={displayedFragrances.length} total={filteredFragrances.length} type="fragrances" />
 
-                <ResultsCounter displayedCount={displayedFragrances.length} filteredCount={filteredFragrances.length} type={"fragrances"}/>
-            </div>
-
-            {/* Fragrances Grid */}
-            <div className="space-y-4 sm:space-y-6 md:space-y-8">
-                {displayedFragrances.length > 0 ? (
-                    <>
-                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6">
-                            {displayedFragrances.map((fragrance, index) => (
-                                <div
-                                    key={fragrance.id}
-                                    className="animate-fadeIn"
-                                    style={{
-                                        animationDelay: `${(index % 20) * 50}ms`,
-                                        animationFillMode: 'both'
-                                    }}
-                                >
-                                    <MemoizedFragranceCard fragrance={fragrance} />
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Load More Button */}
-                        {hasMore && (
-                            <LoadMoreButton onClick={loadMore} disabled={isLoadingMore} message={"Load More Fragrances"}/>
-                        )}
-                    </>
-                ) : (
-                    <div className="text-center py-8 sm:py-12 md:py-16">
-                        <BlurText
-                            text="No fragrances found"
-                            delay={100}
-                            animateBy="words"
-                            direction="bottom"
-                            className="flex justify-center text-2xl sm:text-3xl text-gray-300 mb-2 sm:mb-3 md:mb-4"
+            {displayedFragrances.length > 0 ? (
+                <>
+                    <CatalogueGrid>
+                        {displayedFragrances.map((fragrance, index) => (
+                            <MemoizedFragranceCatCard
+                                key={fragrance.id}
+                                fragrance={fragrance}
+                                index={index}
+                                highlightAccords={advancedSearchData.accords}
+                            />
+                        ))}
+                    </CatalogueGrid>
+                    {hasMore && (
+                        <LoadMoreRow
+                            onClick={loadMore}
+                            disabled={isLoadingMore}
+                            label="↓ Load more fragrances"
+                            note={`${displayedFragrances.length} of ${filteredFragrances.length.toLocaleString()}`}
                         />
-                        <p className="text-gray-200 text-base sm:text-lg md:text-xl">
-                            {advancedSearchData.mode !== 'regular'
-                                ? 'Try adjusting your selected notes, accords, or filters'
-                                : searchQuery || selectedGender !== 'all'
-                                    ? 'Try adjusting your search terms or filters'
-                                    : `No fragrances available for ${brandInfo?.name || brand}`
-                            }
-                        </p>
-                    </div>
-                )}
-                {/* Back to Brands Button */}
-                <div className="text-center space-y-3 sm:space-y-4 md:space-y-6 pt-8 sm:pt-12 md:pt-16">
-                    <BlurText
-                        text="Explore More Brands"
-                        delay={300}
-                        animateBy="words"
-                        direction="bottom"
-                        className="text-shadow-lg flex justify-center text-2xl sm:text-3xl font-bold text-white px-2"
-                    />
-                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center">
-                        <button
-                            onClick={() => navigate('/brands')}
-                            className={`text-shadow-md shadow-lg cursor-pointer ${theme.button.primary} ${theme.shadow.button} text-white font-semibold py-3 sm:py-4 px-6 sm:px-8 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 text-base sm:text-lg md:text-xl`}
-                        >
-                            Back to All Brands
-                        </button>
-                    </div>
+                    )}
+                </>
+            ) : (
+                <EmptyState
+                    big="No fragrances found."
+                    small={advancedSearchData.mode !== 'regular'
+                        ? 'try adjusting your selected notes, accords, or filters'
+                        : searchQuery || selectedGender !== 'all'
+                            ? 'try adjusting your search terms or filters'
+                            : `no fragrances available for ${brandInfo?.name || brand}`}
+                />
+            )}
+
+            <section className="frag-more">
+                <div className="t">Explore more houses</div>
+                <div className="row">
+                    <button type="button" className="btn" onClick={() => navigate('/brands')}>
+                        ← Back to all brands
+                    </button>
                 </div>
-            </div>
+            </section>
+
+            <Composer
+                open={composerOpen}
+                onClose={() => setComposerOpen(false)}
+                value={advancedSearchData}
+                onChange={handleAdvancedSearchChange}
+            />
         </PageLayout>
     );
 };
